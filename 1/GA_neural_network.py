@@ -67,19 +67,19 @@ class NN:
         self.Output-=self.bias_o
 class NNGA:
     def __init__(self):
-        self.nn = [NN()]*Number
+        self.nn = [NN()]*Number #number個のclassNNを生成する。
         self.aveE = 0 #全体誤差平均
 
     # 誤差と適合度計算
     def error(self, x,y): #xが教師入力，yが教師出力
 
-        self.aveE = 0
-        for count in range(Number):
-            self.nn[count].gosa = 0
+        self.aveE = 0 #全体平均誤差
+        for count in range(Number):  #Number個のニューラルネットワークを１つずつ取り出す。
+            self.nn[count].gosa = 0  #count個目のニューラルネットワークの誤差を初期化する。
             #入力を入れて各NNに出力させる
-            self.nn[count].calOutput(x[count])
+            self.nn[count].calOutput(x[count]) #classNNの関数calOutputで順伝播のようなものを計算。
             # 誤差を計算
-            self.nn[count].gosa = abs(self.nn[count].Output - y[count])
+            self.nn[count].gosa = abs(self.nn[count].Output - y[count]) #誤差を計算する
             #################################
             # for i in range(Num):
             #     # 入力を入れて各NNに出力させる
@@ -87,48 +87,48 @@ class NNGA:
             #     # 誤差を計算
             #     self.nn[count].gosa = abs(self.nn[count].Output - y[i])/Num
             #################################
-            self.aveE += self.nn[count].gosa/Num
+            self.aveE += self.nn[count].gosa/Num  #全体の平均誤差を計算する
 
         # 適合度計算
         for count in range(Number):
-            self.nn[count].F= 1/ self.nn[count].gosa
+            self.nn[count].F= 1/ self.nn[count].gosa  #count個目のニューラルネットワークの適応度を計算する
 
     # 遺伝的アルゴリズム(GA)
     def GA(self):
         # 個体数/2 回行う
-        for _ in range(int(Number/2)):
+        for _ in range(int(Number/2)):#_はダミー変数で個体数の半分だけ繰り返す。
             
             F_sum=0 #各個体の適合度の合計
             for count in range(Number):
-                F_sum+=self.nn[count].F 
+                F_sum+=self.nn[count].F  #Number個すべての個体の適応度を計算
            
             # 選択
             p = [0,0] #選択されるインデックスを記録する
 
             # ルーレット選択
-            for i in range(2):
+            for i in range(2):#iがrange(2)の分けはp[0,0]が2次元配列のため。
                 F_temp=0
-                j = -1
-                for count in range(Number):
-                    j +=1
-                    F_temp+=self.nn[count].F
-                    if F_temp > random.random()*F_sum:
+                j = -1 #0からNumber個まででどこが選択されるか知りたいため、始まりは-1となる。
+                for count in range(Number):#個体数だけ繰り返す。
+                    j +=1 #選択されるインデックスを１ずつ加算すうｒ。
+                    F_temp+=self.nn[count].F #
+                    if F_temp > random.random()*F_sum: #ある乱数よりも大きくなあったら、breakしインデックスを記録
                         break    
-                p[i]=j
+                p[i]=j#選択されるインデックスを記録する。
 
             # 子ども候補を作成
-            child = [NN()]*2
+            child = [NN()]*2 #2人生成する。
 
             # 一様交叉
-            if random.random() < kousa:
+            if random.random() < kousa:  #ある一定数よりも大きくなったら交差を行う。
                     if random.random() < 0.5:
-                        child[0].u = self.nn[p[0]].u
+                        child[0].u = self.nn[p[0]].u #0.5以上であれば親の重みをそのまま
                         child[1].u = self.nn[p[1]].u                 
-                    else:
+                    else:#0.5以下であれば親の重みを交叉する。
                         child[0].u = self.nn[p[1]].u
                         child[1].u = self.nn[p[0]].u
 
-                    if random.random() < 0.5:
+                    if random.random() < 0.5:#同様に
                         child[0].v = self.nn[p[0]].v
                         child[1].v = self.nn[p[1]].v
                     else:
@@ -148,7 +148,7 @@ class NNGA:
                     else:
                         child[0].bias_o = self.nn[p[1]].bias_o
                         child[1].bias_o = self.nn[p[0]].bias_o           
-            else:
+            else:#交叉しない場合はすべての重みやバイアスをそのまま
                 child[0] = self.nn[p[0]]
                 child[1] = self.nn[p[1]]
 
