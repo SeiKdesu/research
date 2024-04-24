@@ -157,19 +157,19 @@ class NNGA:
             child[1].F = (self.nn[p[0]].F+self.nn[p[1]].F)/2
 
             # 突然変異
-            for count in range(2):
-                for j in range(Hidden):
-                    for i in range(In):
-                        if random.random() < change:
+            for count in range(2):  #バイアスの数。
+                for j in range(Hidden): #Hiddenlayer分だけループを行う。
+                    for i in range(In): #入力のlayer分だけループを行う。
+                        if random.random() < change:#入力層のみループを行うのはここのみ
                             child[count].u[i][j] = random.random()*2-1
                     
-                    if random.random() < change:
+                    if random.random() < change:#Hiddenlayer分もこことそこでループを行う。
                         child[count].bias_h[j] = random.random()*2-1
 
                     if random.random() < change:
                         child[count].v[j] = random.random()*2-1
 
-                if random.random() < change:
+                if random.random() < change: #バイアスのかずだけ繰り返す。
                     child[count].bias_o = random.random()*2-1
      
             #個体群に子どもを追加
@@ -178,8 +178,8 @@ class NNGA:
             min_F=100000
 
             # 最小適合度の個体と入れ替え
-            rm1 = np.argmin(self.nn[count].F)
-            self.nn[rm1]=child[0]
+            rm1 = np.argmin(self.nn[count].F)#適応度が一番低いインデックスを取得。
+            self.nn[rm1]=child[0] #それを子どもとする。
 
             # 2番目に低い適合度の個体と入れ替え
             for count in range(Number):
