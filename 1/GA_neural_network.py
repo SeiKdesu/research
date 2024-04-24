@@ -7,9 +7,9 @@ import matplotlib.pyplot as  plt
 GEN = 100
 
 # NNの個数
-In = 2
-Hidden = 2
-Out = 1
+In = 2 #入力層の数
+Hidden = 2 #隠れ層の数
+Out = 1 #出力層の数
 
 # NNの個体数
 Number = 1000
@@ -39,7 +39,7 @@ def plot(data,name):
     fig.savefig(str(name)+'.pdf')
 class Kyoshi:
     def __init__(self):
-        self.input = np.random.rand(Num, In)*10-5
+        self.input = np.random.rand(Num, In)*10-5 #Inは入力層の数、Numは教師信号の数np.random.randは次元数の大きさ(1000,2)という配列
         self.output = np.zeros(Num)
 
     def make_teacher(self):
