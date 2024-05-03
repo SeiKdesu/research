@@ -118,8 +118,8 @@ def ga_solve(generation):
                 + ". Worst fitness: " + str(worst_ind.fitness))
 
         # --- Step2. Selection (Roulette)
-        # selected = select_roulette(generation)
-        selected = select_tournament(generation)
+        selected = select_roulette(generation)
+        #selected = select_tournament(generation)
 
         # --- Step3. Crossover (two_point_copy)
         children = crossover(selected)

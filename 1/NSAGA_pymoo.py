@@ -3,7 +3,7 @@ from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.problems import get_problem
 from pymoo.optimize import minimize
 from pymoo.visualization.scatter import Scatter
-
+import matplotlib.pyplot as plt
 problem = get_problem("zdt1")
 
 algorithm = NSGA2(pop_size=100)
