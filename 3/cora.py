@@ -2,16 +2,15 @@ import torch
 import torch.nn.functional as F
 from torch_geometric.datasets import Planetoid
 from torch_geometric.nn import GCNConv
-from torch_geometric.data import Data
+
 import torch_geometric.transforms as T
-from torch_geometric.utils import to_networkx
-import networkx as nx
+
 import matplotlib.pyplot as plt
 import os
 from torch_geometric.datasets import CitationFull
 
 # データセットのロード
-dataset = CitationFull(root='./data', name='cora')
+dataset = Planetoid(root='./data', name='cora')
 
 # GCN (Graph Convolutional Network) モデルの定義
 class GCN(torch.nn.Module):
@@ -32,6 +31,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 # モデルのインスタンスを作成
 model = GCN(num_features=dataset.num_features, hidden_channels=16, num_classes=dataset.num_classes).to(device)
 data = dataset[0].to(device)
+print('data',data)
 # オプティマイザの設定
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=5e-4)
 
@@ -40,7 +40,7 @@ for epoch in range(200):
     optimizer.zero_grad()
     out = model(data)
     loss = F.nll_loss(out[data.train_mask],
-    data.y([data.train_mask]))
+    data.y[data.train_mask])
     loss.backward()
     optimizer.step()
 model.eval()
