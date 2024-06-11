@@ -7,8 +7,11 @@ import torch_geometric.transforms as T
 from torch_geometric.utils import to_networkx
 import networkx as nx
 import matplotlib.pyplot as plt
+import os
+from torch_geometric.datasets import CitationFull
+
 # データセットのロード
-dataset = Planetoid(root='./data', name='Cora', transform=T.NormalizeFeatures())
+dataset = CitationFull(root='./data', name='cora')
 data = dataset[0]
 # GCN (Graph Convolutional Network) モデルの定義
 class GCN(torch.nn.Module):
