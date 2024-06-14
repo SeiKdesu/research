@@ -70,7 +70,7 @@ for epoch in range(100):
 
     optimizer.step()
 
-    print('Epoch %d | Loss: %.4f' % (epoch,loss.item()))
+    #print('Epoch %d | Loss: %.4f' % (epoch,loss.item()))
 
     model.eval()
 
