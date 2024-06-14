@@ -43,7 +43,7 @@ class Net(torch.nn.Module):
         edge_index = data.edge_index
 
         x = self.conv1(x,edge_index)
-
+        print(x.shape)
         x=F.relu(x)
 
         x=self.conv2(x,edge_index)
