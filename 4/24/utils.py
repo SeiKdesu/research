@@ -88,7 +88,7 @@ def sparse_mx_to_torch_sparse_tensor(sparse_mx):
 
 
 
-'''
+
 def graph_to_adj_bet(list_graph,list_n_sequence,list_node_num,model_size):
     
 
@@ -145,7 +145,7 @@ def graph_to_adj_bet(list_graph,list_n_sequence,list_node_num,model_size):
             is_zero = clique_check(index,node_sequence,all_out_dict,all_in_dict)
             if is_zero == True:
               
-                degree_arr[index,0]=0.0
+                degree_arr[index]=0.0
                     
         adj_temp = adj_temp.multiply(csr_matrix(degree_arr))
         adj_temp_t = adj_temp_t.multiply(csr_matrix(degree_arr))
@@ -175,82 +175,6 @@ def graph_to_adj_bet(list_graph,list_n_sequence,list_node_num,model_size):
         list_adjacency_t.append(adj_mat_t)
     print("")          
     return list_adjacency,list_adjacency_t
-'''
-def graph_to_adj_bet(list_graph, list_n_sequence, list_node_num, model_size):
-    list_adjacency = []
-    list_adjacency_t = []
-    list_degree = []
-    max_nodes = model_size
-    zero_list = []
-    list_rand_pos = []
-    list_sparse_diag = []
-
-    for i in range(len(list_graph)):
-        print(f"Processing graphs: {i+1}/{len(list_graph)}", end='\r')
-        graph = list_graph[i]
-        edges = list(graph.edges())
-        graph = nx.MultiDiGraph()
-        graph.add_edges_from(edges)
-
-        # self_loops = [i for i in graph.selfloop_edges()]
-        self_loops = list(nx.selfloop_edges(graph))
-        graph.remove_edges_from(self_loops)
-        node_sequence = list_n_sequence[i]
-
-        adj_temp = nx.adjacency_matrix(graph, nodelist=node_sequence)
-
-        node_num = list_node_num[i]
-
-        adj_temp_t = adj_temp.transpose()
-
-        arr_temp1 = np.sum(adj_temp, axis=1)
-        arr_temp2 = np.sum(adj_temp_t, axis=1)
-
-        arr_multi = np.multiply(arr_temp1, arr_temp2)
-
-        arr_multi = np.where(arr_multi > 0, 1.0, 0.0)
-
-        degree_arr = arr_multi.flatten()  # Ensure degree_arr is 1D
-
-        non_zero_ind = np.nonzero(degree_arr)[0]
-
-        g_nkit = nx2nkit(graph)
-
-        in_n_seq = [node_sequence[nz_ind] for nz_ind in non_zero_ind]
-        all_out_dict = get_out_edges(g_nkit, node_sequence)
-        all_in_dict = get_in_edges(g_nkit, in_n_seq)
-
-        for index in non_zero_ind:
-            is_zero = clique_check(index, node_sequence, all_out_dict, all_in_dict)
-            if is_zero:
-                degree_arr[index] = 0.0  # Correct indexing for 1D array
-
-        adj_temp = adj_temp.multiply(csr_matrix(degree_arr))
-        adj_temp_t = adj_temp_t.multiply(csr_matrix(degree_arr))
-
-        rand_pos = 0
-        top_mat = csr_matrix((rand_pos, rand_pos))
-        remain_ind = max_nodes - rand_pos - node_num
-        bottom_mat = csr_matrix((remain_ind, remain_ind))
-
-        list_rand_pos.append(rand_pos)
-        # remain_ind = max_nodes - node_num
-        # small_arr = csr_matrix((remain_ind, remain_ind))
-
-        # adding extra padding to adj mat, normalize and save as torch tensor
-        adj_temp = csr_matrix(adj_temp)
-        adj_mat = sp.block_diag((top_mat, adj_temp, bottom_mat))
-
-        adj_temp_t = csr_matrix(adj_temp_t)
-        adj_mat_t = sp.block_diag((top_mat, adj_temp_t, bottom_mat))
-
-        adj_mat = sparse_mx_to_torch_sparse_tensor(adj_mat)
-        list_adjacency.append(adj_mat)
-
-        adj_mat_t = sparse_mx_to_torch_sparse_tensor(adj_mat_t)
-        list_adjacency_t.append(adj_mat_t)
-    print("")
-    return list_adjacency, list_adjacency_t
 
 def graph_to_adj_close(list_graph,list_n_sequence,list_node_num,model_size,print_time=False):
     
@@ -307,7 +231,7 @@ def graph_to_adj_close(list_graph,list_n_sequence,list_node_num,model_size,print
             is_zero = clique_check(index,node_sequence,all_out_dict,all_in_dict)
             if is_zero == True:
               
-                degree_arr[index]=0.0
+                degree_arr[index,0]=0.0
 
 
         #modify the in-degree matrix for different layers
