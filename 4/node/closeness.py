@@ -45,6 +45,9 @@ print(f"Graphs to adjacency conversion.")
 list_adj_train,list_adj_mod_train = graph_to_adj_close(list_graph_train,list_n_seq_train,list_num_node_train,model_size)
 list_adj_test,list_adj_mod_test = graph_to_adj_close(list_graph_test,list_n_seq_test,list_num_node_test,model_size)
 
+print('len',len(list_adj_train))
+print('list[1]',list_adj_train[1])
+print('node',list_num_node_train[1])
 
 result =[]
 def train(list_adj_train,list_adj_mod_train,list_num_node_train,cc_mat_train):
