@@ -20,14 +20,14 @@ def Schwefel(x, n):
 
 # オブジェクト関数の定義
 def objective_function(x):
-    n_rastrigin = 10
-    n_schwefel = 10
+    n_rastrigin = 20
+    n_schwefel = 20
     rastrigin_value = OriginalRastrigin(x[:n_rastrigin], n_rastrigin)
     schwefel_value = Schwefel(x[n_rastrigin:], n_schwefel)
     return rastrigin_value + schwefel_value
 
 # パラメータの設定
-dim = 20
+dim = 40  # 合計次元数
 max_gen = 400
 pop_size = 300
 offspring_size = 200
@@ -39,8 +39,8 @@ def init_population(pop_size, dim, bound_rastrigin, bound_schwefel):
     population = []
     for _ in range(pop_size):
         individual = np.zeros(dim)
-        individual[:10] = np.random.uniform(-bound_rastrigin, bound_rastrigin, 10)
-        individual[10:] = np.random.uniform(-bound_schwefel, bound_schwefel, 10)
+        individual[:20] = np.random.uniform(-bound_rastrigin, bound_rastrigin, 20)
+        individual[20:] = np.random.uniform(-bound_schwefel, bound_schwefel, 20)
         population.append(individual)
     return population
 
@@ -78,7 +78,7 @@ def undx_crossover(parent1, parent2, parent3, dim):
 def mutate(individual, bound_rastrigin, bound_schwefel, mutation_rate=0.01):
     for i in range(len(individual)):
         if random.random() < mutation_rate:
-            if i < 10:
+            if i < 20:
                 individual[i] = random.uniform(-bound_rastrigin, bound_rastrigin)
             else:
                 individual[i] = random.uniform(-bound_schwefel, bound_schwefel)
@@ -132,11 +132,14 @@ print(f"最良個体のパラメータ：{best_individual}")
 
 # グラフの作成
 plt.figure(figsize=(12, 6))
-plt.plot(fitness_history, label='Best Fitness')
-plt.plot(avg_fitness_history, label='Average Fitness')
+generations = range(len(fitness_history))
+plt.plot(generations, fitness_history, label='Best Fitness')
+plt.plot(generations, avg_fitness_history, label='Average Fitness')
 plt.xlabel('Generation')
 plt.ylabel('Fitness')
-plt.title('Composite_20dim')
+plt.title('devide_40dim')
 plt.legend()
 plt.grid(True)
-plt.savefig('amount.pdf')
+
+plt.savefig('devide40.pdf')
+#plt.show()

@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 # Rastrigin関数の定義
 def OriginalRastrigin(x, n):
@@ -53,6 +54,8 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
     population = init_population(pop_size, dim, bound)
     best_individual = None
     best_fitness = float('inf')
+    avg_fitnesses = []
+    best_fitnesses = []
 
     for generation in range(max_gen):
         fitness = evaluate_population(population)
@@ -74,12 +77,30 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
             best_fitness = current_best_fitness
             best_individual = population[fitness.index(current_best_fitness)]
         
+        avg_fitness = np.mean(fitness)
+        avg_fitnesses.append(avg_fitness)
+        best_fitnesses.append(best_fitness)
+        
         if generation % 100 == 0:
             print(f"Generation {generation}: Best Fitness = {best_fitness}")
 
-    return best_individual, best_fitness
+    return best_individual, best_fitness, avg_fitnesses, best_fitnesses
 
 # 実行
-best_individual, best_fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
+best_individual, best_fitness, avg_fitnesses, best_fitnesses = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
+
 print(f"最良個体の適合度：{best_fitness}")
 print(f"最良個体のパラメータ：{best_individual}")
+
+# グラフの作成
+generations = range(max_gen)
+plt.figure(figsize=(12, 6))
+plt.plot(generations, avg_fitnesses, label='Average Fitness')
+plt.plot(generations, best_fitnesses, label='Best Fitness')
+plt.xlabel('Generation')
+plt.ylabel('Fitness')
+plt.title('Average and Best Fitness over Generations')
+plt.legend()
+plt.ylim([0.0001,0.1])
+plt.grid(True)
+plt.savefig('Rastrigin10.pdf')

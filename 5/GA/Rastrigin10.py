@@ -14,8 +14,8 @@ def objective_function(x):
     return Schwefel(x, n)
 
 # 初期化
-N = 100  # 粒子数
-max_iter = 1000
+N = 300  # 粒子数
+max_iter = 10000
 dim = 10  # 次元数
 X = 1000 * np.random.rand(dim, N) - 500 * np.ones((dim, N))
 V = 0.2 * np.random.rand(dim, N) - 0.1 * np.ones((dim, N))
@@ -60,7 +60,7 @@ plt.plot(res[0, :], res[1, :])
 plt.xlabel('Iteration')
 plt.ylabel('Best Objective Function Value')
 plt.title('PSO Optimization of 10-dimensional Schwefel Function')
-plt.show()
+plt.savefig('Rastrigin10.pdf')
 
 print("Global Best Position:", gbest[0:dim])
 print("Global Best Value:", gbest[dim])

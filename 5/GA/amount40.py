@@ -2,8 +2,8 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 
-# OriginalRastrigin関数の定義
-def OriginalRastrigin(x, n):
+# Rastrigin関数の定義
+def Rastrigin(x, n):
     value = 0
     for i in range(n):
         value += x[i]**2 - 10 * np.cos(2 * np.pi * x[i])
@@ -14,20 +14,20 @@ def OriginalRastrigin(x, n):
 def Schwefel(x, n):
     value = 0
     for i in range(n):
-        value += x[i] * np.sin(np.sqrt(np.absolute(x[i])))
+        value += x[i] * np.sin(np.sqrt(np.abs(x[i])))
     value = 418.9828873 * n - value
     return value
 
 # オブジェクト関数の定義
 def objective_function(x):
-    n_rastrigin = 10
-    n_schwefel = 10
-    rastrigin_value = OriginalRastrigin(x[:n_rastrigin], n_rastrigin)
+    n_rastrigin = 20
+    n_schwefel = 20
+    rastrigin_value = Rastrigin(x[:n_rastrigin], n_rastrigin)
     schwefel_value = Schwefel(x[n_rastrigin:], n_schwefel)
     return rastrigin_value + schwefel_value
 
 # パラメータの設定
-dim = 20
+dim = 40
 max_gen = 400
 pop_size = 300
 offspring_size = 200
@@ -39,8 +39,8 @@ def init_population(pop_size, dim, bound_rastrigin, bound_schwefel):
     population = []
     for _ in range(pop_size):
         individual = np.zeros(dim)
-        individual[:10] = np.random.uniform(-bound_rastrigin, bound_rastrigin, 10)
-        individual[10:] = np.random.uniform(-bound_schwefel, bound_schwefel, 10)
+        individual[:20] = np.random.uniform(-bound_rastrigin, bound_rastrigin, 20)
+        individual[20:] = np.random.uniform(-bound_schwefel, bound_schwefel, 20)
         population.append(individual)
     return population
 
@@ -78,7 +78,7 @@ def undx_crossover(parent1, parent2, parent3, dim):
 def mutate(individual, bound_rastrigin, bound_schwefel, mutation_rate=0.01):
     for i in range(len(individual)):
         if random.random() < mutation_rate:
-            if i < 10:
+            if i < 20:
                 individual[i] = random.uniform(-bound_rastrigin, bound_rastrigin)
             else:
                 individual[i] = random.uniform(-bound_schwefel, bound_schwefel)
@@ -136,7 +136,7 @@ plt.plot(fitness_history, label='Best Fitness')
 plt.plot(avg_fitness_history, label='Average Fitness')
 plt.xlabel('Generation')
 plt.ylabel('Fitness')
-plt.title('Composite_20dim')
+plt.title('Composite_40')
 plt.legend()
 plt.grid(True)
-plt.savefig('amount.pdf')
+plt.savefig('amount40_2000.pdf')
