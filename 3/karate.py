@@ -8,7 +8,7 @@ print("グラフ数",len(dataset))
 print("クラス数：",dataset.num_classes)
 
 data = dataset[0]
-
+data.num_nodes=28
 def check_graph(data):
     print("グラフ構造:", data)
     print("グラフのキー: ", data.keys)
@@ -43,7 +43,7 @@ class Net(torch.nn.Module):
         edge_index = data.edge_index
 
         x = self.conv1(x,edge_index)
-        print(x.shape)
+        
         x=F.relu(x)
 
         x=self.conv2(x,edge_index)
