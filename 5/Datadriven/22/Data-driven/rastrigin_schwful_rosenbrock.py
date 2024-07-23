@@ -14,17 +14,26 @@ def Rastrigin(x, n):
 # Schwefel関数の定義
 def Schwefel(x, n):
     value = 0
+    
     for i in range(n):
         value += x[i] * np.sin(np.sqrt(np.abs(x[i])))
     value = 418.9828873 * n - value
     return value
-
+def Rosenbrock(x, n):
+    value = 0
+  
+    for i in range(n - 1):
+        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+    return value
 # オブジェクト関数の定義
 def objective_function(x,dim):
-    n_rastrigin = dim//2
-    n_schwefel = dim//2
+    n_rastrigin = 3
+    n_schwefel = 3
+    n_rosenbrock=4
+
     rastrigin_value = Rastrigin(x[:n_rastrigin], n_rastrigin)
-    schwefel_value = Schwefel(x[n_rastrigin:], n_schwefel)
+    schwefel_value = Schwefel(x[n_rastrigin:6], n_schwefel)
+    rosenbrock_value = Rosenbrock(x[6:],n_rosenbrock)
     return rastrigin_value + schwefel_value
 
 # パラメータの設定
@@ -40,6 +49,7 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
+ 
     return [objective_function(individual, dim) for individual in population]
 
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
@@ -142,7 +152,7 @@ plt.plot(test_losses, label='Testing Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend()
-plt.savefig('data_driven_rastrigin+schwful.png')
+plt.savefig('data_driven_rastrigin+schwful+rosenbrock5.png')
 
 def weight():
     key_list=[]
@@ -152,12 +162,9 @@ def weight():
     for key,param in model.state_dict().items():
         key_list.append(key)
         param_list.append(model.state_dict()[key].cpu().numpy())
-    print(param_list)
-    flat_list = [item for sublist in param_list for item in sublist]
    
-    print(flat_list)
-    param_list = np.array(flat_list)
-    for i in range(0,len(key_list)-5):
+  
+    for i in range(0,len(key_list)-5,2):
        
         for row in param_list[i]:
             for element in row:
@@ -174,14 +181,19 @@ def weight():
     param_weight=torch.tensor(param_weight)
     param_weight=param_weight.view(152,1)
     param_bias_torch=torch.tensor(param_bias)
+
     param_bias_reshape=param_bias_torch.view(18,1)
-    temp_x_data = x_data[1]
+    input=torch.empty(1,10)
+    #temp_x_data = torch.zeros_like(input)
+    #temp_index=min(fitness)
+
+    temp_x_data=x_data[1]
     input_data=temp_x_data.cpu().reshape(-1,1)
     print(input_data.shape)
     param_bias = torch.cat((input_data,param_bias_reshape),0)
-    print(param_weight)
+    print(param_bias)
     print(param_bias.shape)
-    return param_weight,param_bias
+    return param_weight,param_bias,dim
 
 
 def correct_data():
