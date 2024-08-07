@@ -12,6 +12,7 @@ def visualize_graph(G, color):
     plt.xticks([])
     plt.yticks([])
     
+    
     # ノードの範囲ごとに縦1列に配置するための位置を設定
     pos = {}
 
