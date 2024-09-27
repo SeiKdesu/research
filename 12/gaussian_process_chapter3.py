@@ -725,6 +725,7 @@ def predict(X_train , X_test , y , Theta_1 , Theta_2 , Theta_3) :
 
     # K^{-1} * y を計算
         yy = Expected_train(K , y)
+        print('重み',K)
 
     # 内積はドットで計算して, 平均値の配列に追加
         mu.append(np.dot(k, yy)) # (3.74)式の期待値
