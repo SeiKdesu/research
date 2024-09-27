@@ -719,13 +719,14 @@ def predict(X_train , X_test , y , Theta_1 , Theta_2 , Theta_3) :
 
             # 訓練データとテストデータのカーネル
             k[x] = kernel(X_train[x], X_test[x_test], Theta_1, Theta_2, Theta_3) # (3.68)式
-
+            print('カーネル',k[x])
             #テストデータ同士のカーネル
         s = kernel(X_test[x_test], X_test[x_test], Theta_1, Theta_2, Theta_3) # (3.69)式
 
     # K^{-1} * y を計算
         yy = Expected_train(K , y)
         print('重み',K)
+        print('train_len',train_length)
 
     # 内積はドットで計算して, 平均値の配列に追加
         mu.append(np.dot(k, yy)) # (3.74)式の期待値
