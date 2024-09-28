@@ -132,7 +132,7 @@ class LE:
         # Check for connectivity
         self._G = self._W.copy() # Adjacency matrix
         self._G[self._G > 0] = 1
-        G = nx.from_numpy_matrix(self._G)
+        G = nx.from_numpy_array(self._G)
         self.cc = nx.number_connected_components(G) # Multiplicity of lambda = 0
         if self.cc != 1:
             warnings.warn("Graph is not fully connected, Laplacian Eigenmaps may not work as expected")
