@@ -193,7 +193,7 @@ class LE:
         if self.graph == 'k-nearest':
             title = 'LE with k = {} and weights = {}'.format(self.k, self.weights)
         else:
-            title = 'LE with $\epsilon$ = {} and weights = {}'.format(self.eps, self.weights)
+            title = 'LE with $\\epsilon$ = {} and weights = {}'.format(self.eps, self.weights)
         plt.title(title)
         plt.xlabel('Coordinate {}'.format(dim_1))
         plt.ylabel('Coordinate {}'.format(dim_2))
@@ -214,7 +214,7 @@ class LE:
         if self.graph == 'k-nearest':
             title = 'LE with k = {} and weights = {}'.format(self.k, self.weights)
         else:
-            title = 'LE with $\epsilon$ = {} and weights = {}'.format(self.eps, self.weights)
+            title = 'LE with $\\epsilon$ = {} and weights = {}'.format(self.eps, self.weights)
         plt.title(title)
         ax.set_xlabel('Coordinate {}'.format(dim_1))
         ax.set_ylabel('Coordinate {}'.format(dim_2))
