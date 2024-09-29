@@ -165,7 +165,11 @@ fun = Rosenbrock(ndim=ndim)
 # Construction of the DOE
 # in order to have the always same LHS points, random_state=1
 sampling = LHS(xlimits=fun.xlimits, criterion="ese", random_state=1)
+
+
+#ここで学習に用いるデータを決めている。
 xt = sampling(ndoe)
+print('input',xt)
 # Compute the outputs
 yt = fun(xt)
 
@@ -202,19 +206,19 @@ surf = ax.plot_surface(
     X, Y, res, cmap=cm.viridis, linewidth=0, antialiased=False, alpha=0.5
 )
 
-ax.scatter(
-    xt[:, 0], xt[:, 1], yt, zdir="z", marker="x", c="b", s=200, label="Training point"
-)
-ax.scatter(
-    xtest[:, 0],
-    xtest[:, 1],
-    ytest,
-    zdir="z",
-    marker=".",
-    c="k",
-    s=200,
-    label="Validation point",
-)
+# ax.scatter(
+#     xt[:, 0], xt[:, 1], yt, zdir="z", marker="x", c="b", s=200, label="Training point"
+# )
+# ax.scatter(
+#     xtest[:, 0],
+#     xtest[:, 1],
+#     ytest,
+#     zdir="z",
+#     marker=".",
+#     c="k",
+#     s=200,
+#     label="Validation point",
+# )
 
 plt.title("Rosenbrock function")
 plt.xlabel("x1")
@@ -250,4 +254,44 @@ if compiled_available:
         plt.legend(loc="upper left")
         plt.title("RBF model: validation of the prediction model")
         plt.savefig('RBF model: validation of the prediction model.png')
+        plt.close()
+        
+# To plot the Rosenbrock function
+x = np.linspace(-2, 2, 50)
+res = []
+for x0 in x:
+    for x1 in x:
+        res.append(t.predict_values(np.array([[x0, x1]])))
+res = np.array(res)
+res = res.reshape((50, 50)).T
+X, Y = np.meshgrid(x, x)
+fig = plt.figure(figsize=(15, 10))
+ax = fig.add_subplot(projection="3d")
+surf = ax.plot_surface(
+    X, Y, res, cmap=cm.viridis, linewidth=0, antialiased=False, alpha=0.5
+)
 
+# ax.scatter(
+#     xt[:, 0], xt[:, 1], yt, zdir="z", marker="x", c="b", s=200, label="Training point"
+# )
+# ax.scatter(
+#     xtest[:, 0],
+#     xtest[:, 1],
+#     ytest,
+#     zdir="z",
+#     marker=".",
+#     c="k",
+#     s=200,
+#     label="Validation point",
+# )
+
+plt.title("Rosenbrock function")
+plt.xlabel("x1")
+plt.ylabel("x2")
+plt.legend()
+plt.savefig('RBF_Rosenbrock function.png')
+
+
+
+print("Weights (重み):")
+print(t.sol[:,0])
