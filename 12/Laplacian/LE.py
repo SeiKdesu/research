@@ -180,8 +180,8 @@ class LE:
     def plot_embedding_2d(self, colors, grid = True, dim_1 = 1, dim_2 = 2, cmap = None, size = (15, 10)):
         if self.dim < 2 and dim_2 <= self.dim and dim_1 <= self.dim:
             raise ValueError("There's not enough coordinates")
-        
-        plt.style.use('seaborn-whitegrid')
+        print(plt.style.available)
+        plt.style.use('seaborn-v0_8-whitegrid')
         fig = plt.figure(figsize=size)
         plt.axhline(c = 'black', alpha = 0.2)
         plt.axvline(c = 'black', alpha = 0.2)
@@ -197,13 +197,14 @@ class LE:
         plt.title(title)
         plt.xlabel('Coordinate {}'.format(dim_1))
         plt.ylabel('Coordinate {}'.format(dim_2))
-        plt.show()
+        plt.savefig('2d.png')
+        plt.close()
     
     def plot_embedding_3d(self, colors, grid = True, dim_1 = 1, dim_2 = 2, dim_3 = 3, cmap = None, size = (15, 10)):
         if self.dim < 3 and dim_2 <= self.dim and dim_1 <= self.dim and dim_3 <= self.dim:
             raise ValueError("There's not enough coordinates")
         
-        plt.style.use('seaborn-whitegrid')
+        plt.style.use('seaborn-v0_8-whitegrid')
         fig = plt.figure(figsize=size)
         ax = fig.add_subplot(111, projection="3d")
         if cmap is None:
@@ -219,4 +220,5 @@ class LE:
         ax.set_xlabel('Coordinate {}'.format(dim_1))
         ax.set_ylabel('Coordinate {}'.format(dim_2))
         ax.set_zlabel('Coordinate {}'.format(dim_3))
-        plt.show()
+        plt.savefig('3d.png')
+        plt.close()
