@@ -1,0 +1,41 @@
+Metadata-Version: 2.1
+Name: smt
+Version: 2.7.0
+Summary: The Surrogate Modeling Toolbox (SMT)
+Home-page: https://github.com/SMTorg/smt
+Download-URL: https://github.com/SMTorg/smt/releases
+Author: Remi Lafage et al.
+Author-email: remi.lafage@onera.fr
+License: BSD-3
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Science/Research
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Programming Language :: C++
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Topic :: Software Development
+Classifier: Topic :: Scientific/Engineering
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Operating System :: Unix
+Classifier: Operating System :: MacOS
+Requires-Python: >=3.9
+License-File: LICENSE.txt
+Requires-Dist: scikit-learn
+Requires-Dist: pyDOE3
+Requires-Dist: scipy
+Requires-Dist: jenn
+Provides-Extra: cs
+Requires-Dist: ConfigSpace~=0.6.1; extra == "cs"
+Provides-Extra: gpx
+Requires-Dist: egobox~=0.22; extra == "gpx"
+Provides-Extra: numba
+Requires-Dist: numba~=0.56.4; extra == "numba"
+
+
+The surrogate modeling toolbox (SMT) is a Python package that contains a collection of surrogate modeling methods, sampling techniques, and benchmarking functions. This package provides a library of surrogate models that is simple to use and facilitates the implementation of additional methods. 
+SMT is different from existing surrogate modeling libraries because of its emphasis on derivatives, including training derivatives used for gradient-enhanced modeling, prediction derivatives, and derivatives with respect to the training data. It also includes new surrogate models that are not available elsewhere: kriging by partial-least squares reduction and energy-minimizing spline interpolation.
+
+SMT 2.0 adds the capability to handle mixed-variable surrogate models and hierarchical variables.
