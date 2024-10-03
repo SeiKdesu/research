@@ -14,20 +14,20 @@ def sample_func_g(x):
 x_j = np.arange(-95, 95, 100)
 y_j = sample_func_g(x_j) 
 
-x = np.arange(-101, 101, 100)
+x = np.arange(-101, 101, 1)
 y = sample_func_g(x)
 
-# 2D表示（元のコードのプロット）
-fig = plt.figure(figsize=(8, 5))
-ax = fig.add_subplot(111)
-ax.plot(x, y, color='magenta', lw=3, label=r'$g(x)$')
-ax.scatter(x_j, y_j, color='blue', s=100, zorder=2, label=r'$x_j$')
-ax.grid()
-ax.set_xlim(-100, 100)
-ax.set_ylim(0, 140)
-ax.legend(fontsize=16)
-plt.savefig('rbf_ex_2d.png')
-plt.close()
+# # 2D表示（元のコードのプロット）
+# fig = plt.figure(figsize=(8, 5))
+# ax = fig.add_subplot(111)
+# ax.plot(x, y, color='magenta', lw=3, label=r'$g(x)$')
+# ax.scatter(x_j, y_j, color='blue', s=100, zorder=2, label=r'$x_j$')
+# ax.grid()
+# ax.set_xlim(-100, 100)
+# ax.set_ylim(0, 140)
+# ax.legend(fontsize=16)
+# plt.savefig('rbf_ex_2d.png')
+# plt.close()
 
 
 function_list = ['multiquadric', 'inverse', 'gaussian', 'linear', 'cubic', 'quintic', 'thin_plate']
