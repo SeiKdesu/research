@@ -14,7 +14,7 @@ def sample_func_g(x):
 x_j = np.arange(-95, 95, 100)
 y_j = sample_func_g(x_j) 
 
-x = np.arange(-101, 101, 1)
+x = np.arange(-101, 101, 100)
 y = sample_func_g(x)
 
 # # 2D表示（元のコードのプロット）
