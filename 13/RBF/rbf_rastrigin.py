@@ -17,7 +17,7 @@ y_j = sample_func_g(x_j)
 x = np.arange(-101, 101, 100)
 y = sample_func_g(x)
 
-# 2D表示（元のコードのプロット）
+#
 # fig = plt.figure(figsize=(8, 5))
 # ax = fig.add_subplot(111)
 # ax.plot(x, y, color='magenta', lw=3, label=r'$g(x)$')
