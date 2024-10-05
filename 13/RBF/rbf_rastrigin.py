@@ -11,7 +11,7 @@ def sample_func_g(x):
     value += 10  * 1
     return value
 
-x_j = np.arange(-95, 95, 100)
+x_j = np.arange(-95, 95, 10)
 y_j = sample_func_g(x_j) 
 
 x = np.arange(-101, 101, 100)
@@ -64,11 +64,16 @@ for i, function in enumerate(function_list):
     plt.savefig(function, dpi=300)
     plt.close()
 
+print('N入力のデータポイント数',interp_model.N)
+print('di:データ値をもつ１次元配列',interp_model.di)
+print('smooth:近時の滑らかさ',interp_model.smooth)
+print('mode:1次元かN次元か',interp_model.mode)
+print('距離関数',interp_model.norm)
 # 重みと基底関数の中心点を出力
 centers = interp_model.nodes
-weights = interp_model.A
+# weights = interp_model.A
 
-print("Centers (基底関数の中心点):")
+print("nodes:補完に使用されるノードの一次元配列")
 print(centers)
 print("Weights (重み):")
-print(weights)
+# print(weights)

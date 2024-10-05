@@ -46,12 +46,16 @@ for i, function in enumerate(function_list):
 # 画像を保存
 plt.tight_layout()
 plt.savefig('interpolation_results.png', dpi=300, bbox_inches='tight')
-
+print('N入力のデータポイント数',interp_model.N)
+print('di:データ値をもつ１次元配列',interp_model.di)
+print('smooth:近時の滑らかさ',interp_model.smooth)
+print('mode:1次元かN次元か',interp_model.mode)
+print('距離関数',interp_model.norm)
 # 重みと基底関数の中心点を出力
 centers = interp_model.nodes
-weights = interp_model.A
+# weights = interp_model.A
 
-print("Centers (基底関数の中心点):")
+print("nodes:補完に使用されるノードの一次元配列")
 print(centers)
 print("Weights (重み):")
-print(weights)
+# print(weights)
