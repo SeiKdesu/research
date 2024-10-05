@@ -81,5 +81,5 @@ weights = interp_model.A
 
 print("nodes:weight for hidden to output")
 print(centers)
-print("A: weight for input to hidden")
-print(weights)
+# print("A: weight for input to hidden")
+# print(weights)
