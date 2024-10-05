@@ -78,11 +78,11 @@ params=torch.tensor(tmp)
 
 edge_attr=params
 np.random.seed(1234)
-x=[-35.0,-100.0,-95., -65., -35.,  -5. , 25.,  55. , 85.,1265.0]
+x=[[-35.0,0],[-100.0,0],[-95.,0],[ -65.,0],[ -35.,0]  ,[-5. ,0],[ 25.,0],[  55. ,0],[ 85.,0],[1265.0,0]]
 #x=np.zeros_like(a)
 x=torch.tensor(x,dtype=torch.float)
 #x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
-y_tmp=[0,1,2,2,2,2,2,2,2,2]
+y_tmp=[0,1,1,1,2,0,2,2,2,2]
 
 y = torch.tensor(y_tmp)
 
@@ -140,7 +140,7 @@ optimizer=torch.optim.Adam(model.parameters(),lr=0.01)
 
 loss_func = torch.nn.CrossEntropyLoss()
 
-for epoch in range(100):
+for epoch in range(300):
     optimizer.zero_grad()
     dataset.to(device)
     out = model(dataset)
