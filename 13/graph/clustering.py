@@ -310,27 +310,27 @@ for epoch in range(1, epochs + 1):
     ap_values.append(ap)
 
     # 各エポックの結果を表示
-    print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+    # print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
 
     # 100エポックごとに表示
-    if (epoch % 100 == 0):
-        print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
-        model.eval()
-        with torch.no_grad():
-            z = model.encode(data_.x, data_.edge_index)
-        z = z.cpu().detach().numpy()
-        gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
-        gnn_labels = gnn_kmeans.labels_
-        count=0
-        for i in range(len(gnn_labels)): 
-            if gnn_labels[i]==dataset.y[i]:
-                count += 1
-        acc=count/len(dataset.y)
-        
-        accuracy.append(count/len(dataset.y))
-        print(count/len(dataset.y))
-    if acc > 0.8:
-        print(gnn_labels)
+    # if (epoch % 100 == 0):
+    print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+    model.eval()
+    with torch.no_grad():
+        z = model.encode(data_.x, data_.edge_index)
+    z = z.cpu().detach().numpy()
+    gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
+    gnn_labels = gnn_kmeans.labels_
+    count=0
+    for i in range(len(gnn_labels)): 
+        if gnn_labels[i]==dataset.y[i]:
+            count += 1
+    acc=count/len(dataset.y)
+    
+    accuracy.append(count/len(dataset.y))
+    print(count/len(dataset.y))
+    if acc > 0.79:
+        print(gnn_labels,epoch)
         break
     # Early stoppingの条件確認
     if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
@@ -340,15 +340,15 @@ for epoch in range(1, epochs + 1):
         if (ap >= 0.5):
             best_ap = ap
             consecutive_epochs = 0
-        if (ap >= 0.5) and (auc >= 0.8):
-            print("AUC and AP Over GOOD value")
-            # break
+        # if (ap >= 0.5) and (auc >= 0.8):
+        #     print("AUC and AP Over GOOD value")
+        #     # break
     else:
         consecutive_epochs += 1
 
-    if (consecutive_epochs >= 10):
-        print('Early stopping: AUC and AP have not increased by more than 1% for 10 epochs.')
-        # break
+    # if (consecutive_epochs >= 10):
+    #     print('Early stopping: AUC and AP have not increased by more than 1% for 10 epochs.')
+    #     # break
 
 # 訓練終了後にlossとAUCをプロット
 plt.figure()
