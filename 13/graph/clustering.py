@@ -86,6 +86,7 @@ os.makedirs(folder_path, exist_ok=True)
 # Define the Number of Clusters
 num_clusters = 3
 
+
 K = num_clusters
 clusters = []
 
