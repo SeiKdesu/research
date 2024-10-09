@@ -111,6 +111,7 @@ for i, function in enumerate(function_list):
 
     # 元の関数の表示
 
+
     # 補完した結果を表示
     print('1inputのノード特徴量',x_j)
     print('2inputのノード特徴量',y_j)
