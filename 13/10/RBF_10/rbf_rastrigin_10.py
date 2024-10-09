@@ -41,11 +41,18 @@ def objective_function(x,dim):
     # return rosen_value + dixon_value+ powell_value
 
 # パラメータの設定
-dim = 2
+dim = 10
 max_gen = 100
 pop_size = 30
 offspring_size = 200
 bound = 100
+from datetime import datetime
+
+# 現在の時刻を取得
+current_time = datetime.now()
+name = f'{current_time}_{pop_size}'
+
+
 
 # 初期集団の生成
 def init_population(pop_size, dim, bound):
@@ -117,19 +124,24 @@ for i, function in enumerate(function_list):
     print(X[0][32],Y[0][32],Z[0][32])
     Z_interp = interp_model(X,Y)
 
-    # 補間関数のプロット
-    ax.plot_wireframe(X, Y, Z_interp, color='green', label=f'{function} RBF', linewidth=0.5)
+    # # 補間関数のプロット
+    # ax.plot_wireframe(X, Y, Z_interp, color='green', label=f'{function} RBF', linewidth=0.5)
 
-    # 3Dの設定
-    ax.set_xlabel('X axis')
-    ax.set_ylabel('Y axis')
-    ax.set_zlabel('Z axis')
-    ax.set_title('3D Interpolation with RBF')
-    plt.legend(loc='upper right')
+    # # 3Dの設定
+    # ax.set_xlabel('X axis')
+    # ax.set_ylabel('Y axis')
+    # ax.set_zlabel('Z axis')
+    # ax.set_title('3D Interpolation with RBF')
+    # plt.legend(loc='upper right')
 
-    # 画像を保存
-    plt.savefig('rosen.png')
-    plt.close()
+    # # 画像を保存
+    # plt.savefig(f'rosenbrock/{name}_rbf_fig.pdf')  # 保存
+    # plt.close()
+error = Z - Z_interp
+mse = np.mean(error**2)
+
+# 結果を表示
+print(f"Mean Squared Error (MSE) between Z and Z_interp: {mse}")
 
 
 print('di:データ値をもつ１次元配列',interp_model.di)
@@ -143,7 +155,21 @@ print('episilon',interp_model.epsilon)
 centers = interp_model.nodes
 weights = interp_model.A
 
-print("nodes:weight for hidden to output")
-print(centers)
+# print("nodes:weight for hidden to output")
+# print(centers)
 # print("A: weight for input to hidden")
 # print(weights)
+
+# 元の関数 Z の等高線表示
+plt.figure(figsize=(10, 8))
+plt.contour(X, Y, Z, levels=30, cmap='viridis')
+plt.title("Contour Plot of Original Function Z")
+plt.colorbar()
+plt.savefig(f'rosenbrock/{name}_rbf_original_contour.pdf')  # 保存
+plt.close()
+# 補間された関数 Z_interp の等高線表示
+plt.figure(figsize=(10, 8))
+plt.contour(X, Y, Z_interp, levels=30, cmap='viridis')
+plt.title("Contour Plot of Interpolated Function Z_interp")
+plt.colorbar()
+plt.savefig(f'rosenbrock/{name}_rbf_predict_contour.pdf')  # 保存
