@@ -43,7 +43,7 @@ def objective_function(x,dim):
 # パラメータの設定
 dim = 10
 max_gen = 100
-pop_size = 30
+pop_size = 100
 offspring_size = 200
 bound = 100
 from datetime import datetime
@@ -100,43 +100,27 @@ from mpl_toolkits.mplot3d import Axes3D
 # function_list = ['multiquadric', 'inverse', 'gaussian', 'linear', 'cubic', 'quintic', 'thin_plate']
 function_list = ['gaussian']
 for i, function in enumerate(function_list):
-    # 3D表示用にX, Y軸を拡張
-    x_range = np.linspace(-100, 100, 100)
-    y_range = np.linspace(-100, 100, 100)
-    X, Y = np.meshgrid(x_range, y_range)
-    # Rosenbrock関数の計算 (n=2の場合)
-    Z = np.zeros(X.shape)
-    for i in range(X.shape[0]):
-        for j in range(X.shape[1]):
-            Z[i, j] = Rosenbrock([X[i, j], Y[i, j]], 2)
+    # -100から100までの範囲をpop_size個に分割して10次元ベクトルを生成
+    x_population = np.linspace(-100, 100, pop_size * dim).reshape(pop_size, dim)
+    X=x_population
+    # 各個体に対してRosenbrock関数を計算
+    Z = np.array([Rosenbrock(x, dim) for x in x_population])
     # 3D表示
     fig = plt.figure(figsize=(10, 8))
     ax = fig.add_subplot(111, projection='3d')
 
     # 元の関数の表示
-    ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.6)
 
     # 補完した結果を表示
     print('1inputのノード特徴量',x_j)
     print('2inputのノード特徴量',y_j)
     print(x_j[:,0].shape,x_j[:,1].shape,y_j.shape)
-    interp_model = Rbf(x_j[:,0], x_j[:,1],y_j, function=function)
-    print(X[0][32],Y[0][32],Z[0][32])
-    Z_interp = interp_model(X,Y)
+    """変更点"""
+    interp_model = Rbf(x_j[:,0], x_j[:,1],x_j[:,2],x_j[:,3],x_j[:,4],x_j[:,5],x_j[:,6],x_j[:,7],x_j[:,8],x_j[:,9],y_j, function=function)
+    # print(x_population[0][32],x_populatiZ[0][32])
+    Z_interp = interp_model(x_population[:,0],x_population[:,1],x_population[:,2],x_population[:,3],x_population[:,4],x_population[:,5],x_population[:,6],x_population[:,7],x_population[:,8],x_population[:,9])
+    """ここまで変更点"""
 
-    # # 補間関数のプロット
-    # ax.plot_wireframe(X, Y, Z_interp, color='green', label=f'{function} RBF', linewidth=0.5)
-
-    # # 3Dの設定
-    # ax.set_xlabel('X axis')
-    # ax.set_ylabel('Y axis')
-    # ax.set_zlabel('Z axis')
-    # ax.set_title('3D Interpolation with RBF')
-    # plt.legend(loc='upper right')
-
-    # # 画像を保存
-    # plt.savefig(f'rosenbrock/{name}_rbf_fig.pdf')  # 保存
-    # plt.close()
 error = Z - Z_interp
 mse = np.mean(error**2)
 
@@ -161,15 +145,15 @@ weights = interp_model.A
 # print(weights)
 
 # 元の関数 Z の等高線表示
-plt.figure(figsize=(10, 8))
-plt.contour(X, Y, Z, levels=30, cmap='viridis')
-plt.title("Contour Plot of Original Function Z")
-plt.colorbar()
-plt.savefig(f'rosenbrock/{name}_rbf_original_contour.pdf')  # 保存
-plt.close()
-# 補間された関数 Z_interp の等高線表示
-plt.figure(figsize=(10, 8))
-plt.contour(X, Y, Z_interp, levels=30, cmap='viridis')
-plt.title("Contour Plot of Interpolated Function Z_interp")
-plt.colorbar()
-plt.savefig(f'rosenbrock/{name}_rbf_predict_contour.pdf')  # 保存
+# plt.figure(figsize=(10, 8))
+# plt.contour(X,  Z, levels=30, cmap='viridis')
+# plt.title("Contour Plot of Original Function Z")
+# plt.colorbar()
+# plt.savefig(f'rosenbrock/{name}_rbf_original_contour.pdf')  # 保存
+# plt.close()
+# # 補間された関数 Z_interp の等高線表示
+# plt.figure(figsize=(10, 8))
+# plt.contour(X,  Z_interp, levels=30, cmap='viridis')
+# plt.title("Contour Plot of Interpolated Function Z_interp")
+# plt.colorbar()
+# plt.savefig(f'rosenbrock/{name}_rbf_predict_contour.pdf')  # 保存
