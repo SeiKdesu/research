@@ -1,0 +1,410 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%LanguageLevel: 3
+%%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
+%%Creator: Matplotlib v3.9.2, https://matplotlib.org/
+%%CreationDate: Sat Oct  5 19:22:05 2024
+%%Orientation: portrait
+%%BoundingBox: 0 0 720 720
+%%HiResBoundingBox: 0.000000 0.000000 720.000000 720.000000
+%%EndComments
+%%BeginProlog
+/mpldict 9 dict def
+mpldict begin
+/_d { bind def } bind def
+/m { moveto } _d
+/l { lineto } _d
+/r { rlineto } _d
+/c { curveto } _d
+/cl { closepath } _d
+/ce { closepath eofill } _d
+/sc { setcachedevice } _d
+%!PS-Adobe-3.0 Resource-Font
+%%Creator: Converted from TrueType to Type 3 by Matplotlib.
+10 dict begin
+/FontName /DejaVuSans def
+/PaintType 0 def
+/FontMatrix [0.00048828125 0 0 0.00048828125 0 0] def
+/FontBBox [-2090 -948 3673 2524] def
+/FontType 3 def
+/Encoding [/X /Y] def
+/CharStrings 3 dict dup begin
+/.notdef 0 def
+/X{1403 0 61 0 1339 1493 sc
+129 1493 m
+346 1493 l
+717 938 l
+1090 1493 l
+1307 1493 l
+827 776 l
+1339 0 l
+1122 0 l
+702 635 l
+279 0 l
+61 0 l
+594 797 l
+129 1493 l
+
+ce} _d
+/Y{1251 0 -4 0 1255 1493 sc
+-4 1493 m
+213 1493 l
+627 879 l
+1038 1493 l
+1255 1493 l
+727 711 l
+727 0 l
+524 0 l
+524 711 l
+-4 1493 l
+
+ce} _d
+end readonly def
+
+/BuildGlyph {
+ exch begin
+ CharStrings exch
+ 2 copy known not {pop /.notdef} if
+ true 3 1 roll get exec
+ end
+} _d
+
+/BuildChar {
+ 1 index /Encoding get exch get
+ 1 index /BuildGlyph get exec
+} _d
+
+FontName currentdict end definefont pop
+end
+%%EndProlog
+mpldict begin
+0 0 translate
+0 0 720 720 rectclip
+gsave
+0 0 m
+720 0 l
+720 720 l
+0 720 l
+cl
+1 setgray
+fill
+grestore
+gsave
+90 79.2 m
+648 79.2 l
+648 633.6 l
+90 633.6 l
+cl
+1 setgray
+fill
+grestore
+1 setlinewidth
+1 setlinejoin
+0 setlinecap
+[] 0 setdash
+0.502 setgray
+gsave
+90 79.2 558 554.4 rectclip
+/o {
+gsave
+newpath
+translate
+1.0 setlinewidth
+1 setlinejoin
+
+0 setlinecap
+
+0 -2.236068 m
+0.593012 -2.236068 1.161816 -2.000462 1.581139 -1.581139 c
+2.000462 -1.161816 2.236068 -0.593012 2.236068 0 c
+2.236068 0.593012 2.000462 1.161816 1.581139 1.581139 c
+1.161816 2.000462 0.593012 2.236068 0 2.236068 c
+-0.593012 2.236068 -1.161816 2.000462 -1.581139 1.581139 c
+-2.000462 1.161816 -2.236068 0.593012 -2.236068 0 c
+-2.236068 -0.593012 -2.000462 -1.161816 -1.581139 -1.581139 c
+-1.161816 -2.000462 -0.593012 -2.236068 0 -2.236068 c
+cl
+
+gsave
+0.502 setgray
+fill
+grestore
+stroke
+grestore
+} bind def
+160.381 356.4 o
+138.421 356.4 o
+140.111 356.4 o
+150.246 356.4 o
+160.381 356.4 o
+170.517 356.4 o
+180.652 356.4 o
+190.787 356.4 o
+200.923 356.4 o
+599.579 356.4 o
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+140.110707 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+150.246027 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+160.381346 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+170.516665 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+180.651984 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+190.787304 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+200.922623 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+140.110707 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+150.246027 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+160.381346 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+170.516665 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+180.651984 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+190.787304 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+138.421488 356.4 m
+200.922623 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+140.110707 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+150.246027 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381346 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+170.516665 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+180.651984 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+190.787304 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+200.922623 356.4 m
+599.578512 356.4 l
+stroke
+grestore
+0 setgray
+/DejaVuSans 10.000 selectfont
+gsave
+
+365.57 67.6062 translate
+0 rotate
+0 0 m /X glyphshow
+grestore
+/DejaVuSans 10.000 selectfont
+gsave
+
+83.9219 353.345 translate
+90 rotate
+0 0 m /Y glyphshow
+grestore
+/p0_0 {
+newpath
+translate
+0 -2.236068 m
+0.593012 -2.236068 1.161816 -2.000462 1.581139 -1.581139 c
+2.000462 -1.161816 2.236068 -0.593012 2.236068 0 c
+2.236068 0.593012 2.000462 1.161816 1.581139 1.581139 c
+1.161816 2.000462 0.593012 2.236068 0 2.236068 c
+-0.593012 2.236068 -1.161816 2.000462 -1.581139 1.581139 c
+-2.000462 1.161816 -2.236068 0.593012 -2.236068 0 c
+-2.236068 -0.593012 -2.000462 -1.161816 -1.581139 -1.581139 c
+-1.161816 -2.000462 -0.593012 -2.236068 0 -2.236068 c
+cl
+
+} bind def
+0.62 0.855 0.898 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
+160.381 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+0.549 0.337 0.294 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
+138.421 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+0.122 0.467 0.706 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
+140.111 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+150.246 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+160.381 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+170.517 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+180.652 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+190.787 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+200.923 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+90 79.2 558 554.4 rectclip
+599.579 356.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+0.8 setlinewidth
+0 setlinejoin
+2 setlinecap
+0 setgray
+gsave
+90 79.2 m
+90 633.6 l
+stroke
+grestore
+gsave
+648 79.2 m
+648 633.6 l
+stroke
+grestore
+gsave
+90 79.2 m
+648 79.2 l
+stroke
+grestore
+gsave
+90 633.6 m
+648 633.6 l
+stroke
+grestore
+
+end
+showpage
