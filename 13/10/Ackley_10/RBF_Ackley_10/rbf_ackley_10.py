@@ -90,7 +90,7 @@ population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, 
 
 x_j = np.array(population, dtype=np.float32)    
 y_j = np.array(fitness, dtype=np.float32)
-
+print(x_j.shape)
 np.savetxt(f"acc_loss/{name}_pop.txt", x_j, fmt='%.6f')  # フォーマットを指定
 
 import numpy as np
