@@ -6,7 +6,6 @@ import random
 
 from smt.problems import Rosenbrock
 
-
 def Rosenbrock(x, n):
     value = 0
     for i in range(n-1):
