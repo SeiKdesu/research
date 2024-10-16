@@ -78,7 +78,7 @@ y_j = np.array(fitness, dtype=np.float32)
 
 np.savetxt(f"acc_loss/{name}_pop.txt", x_j, fmt='%.6f')  # フォーマットを指定
 
-import numpy as np
+
 from scipy.interpolate import Rbf
 from matplotlib import pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D

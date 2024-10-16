@@ -465,6 +465,7 @@ plt.figure()
 
 
 
+
 # Lossのプロット
 plt.subplot(2, 1, 1)
 plt.plot(range(1, len(loss_values) + 1), loss_values, label='loss')
