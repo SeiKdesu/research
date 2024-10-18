@@ -124,7 +124,7 @@ os.makedirs(folder_path, exist_ok=True)
 
 
 # Define the Number of Clusters
-num_clusters = 2
+num_clusters = 3
 
 K = num_clusters
 clusters = []
@@ -136,7 +136,7 @@ max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
 in_channels = 6
-hidden_channels = 7
+hidden_channels = 10
 out_channels = 1
 
 # Transform Parameters
@@ -277,10 +277,12 @@ x=formatted_weight_data
 x=torch.tensor(x,dtype=torch.float)
 #x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
 y_tmp=[]
-for i in range(6):
+for i in range(3):
     y_tmp.append(0)
-for i in range(21):
+for i in range(3):
     y_tmp.append(1)
+for i in range(21):
+    y_tmp.append(2)
 
 y = torch.tensor(y_tmp)
 
@@ -305,7 +307,7 @@ Variational Graph Autoencoders VGAE
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=2)
+dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
 Data.train_mask=np.array([1 for i in range(len(y))])
 
 
