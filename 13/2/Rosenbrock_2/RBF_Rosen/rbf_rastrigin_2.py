@@ -43,7 +43,7 @@ def objective_function(x,dim):
 # パラメータの設定
 dim = 2
 max_gen = 100
-pop_size = 30
+pop_size = 30s
 offspring_size = 200
 bound = 5
 from datetime import datetime
