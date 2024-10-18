@@ -95,7 +95,7 @@ Z = []
 Z_interp=[]
 num=0
 for i, function in enumerate(function_list):
-    range_per_dim = np.linspace(-5, 5, 100)  # 各次元の範囲
+    range_per_dim = np.linspace(-5, 5, 10)  # 各次元の範囲
 
     # itertools.productを使ってn次元の全組み合わせを逐次的に生成
     for point in itertools.product(range_per_dim, repeat=dim):
@@ -114,9 +114,11 @@ for i, function in enumerate(function_list):
     # print('2inputのノード特徴量',y_j)
     # print(x_j[:,0].shape,x_j[:,1].shape,y_j.shape)
     # RBF補間モデルの作成（n次元対応）
-    interp_model = Rbf(*[x_j[:, i] for i in range(dim)], y_j, function=function)
+    interp_model = Rbf(*[x_j[:, i] for i in range(x_j.shape[1])], function=function)
 
-    range_per_dim = np.linspace(-5, 5, 100)  # 各次元の範囲
+    #interp_model = Rbf(x_j[:,0], x_j[:,1],x_j[:,2],x_j[:,3],x_j[:,4],x_j[:,5],x_j[:,6],x_j[:,7],x_j[:,8],x_j[:,9], function=function)
+
+    range_per_dim = np.linspace(-5, 5, 10)  # 各次元の範囲
 
 
 
