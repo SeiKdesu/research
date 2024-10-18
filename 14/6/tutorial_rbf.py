@@ -110,7 +110,7 @@ To do so:
 import numpy as np
 from smt.utils.misc import compute_rms_error
 
-from smt.problems import Rosenbrock
+# from smt.problems import Rosenbrock
 from smt.sampling_methods import LHS
 from smt.surrogate_models import LS, QP, KPLS, KRG, KPLSK, GEKPLS, MGP
 
@@ -148,6 +148,10 @@ if not os.path.exists(name):
     os.makedirs(name)
 # ファイルのパスを指定
     file_path = os.path.join(name, "population.txt")
+
+
+
+
 """## Rosenbrock Function  in dimension N
 
 $$
@@ -167,8 +171,59 @@ Here we outline the studied function by plotting the surface representing the fu
 
 ########### Initialization of the problem, construction of the training and validation points
 
-ndim = 100
+ndim = 6
 ndoe = 20  # int(10*ndim)
+from smt.problems.problem import Problem
+class Rosenbrock(Problem):
+    def _initialize(self):
+        self.options.declare("name", "Rosenbrock", types=str)
+
+    def _setup(self):
+        self.xlimits[:, 0] = -2.0
+        self.xlimits[:, 1] = 2.0
+
+    def _evaluate(self, x, kx):
+        """
+        Arguments
+        ---------
+        x : ndarray[ne, nx]
+            Evaluation points.
+        kx : int or None
+            Index of derivative (0-based) to return values with respect to.
+            None means return function value rather than derivative.
+
+        Returns
+        -------
+        ndarray[ne, 1]
+            Functions values if kx=None or derivative values if kx is an int.
+        """
+        ne, nx = x.shape
+
+        y = np.zeros((ne, 1), complex)
+        tmp1 =np.zeros((ne,1),complex)
+        tmp2 =np.zeros((ne,1),complex)
+        if kx is None:
+            for ix in range(int(nx/2) - 1):
+                tmp1[:,0] += (
+                    100.0 * (x[:, ix + 1] - x[:, ix] ** 2) ** 2 + (1 - x[:, ix]) ** 2
+                )
+            for ix in range(int(nx/2) - 1):
+                tmp2[:,0] += (
+                    100.0 * (x[:, ix + 1] - x[:, ix] ** 2) ** 2 + (1 - x[:, ix]) ** 2
+                )
+                # y[:, 0] += (
+                #     100.0 * (x[:, ix + 1] - x[:, ix] ** 2) ** 2 + (1 - x[:, ix]) ** 2
+                # )
+        else:
+            print('Wow!')
+            if kx < nx - 1:
+                y[:, 0] += -400.0 * (x[:, kx + 1] - x[:, kx] ** 2) * x[:, kx] - 2 * (
+                    1 - x[:, kx]
+                )
+            if kx > 0:
+                y[:, 0] += 200.0 * (x[:, kx] - x[:, kx - 1] ** 2)
+        y = tmp1 + tmp2
+        return y
 # Define the function
 fun = Rosenbrock(ndim=ndim)
 
