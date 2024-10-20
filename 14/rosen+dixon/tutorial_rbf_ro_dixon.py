@@ -202,6 +202,7 @@ class Rosenbrock(Problem):
         y = np.zeros((ne, 1), complex)
         tmp1 =np.zeros((ne,1),complex)
         tmp2 =np.zeros((ne,1),complex)
+        term2 =np.zeros((ne,1),complex)
         if kx is None:
             for ix in range(int(nx/2) - 1):
                 tmp1[:,0] += (
@@ -214,7 +215,8 @@ class Rosenbrock(Problem):
                 # )
                 
             term1 = (x[0] - 1) ** 2
-            term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in range(3,6)])
+            for i in range(3,6):
+                term2[:,0] += sum([i * (2 * x[:,i]**2 - x[:,i-1])**2 ])
             tmp2 = term1 + term2
                 # y[:, 0] += (
                 #     100.0 * (x[:, ix + 1] - x[:, ix] ** 2) ** 2 + (1 - x[:, ix]) ** 2
