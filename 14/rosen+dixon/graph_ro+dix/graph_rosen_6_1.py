@@ -519,9 +519,9 @@ for epoch in range(1, epochs + 1):
     
     accuracy.append(count/6)
     # print(count/2)
-    print(gnn_labels)
+    # print(gnn_labels)
     if acc > 0.5:
-        print('acc 90%',gnn_labels,epoch,acc)
+        print('acc 50%',gnn_labels,epoch,acc)
         # break
     # Early stoppingの条件確認
     if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
