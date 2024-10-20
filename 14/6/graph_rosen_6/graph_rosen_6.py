@@ -129,14 +129,14 @@ num_clusters = 3
 K = num_clusters
 clusters = []
 
-num_Infrastructure = 10 #The number of RSU and Towers in the Dataset (always at the start of the dataset)
-max_dist_tower = 500 #V2I
-max_dist_rsu = 250 #V2R
-max_dist = 150 #V2V
+# num_Infrastructure = 10 #The number of RSU and Towers in the Dataset (always at the start of the dataset)
+# max_dist_tower = 500 #V2I
+# max_dist_rsu = 250 #V2R
+# max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
 in_channels = 6
-hidden_channels = 10
+hidden_channels = 25
 out_channels = 1
 
 # Transform Parameters
@@ -322,7 +322,7 @@ G=to_networkx(dataset, to_undirected=False)
 transform = RandomLinkSplit(
     num_val=0.05,
     num_test=0.15,
-    is_undirected=True,
+    is_undirected=False,
     split_labels=True,
     add_negative_train_samples=True)
 
