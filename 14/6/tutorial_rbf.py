@@ -315,7 +315,7 @@ if compiled_available:
 
     t.train()
     with open(file_path, "a") as file:
-        file.write(f"{xt},{yt},{t.sol}\n")
+        file.write(f"{xt},{yt},{t.sol},{t.mtx}\n")
     # Prediction of the validation points
     y = t.predict_values(xtest)
     print("RBF,  err: " + str(compute_rms_error(t, xtest, ytest)))

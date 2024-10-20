@@ -136,7 +136,7 @@ clusters = []
 
 # Channel Parameters & GAE MODEL
 in_channels = 6
-hidden_channels = 25
+hidden_channels = 20
 out_channels = 1
 
 # Transform Parameters
@@ -147,7 +147,7 @@ learn_rate = 0.0001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 100
+epochs = 300
 n = 1000
 
 """# Run GNN
@@ -349,7 +349,6 @@ print(data.is_directed())
 ### Visualize Entire Data
 """
 
-print(data)
 
 G = to_networkx(data)
 G = G.to_directed()
@@ -387,14 +386,23 @@ class GCNEncoder(torch.nn.Module):
       # GAT
       self.in_head = 8
       self.out_head = 1
+      hidden_channels2 = 10
+      hidden_channels3=5
+      hidden_channels4 =3
       self.conv1 = GATConv(in_channels, hidden_channels, heads=self.in_head, dropout=0.6)
-      self.conv2 = GATConv(hidden_channels*self.in_head, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
+      self.conv2 = GATConv(hidden_channels*self.in_head,hidden_channels2)
+      self.conv3 = GATConv(hidden_channels2,hidden_channels3)
+      self.conv4 = GATConv(hidden_channels3,hidden_channels4)
+      self.conv5 = GATConv(hidden_channels4, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
 
 
     def forward(self, x, edge_index):
       x = self.conv1(x, edge_index).relu()
       x = F.dropout(x, p=0.6, training=self.training)
-      x = self.conv2(x, edge_index)
+      x = self.conv2(x,edge_index).relu()
+      x = self.conv3(x, edge_index).relu()
+      x = self.conv4(x, edge_index).relu()
+      x = self.conv5(x,edge_index)
       return x
 
 """### Define the Autoencoder
@@ -474,11 +482,30 @@ for epoch in range(1, epochs + 1):
     # gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
     # gnn_labels = gnn_kmeans.labels_
 
+    # from sklearn import cluster
+    # # SVMの分類器を訓練
+    # spkm = cluster.SpectralClustering(n_clusters=num_clusters,affinity="rbf",assign_labels='discretize')
+    # res_spkm = spkm.fit(z)
+    # gnn_labels = res_spkm.labels_
+
+    # from sklearn.cluster import AffinityPropagation
+    # # SVMの分類器を訓練
+    # spkm = AffinityPropagation()
+    # res_spkm = spkm.fit(z)
+    # gnn_labels = res_spkm.labels_
+
     from sklearn import cluster
     # SVMの分類器を訓練
-    spkm = cluster.SpectralClustering(n_clusters=num_clusters,affinity="nearest_neighbors")
+    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters,metric='manhattan', linkage='complete')
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
+
+    # from sklearn import cluster
+    # # SVMの分類器を訓練
+    # spkm = cluster.DBSCAN()
+    # res_spkm = spkm.fit(z)
+    # gnn_labels = res_spkm.labels_
+
     if best_loss > loss:
         best_loss = loss
         best_label=gnn_labels
@@ -491,7 +518,8 @@ for epoch in range(1, epochs + 1):
     
     accuracy.append(count/6)
     # print(count/2)
-    if acc > 0.9:
+    print(gnn_labels)
+    if acc > 0.5:
         print('acc 90%',gnn_labels,epoch,acc)
         # break
     # Early stoppingの条件確認

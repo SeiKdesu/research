@@ -46,7 +46,7 @@ def make_data():
     ga = GA(func=objective_function, n_dim=dim, size_pop=10, max_iter=10, prob_mut=0.001, lb=[-1]*dim, ub=[1]*dim, precision=1e-7)
     best_x, best_y = ga.run()
 
-    ga.all_history_X
+
 
     print('best_x:', best_x, '\n', 'best_y:', best_y)
 
