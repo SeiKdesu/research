@@ -311,6 +311,7 @@ if compiled_available:
     ########### The RBF model
 
     t = RBF(print_prediction=False, poly_degree=0)
+    print(xt.shape,yt.shape)
     t.set_training_values(xt, yt[:, 0])
 
     t.train()

@@ -118,6 +118,7 @@ def Rosenbrock(x, n):
     value = 0
     for i in range(n - 1):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+    print('valueのshapeです',value)
     return value
 def dixon_price(x):
     n = len(x)
@@ -169,6 +170,7 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
+    # return objective_function(population,dim)
     return [objective_function(individual, dim) for individual in population]
 
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
@@ -264,16 +266,24 @@ population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, 
 
 
 
-xt = np.array(population, dtype=np.float32)    
-yt = np.array(fitness, dtype=np.float32)
+xt = np.array(population, dtype=np.double)    
+yt = np.array(fitness, dtype=np.double)
+yt=yt.reshape(50,1)
 # Construction of the validation points
 ntest = 200  # 500
 
 population_test, fitness_test = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
 
-xtest = [arr.tolist() for arr in population_test]
-# Compute the outputs
-ytest = [arr.tolist() for arr in fitness_test]
+
+
+xtest = np.array(population_test, dtype=np.double)    
+ytest = np.array(fitness_test, dtype=np.double)
+ytest=ytest.reshape(50,1)
+
+
+# xtest = [arr.tolist() for arr in population_test]
+# # Compute the outputs
+# ytest = [arr.tolist() for arr in fitness_test]
 
 
 """Different models will be used and compared:
@@ -301,7 +311,8 @@ if compiled_available:
     ########### The RBF model
 
     t = RBF(print_prediction=False, poly_degree=0)
-    t.set_training_values(xt, yt[:, 0])
+    print(xt.shape,yt.shape)
+    t.set_training_values(xt, yt)
 
     t.train()
     with open(file_path, "a") as file:

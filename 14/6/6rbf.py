@@ -14,6 +14,8 @@ def Rosenbrock(x, n):
     value = 0
     for i in range(n-1):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+
+   
     return value
 # def dixon_price(x,n):
 #     n = len(x)
