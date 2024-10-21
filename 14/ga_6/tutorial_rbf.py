@@ -107,58 +107,61 @@ To do so:
 
 """# 0. Construction of the DOE points"""
 
+import numpy as np
+import torch
+from torch import nn
 import matplotlib.pyplot as plt
-import numpy as np
-import numpy as np
-import random
-
-from smt.problems import Rosenbrock
+from torchinfo import summary
 
 
 def Rosenbrock(x, n):
-    print(x.shape)
-    ne, = x.shape
-    print(ne)
-    tmp1=0
-    # y = np.zeros((ne, 1), complex)
-    # tmp1 =np.zeros((ne,1),complex)
-    # tmp2 =np.zeros((ne,1),complex)
-    
-    for ix in range(n-1):
-        tmp1 += (
-            100.0 * (x[ix + 1] - x[ ix] ** 2) ** 2 + (1 - x[ ix]) ** 2
-        )
-    return tmp1
-def dixon_price(x,n):
-    n = len(x)
-    term1 = (x[0] - 1) ** 2
-    term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in range(51, 100)])
-    return term1 + term2
-def Rosenbrock1(x, n):
     value = 0
-    for i in range(101,150):
+    for i in range(n - 1):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
     return value
+def dixon_price(x):
+    n = len(x)
+    term1 = (x[0] - 1) ** 2
+    term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in range(1, n)])
+    return term1 + term2
 
+def powell(x):
+    n = len(x)
+    if n % 4 != 0:
+        raise ValueError("Input vector length must be a multiple of 4.")
+    
+    sum_term = 0
+    for i in range(0, n, 4):
+        term1 = (x[i] + 10 * x[i+1]) ** 2
+        term2 = 5 * (x[i+2] - x[i+3]) ** 2
+        term3 = (x[i+1] - 2 * x[i+2]) ** 4
+        term4 = 10 * (x[i] - x[i+3]) ** 4
+        sum_term += term1 + term2 + term3 + term4
+    
+    return sum_term
 def objective_function(x,dim):
-    n_rosenbrock = 2
-    n_dixon=50
-    n_powell=100
-    rosen_value = Rosenbrock(x, n_rosenbrock)
-    # dixon_value = dixon_price(x,n_dixon)
-    # rosen_value2 = Rosenbrock1(x, n_rosenbrock)
-    # powell_value= trid(x,n_powell)
+    return Rosenbrock(x,dim)
+    # n_rosenbrock = 3
+    # n_dixon=3
+    # n_powell=4
+    # rosen_value = Rosenbrock(x[:n_rosenbrock], n_rosenbrock)
+    # dixon_value = dixon_price(x[n_rosenbrock:n_rosenbrock+n_dixon])
+    # powell_value= powell(x[n_rosenbrock+n_dixon:n_rosenbrock+n_dixon+n_powell])
     # return rosen_value + dixon_value+ powell_value
-    return rosen_value
 
 # パラメータの設定
-dim = 2
+dim = 10
+max_gen = 100
+pop_size = 50
+offspring_size = 300
+bound = 5
+from datetime import datetime
 
-max_gen = 3
-pop_size = 100
-offspring_size = 1
-bound_rastrigin = 5.12
-bound = 5 # Typical bound for Rosenbrock function
+# 現在の時刻を取得
+current_time = datetime.now()
+name = f'{current_time}_{pop_size}'
+
+
 
 # 初期集団の生成
 def init_population(pop_size, dim, bound):
@@ -166,99 +169,16 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
-    return [objective_function(individual,dim) for individual in population]
+    return [objective_function(individual, dim) for individual in population]
 
-# ルーレット選択
-def roulette_wheel_selection(population, fitness):
-    current_best_fitness_index = np.argmin(fitness)
-    return population[current_best_fitness_index]
-    # max_val = sum(fitness)
-    # pick = random.uniform(0, max_val)
-    # current = 0
-    # for i, f in enumerate(fitness):
-    #     current += f
-    #     if current > pick:
-    #         return population[i]
-    # return population[-1]
-
-# UNDX交叉操作
-def undx_crossover(parent1, parent2, parent3, dim):
-    alpha = 0.5 #親の情報をどれだけ持ってくるか
-    beta = 0.35 #乱数をどれだけ受け入れるか
-    g = 0.5 * (parent1 + parent2)
-    d = parent2 - parent1
-    norm_d = np.linalg.norm(d)
-    if norm_d == 0:#parent2とparent1が等しいとき
-        return parent1, parent2
-    d = d / norm_d#どれだけ解に近いか。
-    
-    rand = np.random.normal(0, 1, dim)
-    
-
-    child1 = g + alpha * (parent3 - g) + beta * np.dot(rand, d) * d #乱数
-    child2 = g + alpha * (g - parent3) + beta * np.dot(rand, d) * d
-    for i in range(3,10):
-        child1[i] = rand[i]
-        child2[i] = rand[i]
-    
-    return child1, child2
-
-# 変異操作
-def mutate(individual, bound, mutation_rate=0.01):
-    for i in range(len(individual)):
-        if random.random() < mutation_rate:
-            individual[i] = random.uniform(-bound, bound)
-    return individual
-
-# メインの遺伝的アルゴリズム
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
     population = init_population(pop_size, dim, bound)
-    print(population)
-    #population=population[0]
-    best_individual = None
-    best_fitness = float('inf')
-    fitness_history = []
-    best_fitness_history = []
-    avg_fitness_history = []    
+    # for generation in range(max_gen):
+    fitness = evaluate_population(population)
+    
+    return population, fitness
 
-            
-    for generation in range(max_gen):
-        
-                
-        fitness = evaluate_population(population)
-        print(fitness)
-        current_best_fitness = min(fitness)
-        avg_fitness = np.mean(fitness)
-        best_fitness_history.append(current_best_fitness)
-        avg_fitness_history.append(avg_fitness)
-        if generation % 100 == 0:
-            avg_fitness = np.mean(fitness)
-            print(f"Generation {generation}: Best Fitness = {best_fitness}, Average Fitness = {avg_fitness}")
 
-        fitness_history.append(np.mean(fitness))
-
-        new_population = []
-        while len(new_population) < offspring_size:
-            parent1 = roulette_wheel_selection(population, fitness)
-            parent2 = roulette_wheel_selection(population, fitness)
-            parent3 = roulette_wheel_selection(population, fitness)
-            child1, child2 = undx_crossover(parent1, parent2, parent3, dim)
-            new_population.append(mutate(child1, bound))
-            if len(new_population) < offspring_size:
-                new_population.append(mutate(child2, bound))
-
-        population = population + new_population
-        population = sorted(population, key=lambda x: objective_function(x,dim))[:pop_size]
-
-        current_best_fitness = min(fitness)
-        if current_best_fitness < best_fitness:
-            best_fitness = current_best_fitness
-            best_individual = population[fitness.index(current_best_fitness)]
-            print('chage')
-        # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
-        #     break
-
-    return population,fitness
 
 # 実行
 
@@ -326,19 +246,26 @@ Here we outline the studied function by plotting the surface representing the fu
 
 ########### Initialization of the problem, construction of the training and validation points
 
-ndim = 6
-ndoe = 20  # int(10*ndim)
+ndim = dim
+ndoe = pop_size  # int(10*ndim)
 
+
+# population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
+
+# xt = [arr.tolist() for arr in population]
+# # Compute the outputs
+# yt = [arr.tolist() for arr in fitness]
+# with open(file_path, "a") as file:
+#         file.write(f"{xt},{yt}\n")
+# xt =  [[xt[i], xt[i + 1]] for i in range(0, len(xt), 2)]
+# yt = [[yt[i], yt[i + 1]] for i in range(0, len(yt), 2)]
 
 population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
 
-xt = [arr.tolist() for arr in population]
-# Compute the outputs
-yt = [arr.tolist() for arr in fitness]
-with open(file_path, "a") as file:
-        file.write(f"{xt},{yt}\n")
-xt =  [[xt[i], xt[i + 1]] for i in range(0, len(xt), 2)]
-yt = [[yt[i], yt[i + 1]] for i in range(0, len(yt), 2)]
+
+
+xt = np.array(population, dtype=np.float32)    
+yt = np.array(fitness, dtype=np.float32)
 # Construction of the validation points
 ntest = 200  # 500
 
