@@ -153,7 +153,7 @@ def objective_function(x,dim):
 # パラメータの設定
 dim = 10
 max_gen = 100
-pop_size = 50
+pop_size = 20
 offspring_size = 300
 bound = 5
 from datetime import datetime
@@ -268,7 +268,7 @@ population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, 
 
 xt = np.array(population, dtype=np.double)    
 yt = np.array(fitness, dtype=np.double)
-yt=yt.reshape(50,1)
+yt=yt.reshape(20,1)
 # Construction of the validation points
 ntest = 200  # 500
 
@@ -278,7 +278,7 @@ population_test, fitness_test = genetic_algorithm(dim, max_gen, pop_size, offspr
 
 xtest = np.array(population_test, dtype=np.double)    
 ytest = np.array(fitness_test, dtype=np.double)
-ytest=ytest.reshape(50,1)
+ytest=ytest.reshape(20,1)
 
 
 # xtest = [arr.tolist() for arr in population_test]
