@@ -63,7 +63,7 @@ import random
 import datetime
 
 # libraries for the files in google drive
-from pydrive.auth import GoogleAuth
+# from pydrive.auth import GoogleAuth
 # from google.colab import drive
 # from pydrive.drive import GoogleDrive
 # from google.colab import auth
@@ -513,13 +513,13 @@ for com in range(20):
             break
     # visualize_graph(G,color=best_label,i=0)
     for i in range(6): 
-        if best_label[i]== 0:
+        if gnn_labels[i]== 0:
             print(i)
             count_0[i] += 1
-        if best_label[i]== 1:
+        if gnn_labels[i]== 1:
             
             count_1[i] += 1
-        if best_label[i]== 2:
+        if gnn_labels[i]== 2:
             count_2[i] += 1
     print(epoch,gnn_labels,loss)
     print(best_label,best_epoch,best_auc,best_loss)
