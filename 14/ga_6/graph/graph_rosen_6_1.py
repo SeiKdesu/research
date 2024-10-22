@@ -545,7 +545,9 @@ plt.close()
 # ヒストグラムの作成
 # 要素のインデックス
 indices = np.arange(len(count_0))  # 0, 1, 2, ... の配列を作成
-
+file_path_count = os.path.join(dir_file,"count.txt")
+with open(file_path_count, "a") as file:
+    file.write(f"{count_0},{count_1},{count_2}\n")
 # 棒グラフの幅
 width = 0.25  
 

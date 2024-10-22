@@ -160,7 +160,7 @@ def objective_function(x,dim):
 
 # パラメータの設定
 dim = 6
-max_gen = 5
+max_gen = 10
 pop_size = 20
 offspring_size = 300
 bound = 5
