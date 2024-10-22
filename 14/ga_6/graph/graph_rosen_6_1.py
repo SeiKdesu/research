@@ -150,6 +150,9 @@ learn_rate = 0.0001
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
 epochs = 300
 n = 1000
+count_0 = 0
+count_1 = 0
+count_2 = 0
 
 """# Run GNN
 
@@ -211,7 +214,7 @@ tmp  = [item for sublist in tmp for item in sublist]
 params=[]
 for item in tmp:
     params.append(item)
-
+params = torch.tensor(params)
 edge_attr=params
 np.random.seed(1234)
 
@@ -245,9 +248,11 @@ for i in range(dim-1,-1,-1):
 # formatted_weight_data.insert(3, [ 0.70831308    , 1,1,1,1,1])
 # formatted_weight_data.insert(4, [ -3.63318154  , 1,1,1,1,1])
 # formatted_weight_data.insert(5, [-0.62985134, 1,1,1,1,1])
+to_match = np.array([1,1,1,1,1,1])
+formatted_weight_data = np.vstack([formatted_weight_data,to_match])
+
 
 num1 = get_yt()
-
 new_temp= np.array([num1[0][0],1,1,1,1,1])
 formatted_weight_data = np.vstack([formatted_weight_data,new_temp])
 # formatted_weight_data.append([num1[0], 1,1,1,1,1])#yの値
@@ -261,7 +266,7 @@ for i in range(3):
     y_tmp.append(0)
 for i in range(3):
     y_tmp.append(1)
-for i in range(21):
+for i in range(22):
     y_tmp.append(2)
 
 y = torch.tensor(y_tmp)
@@ -297,7 +302,7 @@ G=to_networkx(dataset, to_undirected=False)
 # visualize_graph(G,color=dataset.y,i=1)
 # transform = RemoveDuplicatedEdges()
 # data = transform(data)
-
+print(data)
 
 transform = RandomLinkSplit(
     num_val=0.05,
@@ -434,6 +439,7 @@ auc_values = []
 accuracy=[]
 best_label=[]
 best_loss= 100000000000000
+
 for epoch in range(1, epochs + 1):
     acc=0
     # 訓練データでのlossを取得
@@ -522,8 +528,16 @@ for epoch in range(1, epochs + 1):
         print(gnn_labels,epoch)
         break
 # visualize_graph(G,color=best_label,i=0)
+for i in range(6): 
+    if best_label[i]== 0:
+        count_0[i] += 1
+    if best_label[i]== 1:
+        count_1[i] += 1
+    if best_label[i]== 2:
+        count_2[i] += 1
 print(epoch,gnn_labels,loss)
 print(best_label,best_epoch,best_auc,best_loss)
+print(count_0,count_1,count_2)
 # 訓練終了後にlossとAUCをプロット
 plt.figure()
 
