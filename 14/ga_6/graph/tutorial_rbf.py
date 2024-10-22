@@ -116,7 +116,13 @@ from torchinfo import summary
 
 def Rosenbrock(x, n):
     value = 0
-    for i in range(n - 1):
+    for i in range(0,2):
+        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+    print('valueのshapeです',value)
+    return value
+def Rosenbrock1(x, n):
+    value = 0
+    for i in range(3,4):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
     print('valueのshapeです',value)
     return value
@@ -141,7 +147,9 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    return Rosenbrock(x,dim)
+    tmp1 = Rosenbrock(x,dim)
+    tmp2 = Rosenbrock1(x,dim)
+    return tmp1+tmp2
     # n_rosenbrock = 3
     # n_dixon=3
     # n_powell=4
@@ -151,7 +159,7 @@ def objective_function(x,dim):
     # return rosen_value + dixon_value+ powell_value
 
 # パラメータの設定
-dim = 10
+dim = 6
 max_gen = 100
 pop_size = 20
 offspring_size = 300
@@ -226,7 +234,8 @@ if not os.path.exists(name):
 # ファイルのパスを指定
     file_path = os.path.join(name, "population.txt")
 
-
+def make_file_path():
+    return file_path
 
 
 """## Rosenbrock Function  in dimension N
@@ -307,16 +316,26 @@ Here we implement the RBF model.
 """
 print('これがyr',yt)
 
+def get_xt():
+    return xt[0]
+
+def xt_all():
+    return xt
+def get_yt():
+    return yt
+tmp = yt[0]
+print('ここは',tmp[0])
 if compiled_available:
     ########### The RBF model
 
     t = RBF(print_prediction=False, poly_degree=0)
     print(xt.shape,yt.shape)
     t.set_training_values(xt, yt)
-
+    print(xt[0,0])
     t.train()
     with open(file_path, "a") as file:
-        file.write(f"{xt},{yt},{t.sol},{t.mtx}\n")
+        file.write(f"{xt}\n")
+
     # Prediction of the validation points
     y = t.predict_values(xtest)
     print("RBF,  err: " + str(compute_rms_error(t, xtest, ytest)))
