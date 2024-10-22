@@ -19,7 +19,7 @@ from datetime import datetime
 # 現在の時刻を取得
 current_time = datetime.now()
 name = f'{current_time}_Spectural'
-def visualize_graph(G, color,i):
+def visualize_graph(G, color,i,file_dir_name):
     plt.figure(figsize=(3, 3))
     plt.xticks([])
     plt.yticks([])
@@ -28,7 +28,7 @@ def visualize_graph(G, color,i):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1], [2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31], [32]]
+    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
@@ -50,9 +50,9 @@ def visualize_graph(G, color,i):
 
     # 画像を保存
     if(i==1):
-        plt.savefig(f'acc_loss/{name}_rosencrok_teacher_.png')  # 保存
+        plt.savefig(f'{file_dir_name}/teacher_.png')  # 保存
 
-    plt.savefig(f'acc_loss/{name}_rosencrok_predict_.png')  # 保存
+    plt.savefig(f'{file_dir_name}/predict_.png')  # 保存
 
 
 import os
@@ -100,7 +100,7 @@ from torch_geometric.nn import GCNConv, SAGEConv, GAE, GINConv, GATConv
 from torch_geometric.utils import train_test_split_edges, to_networkx, from_networkx, to_dense_adj
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
-from tutorial_rbf import *
+
 
 
 
@@ -150,211 +150,11 @@ learn_rate = 0.0001
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
 epochs = 300
 n = 1000
-count_0 = 0
-count_1 = 0
-count_2 = 0
-
-"""# Run GNN
-
-## InMemory Dataset
-
-Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
-"""
-
-src=[]
-dst=[]
-for j in range(6):
-    for i in range(21):
-        src.append(j)
-
-for i in range(6,27):
-    src.append(i)
-
-for j in range(6):
-    for i in range(6,27):
-        dst.append(i)
-for i in range(21):
-    dst.append(27)
-
-# src=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-# dst=[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32,32]
-edge_index=torch.tensor([src,dst],dtype=torch.long)
+count_0 = [0]*6
+count_1 = [0]*6
+count_2 = [0]*6
 
 
-# input_file_path = 'data.txt'
-
-
-# # 入力ファイルを読み込み、カンマ区切りに変換
-# with open(input_file_path, 'r') as infile:
-#     # 各行を取り込み、空白をカンマで区切る
-#     lines = infile.readlines()
-#     output_numbers = []
-    
-#     for line in lines:
-#         # 行の前後の空白を取り除き、空白を使って数値に変換
-#         numbers = [float(num) for num in line.strip().split()]
-#         output_numbers.extend(numbers) 
-# tmp=output_numbers
-tmp =[]
-length_matrix = matrix()
-one = length_matrix[0]
-
-
-for i in range(dim):
-    tmp.append(one)
-    
-weight1 = weight()
-weight1=weight1.squeeze(1)
-weight1 = weight1.tolist()
-
-tmp.append(weight1)
-
-
-tmp  = [item for sublist in tmp for item in sublist]
-params=[]
-for item in tmp:
-    params.append(item)
-params = torch.tensor(params)
-edge_attr=params
-np.random.seed(1234)
-
-
-
-# ファイル名を指定
-file_name = make_file_path()
-
-# ファイルを読み込み、行ごとにデータを処理
-with open(file_name, 'r') as file:
-    lines = file.readlines()
-
-# 読み込んだデータをリスト形式に変換
-num = get_xt()
-num.reshape(6)
-formatted_weight_data = []
-formatted_weight_data = xt_all()
-# for line in lines:
-#     # 改行を削除し、スペース区切りで数値を分割
-#     values = line.strip().split()
-#     # 各数値をfloat型に変換し、リストに格納
-#     formatted_weight_data.append([float(values[i]) for i in range(6)])
-for i in range(dim-1,-1,-1):
-    new_array = np.array([num[i],1,1,1,1,1])
-    formatted_weight_data = np.vstack([new_array,formatted_weight_data])
-
-
-    # formatted_weight_data.insert(i, [num[i] , 1,1,1,1,1])
-# formatted_weight_data.insert(1, [-2.20  , 1,1,1,1,1])
-# formatted_weight_data.insert(2, [0.21596364  , 1,1,1,1,1])
-# formatted_weight_data.insert(3, [ 0.70831308    , 1,1,1,1,1])
-# formatted_weight_data.insert(4, [ -3.63318154  , 1,1,1,1,1])
-# formatted_weight_data.insert(5, [-0.62985134, 1,1,1,1,1])
-to_match = np.array([1,1,1,1,1,1])
-formatted_weight_data = np.vstack([formatted_weight_data,to_match])
-
-
-num1 = get_yt()
-new_temp= np.array([num1[0][0],1,1,1,1,1])
-formatted_weight_data = np.vstack([formatted_weight_data,new_temp])
-# formatted_weight_data.append([num1[0], 1,1,1,1,1])#yの値
-x=formatted_weight_data
-
-#x=np.zeros_like(a)
-x=torch.tensor(x,dtype=torch.float)
-#x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
-y_tmp=[]
-for i in range(3):
-    y_tmp.append(0)
-for i in range(3):
-    y_tmp.append(1)
-for i in range(22):
-    y_tmp.append(2)
-
-y = torch.tensor(y_tmp)
-
-
-
-
-
-
-
-
-
-"""## Graph AutoEncoder GAE
-
-Graph AutoEncoders GAE &  
-Variational Graph Autoencoders VGAE    
-
-[Tutorial 6 paper](https://arxiv.org/pdf/1611.07308.png)  
-[Tutorial 6 code](https://github.com/rusty1s/pytorch_geometric/blob/master/examples/autoencoder.py)
-
-### Load the data
-"""
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
-Data.train_mask=np.array([1 for i in range(len(y))])
-
-
-
-data = dataset
-G=to_networkx(dataset, to_undirected=False)
-# visualize_graph(G,color=dataset.y,i=1)
-# transform = RemoveDuplicatedEdges()
-# data = transform(data)
-print(data)
-
-transform = RandomLinkSplit(
-    num_val=0.05,
-    num_test=0.15,
-    is_undirected=False,
-    split_labels=True,
-    add_negative_train_samples=True)
-
-train_data, val_data, test_data = transform(data)
-
-# Display Graphs
-print(f'Number of graphs: {len(dataset)}')
-print('dataset',dataset) ## dataset is vector with size 1 because we have one graph
-
-print(f'Number of features: {dataset.num_features}')
-print('------------')
-
-# Print information for initialization
-print('data', data)
-print('train data',train_data)
-print('valid data', val_data)
-print('test data', test_data)
-print('------------')
-
-print(data.is_directed())
-
-"""## Build Graph for Visualization
-
-### Visualize Entire Data
-"""
-
-
-G = to_networkx(data)
-G = G.to_directed()
-
-X = data.x[:,[0,1]].cpu().detach().numpy()
-pos = dict(zip(range(X[:, 0].size), X))
-
-
-# Draw the Graph
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.scatter(X[:,0], X[:,1], s=20, color='grey')
-nx.draw_networkx_nodes(G, pos, node_color='black', node_size=20, ax=ax)
-nx.draw_networkx_edges(G, pos, edge_color='grey', ax=ax)
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-plt.savefig(f'{folder_path}{run_id}_{version}-initial-graph', format='eps', dpi=300)
-
-
-"""### Define the Encoder
-Change the Encoder based on the type testing against
-"""
 
 class GCNEncoder(torch.nn.Module):
     def __init__(self, in_channels, hidden_size, out_channels):
@@ -389,24 +189,7 @@ class GCNEncoder(torch.nn.Module):
       x = self.conv4(x, edge_index).relu()
       x = self.conv5(x,edge_index)
       return x
-
-"""### Define the Autoencoder
-
-
-"""
-
-# Initialize the Model
-model = GAE(GCNEncoder(in_channels, hidden_channels, out_channels))
-
-model = model.to(device)
-train_data = train_data.to(device)
-test_data = test_data.to(device)
-data_ = data.to(device)
-
-# Inizialize the Optimizer
-optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
-print(model)
-
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(dt):
     model.train()
     optimizer.zero_grad()
@@ -423,134 +206,351 @@ def test(dt):
       z = model.encode(dt.x, dt.pos_edge_label_index)
   
     return model.test(z, dt.pos_edge_label_index, dt.neg_edge_label_index)
+"""# Run GNN
 
-auc_values=[]
-ap_values =[]
+## InMemory Dataset
 
-best_auc = 0.0  # Track the best AUC value
-consecutive_epochs = 0  # Track the number of consecutive epochs with AUC not increasing
-best_ap = 0.0
+Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
+"""
+for com in range(20):
+    from tutorial_rbf import *
+    src=[]
+    dst=[]
+    for j in range(6):
+        for i in range(21):
+            src.append(j)
 
-import matplotlib.pyplot as plt
+    for i in range(6,27):
+        src.append(i)
 
-# 各エポックのlossとAUCの値を保存するリスト
-loss_values = []
-auc_values = []
-accuracy=[]
-best_label=[]
-best_loss= 100000000000000
+    for j in range(6):
+        for i in range(6,27):
+            dst.append(i)
+    for i in range(21):
+        dst.append(27)
+    edge_index=torch.tensor([src,dst],dtype=torch.long)
 
-for epoch in range(1, epochs + 1):
-    acc=0
-    # 訓練データでのlossを取得
-    loss = train(train_data)
-  
-    loss_values.append(loss)
 
-    # テストデータでのAUCとAPを取得
-    auc, ap = test(test_data)
-    auc_values.append(auc)
-    ap_values.append(ap)
+###############################################################################
+    tmp =[]
+    length_matrix = matrix()
+    one = length_matrix[0]
 
-    # 各エポックの結果を表示
-    # print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
 
-    # 100エポックごとに表示
-    # if (epoch % 100 == 0):
-    print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
-    model.eval()
-    with torch.no_grad():
-        z = model.encode(data_.x, data_.edge_index)
-    z = z.cpu().detach().numpy()
+    for i in range(dim):
+        tmp.append(one)
+        
+    weight1 = weight()
+    weight1=weight1.squeeze(1)
+    weight1 = weight1.tolist()
+
+    tmp.append(weight1)
+
+
+    tmp  = [item for sublist in tmp for item in sublist]
+    params=[]
+    for item in tmp:
+        params.append(item)
+    params = torch.tensor(params)
+    edge_attr=params
+    np.random.seed(1234)
+
+#########################################################################
+
+    # ファイル名を指定
+    file_name = make_file_path()
+
+    # ファイルを読み込み、行ごとにデータを処理
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+
+    # 読み込んだデータをリスト形式に変換
+    num = get_xt()
+    num=num[com]
+    num.reshape(6)
+    formatted_weight_data = []
+    formatted_weight_data = xt_all()
+    # for line in lines:
+    #     # 改行を削除し、スペース区切りで数値を分割
+    #     values = line.strip().split()
+    #     # 各数値をfloat型に変換し、リストに格納
+    #     formatted_weight_data.append([float(values[i]) for i in range(6)])
+    for i in range(dim-1,-1,-1):
+        new_array = np.array([num[i],1,1,1,1,1])
+        formatted_weight_data = np.vstack([new_array,formatted_weight_data])
+
+
+        # formatted_weight_data.insert(i, [num[i] , 1,1,1,1,1])
+    # formatted_weight_data.insert(1, [-2.20  , 1,1,1,1,1])
+    # formatted_weight_data.insert(2, [0.21596364  , 1,1,1,1,1])
+    # formatted_weight_data.insert(3, [ 0.70831308    , 1,1,1,1,1])
+    # formatted_weight_data.insert(4, [ -3.63318154  , 1,1,1,1,1])
+    # formatted_weight_data.insert(5, [-0.62985134, 1,1,1,1,1])
+    to_match = np.array([1,1,1,1,1,1])
+    formatted_weight_data = np.vstack([formatted_weight_data,to_match])
+
+
+    num1 = get_yt()
+    new_temp= np.array([num1[com][0],1,1,1,1,1])
+    formatted_weight_data = np.vstack([formatted_weight_data,new_temp])
+    # formatted_weight_data.append([num1[0], 1,1,1,1,1])#yの値
+    x=formatted_weight_data
+
+    #x=np.zeros_like(a)
+    x=torch.tensor(x,dtype=torch.float)
+    #x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
+    y_tmp=[]
+    for i in range(3):
+        y_tmp.append(0)
+    for i in range(3):
+        y_tmp.append(1)
+    for i in range(22):
+        y_tmp.append(2)
+
+    y = torch.tensor(y_tmp)
+
+
+    """## Graph AutoEncoder GAE
+
+    Graph AutoEncoders GAE &  
+    Variational Graph Autoencoders VGAE    
+
+    [Tutorial 6 paper](https://arxiv.org/pdf/1611.07308.png)  
+    [Tutorial 6 code](https://github.com/rusty1s/pytorch_geometric/blob/master/examples/autoencoder.py)
+
+    ### Load the data
+    """
+
+
+
+    dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
+    Data.train_mask=np.array([1 for i in range(len(y))])
+
+
+
+    data = dataset
+    G=to_networkx(dataset, to_undirected=False)
+    dir_file = dirs()
+    visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
+    # transform = RemoveDuplicatedEdges()
+    # data = transform(data)
+    print(data)
+
+    transform = RandomLinkSplit(
+        num_val=0.05,
+        num_test=0.15,
+        is_undirected=False,
+        split_labels=True,
+        add_negative_train_samples=True)
+
+    train_data, val_data, test_data = transform(data)
+
+    # Display Graphs
+    print(f'Number of graphs: {len(dataset)}')
+    print('dataset',dataset) ## dataset is vector with size 1 because we have one graph
+
+    print(f'Number of features: {dataset.num_features}')
+    print('------------')
+
+    # Print information for initialization
+    print('data', data)
+    print('train data',train_data)
+    print('valid data', val_data)
+    print('test data', test_data)
+    print('------------')
+
+    print(data.is_directed())
+
+    """## Build Graph for Visualization
+
+    ### Visualize Entire Data
+    """
+
+
+    G = to_networkx(data)
+    G = G.to_directed()
+
+    X = data.x[:,[0,1]].cpu().detach().numpy()
+    pos = dict(zip(range(X[:, 0].size), X))
+
+
+    # Draw the Graph
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.scatter(X[:,0], X[:,1], s=20, color='grey')
+    nx.draw_networkx_nodes(G, pos, node_color='black', node_size=20, ax=ax)
+    nx.draw_networkx_edges(G, pos, edge_color='grey', ax=ax)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    plt.savefig(f'{folder_path}{run_id}_{version}-initial-graph', format='eps', dpi=300)
+
+
+    """### Define the Encoder
+    Change the Encoder based on the type testing against
+    """
+
+    """### Define the Autoencoder
+
+
+    """
+
+    # Initialize the Model
+    model = GAE(GCNEncoder(in_channels, hidden_channels, out_channels))
+
+    model = model.to(device)
+    train_data = train_data.to(device)
+    test_data = test_data.to(device)
+    data_ = data.to(device)
+
+    # Inizialize the Optimizer
+    optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
+    print(model)
+
+
+
+    auc_values=[]
+    ap_values =[]
+
+    best_auc = 0.0  # Track the best AUC value
+    consecutive_epochs = 0  # Track the number of consecutive epochs with AUC not increasing
+    best_ap = 0.0
+
+    import matplotlib.pyplot as plt
+
+    # 各エポックのlossとAUCの値を保存するリスト
+    loss_values = []
+    auc_values = []
+    accuracy=[]
+    best_label=[]
+    best_loss= 100000000000000
+
+    for epoch in range(1, epochs + 1):
+        acc=0
+        # 訓練データでのlossを取得
+        loss = train(train_data)
     
+        loss_values.append(loss)
 
-    
-    # gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
-    # gnn_labels = gnn_kmeans.labels_
+        # テストデータでのAUCとAPを取得
+        auc, ap = test(test_data)
+        auc_values.append(auc)
+        ap_values.append(ap)
 
-    # from sklearn import cluster
-    # # SVMの分類器を訓練
-    # spkm = cluster.SpectralClustering(n_clusters=num_clusters,affinity="rbf",assign_labels='discretize')
-    # res_spkm = spkm.fit(z)
-    # gnn_labels = res_spkm.labels_
+        # 各エポックの結果を表示
+        # print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
 
-    # from sklearn.cluster import AffinityPropagation
-    # # SVMの分類器を訓練
-    # spkm = AffinityPropagation()
-    # res_spkm = spkm.fit(z)
-    # gnn_labels = res_spkm.labels_
+        # 100エポックごとに表示
+        # if (epoch % 100 == 0):
+        print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+        model.eval()
+        with torch.no_grad():
+            z = model.encode(data_.x, data_.edge_index)
+        z = z.cpu().detach().numpy()
+        
 
-    from sklearn import cluster
-    # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters,metric='manhattan', linkage='complete')
-    res_spkm = spkm.fit(z)
-    gnn_labels = res_spkm.labels_
+        
+        # gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
+        # gnn_labels = gnn_kmeans.labels_
 
-    # from sklearn import cluster
-    # # SVMの分類器を訓練
-    # spkm = cluster.DBSCAN()
-    # res_spkm = spkm.fit(z)
-    # gnn_labels = res_spkm.labels_
+        # from sklearn import cluster
+        # # SVMの分類器を訓練
+        # spkm = cluster.SpectralClustering(n_clusters=num_clusters,affinity="rbf",assign_labels='discretize')
+        # res_spkm = spkm.fit(z)
+        # gnn_labels = res_spkm.labels_
 
-    if best_loss > loss:
-        best_loss = loss
-        best_label=gnn_labels
-        best_epoch=epoch
-    count=0
-    for i in range(6): 
-        if gnn_labels[i]==dataset.y[i]:
-            count += 1
-    acc=count/6
-    
-    accuracy.append(count/6)
-    # print(count/2)
-    print(gnn_labels)
-    if acc > 0.5:
-        print('acc 90%',gnn_labels,epoch,acc)
-        # break
-    # Early stoppingの条件確認
-    if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
-        if (auc >= 0.8):
-            best_auc = auc
-            consecutive_epochs = 0
-        if (ap >= 0.5):
-            best_ap = ap
-            consecutive_epochs = 0
-        if (ap >= 0.5) and (auc >= 0.8):
-            print("AUC and AP Over GOOD value")
+        # from sklearn.cluster import AffinityPropagation
+        # # SVMの分類器を訓練
+        # spkm = AffinityPropagation()
+        # res_spkm = spkm.fit(z)
+        # gnn_labels = res_spkm.labels_
+
+        from sklearn import cluster
+        # SVMの分類器を訓練
+        spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters,metric='manhattan', linkage='complete')
+        res_spkm = spkm.fit(z)
+        gnn_labels = res_spkm.labels_
+
+        # from sklearn import cluster
+        # # SVMの分類器を訓練
+        # spkm = cluster.DBSCAN()
+        # res_spkm = spkm.fit(z)
+        # gnn_labels = res_spkm.labels_
+
+        if best_loss > loss:
+            best_loss = loss
+            best_label=gnn_labels
+            best_epoch=epoch
+        count=0
+        for i in range(6): 
+            if gnn_labels[i]==dataset.y[i]:
+                count += 1
+        acc=count/6
+        
+        accuracy.append(count/6)
+        # print(count/2)
+        print(gnn_labels)
+        if acc > 0.5:
+            print('acc 90%',gnn_labels,epoch,acc)
+            # break
+        # Early stoppingの条件確認
+        if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
+            if (auc >= 0.8):
+                best_auc = auc
+                consecutive_epochs = 0
+            if (ap >= 0.5):
+                best_ap = ap
+                consecutive_epochs = 0
+            if (ap >= 0.5) and (auc >= 0.8):
+                print("AUC and AP Over GOOD value")
+                print(gnn_labels,epoch)
+                break
+        else:
+            consecutive_epochs += 1
+
+        if (consecutive_epochs >= 10):
+            print('Early stopping: AUC and AP have not increased by more than 1% for 10 epochs.')
             print(gnn_labels,epoch)
             break
-    else:
-        consecutive_epochs += 1
-
-    if (consecutive_epochs >= 10):
-        print('Early stopping: AUC and AP have not increased by more than 1% for 10 epochs.')
-        print(gnn_labels,epoch)
-        break
-# visualize_graph(G,color=best_label,i=0)
-for i in range(6): 
-    if best_label[i]== 0:
-        count_0[i] += 1
-    if best_label[i]== 1:
-        count_1[i] += 1
-    if best_label[i]== 2:
-        count_2[i] += 1
-print(epoch,gnn_labels,loss)
-print(best_label,best_epoch,best_auc,best_loss)
-print(count_0,count_1,count_2)
-# 訓練終了後にlossとAUCをプロット
-plt.figure()
+    # visualize_graph(G,color=best_label,i=0)
+    for i in range(6): 
+        if best_label[i]== 0:
+            print(i)
+            count_0[i] += 1
+        if best_label[i]== 1:
+            
+            count_1[i] += 1
+        if best_label[i]== 2:
+            count_2[i] += 1
+    print(epoch,gnn_labels,loss)
+    print(best_label,best_epoch,best_auc,best_loss)
+    print(count_0,count_1,count_2)
+    visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
+    # 訓練終了後にlossとAUCをプロット
+    plt.figure()
 
 
 
 
-# Lossのプロット
-plt.subplot(2, 1, 1)
-plt.plot(range(1, len(loss_values) + 1), loss_values, label='loss')
-plt.xlabel('Epoch')
-plt.ylabel('LOss')
-plt.title('Loss per Epoch')
-plt.legend()
-plt.savefig(f'acc_loss/{name}_rbf_loss.png')  # 保存
-plt.close()
+    # Lossのプロット
+    plt.subplot(2, 1, 1)
+    plt.plot(range(1, len(loss_values) + 1), loss_values, label='loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('LOss')
+    plt.title('Loss per Epoch')
+    plt.legend()
+    plt.savefig(f'acc_loss/{name}_rbf_loss.png')  # 保存
+    plt.close()
 
+# ヒストグラムの作成
+plt.hist(count_0, bins=range(2, 15), alpha=0.5, label='Data 1', color='blue', edgecolor='black')
+plt.hist(count_1, bins=range(2, 15), alpha=0.5, label='Data 2', color='orange', edgecolor='black')
+plt.hist(count_2, bins=range(2, 15), alpha=0.5, label='Data 3', color='green', edgecolor='black')
+
+# グラフの設定
+plt.xlabel('Values')
+plt.ylabel('Frequency')
+plt.title('Histogram of Data')
+plt.xticks(range(2, 15))  # 横軸の目盛りを設定
+plt.legend(loc='upper right')  # 凡例の表示
+
+# グラフを表示
+plt.savefig(f'{dir_file}/hist.png')

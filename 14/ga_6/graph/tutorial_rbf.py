@@ -231,10 +231,12 @@ name = f'{current_time}'
 # 保存するディレクトリを作成
 if not os.path.exists(name):
     os.makedirs(name)
+def dirs():
+    return name
 # ファイルのパスを指定
-    file_path = os.path.join(name, "population.txt")
-    file_path2 = os.path.join(name,"weight.txt")
-    file_path3 = os.path.join(name,"matrix.txt")
+file_path = os.path.join(name, "population.txt")
+file_path2 = os.path.join(name,"weight.txt")
+file_path3 = os.path.join(name,"matrix.txt")
 
 def make_file_path():
     return file_path
@@ -319,7 +321,7 @@ Here we implement the RBF model.
 print('これがyr',yt)
 
 def get_xt():
-    return xt[0]
+    return xt
 
 def xt_all():
     return xt
