@@ -160,7 +160,7 @@ def objective_function(x,dim):
 
 # パラメータの設定
 dim = 6
-max_gen = 100
+max_gen = 5
 pop_size = 20
 offspring_size = 300
 bound = 5
@@ -183,9 +183,9 @@ def evaluate_population(population):
 
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
     population = init_population(pop_size, dim, bound)
-    # for generation in range(max_gen):
-    fitness = evaluate_population(population)
-    
+    for generation in range(max_gen):
+        fitness = evaluate_population(population)
+        print(generation,population,fitness)
     return population, fitness
 
 
