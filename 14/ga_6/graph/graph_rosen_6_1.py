@@ -212,8 +212,9 @@ def test(dt):
 
 Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
 """
+from tutorial_rbf import *
 for com in range(20):
-    from tutorial_rbf import *
+    
     src=[]
     dst=[]
     for j in range(6):
@@ -540,17 +541,27 @@ for com in range(20):
     plt.savefig(f'acc_loss/{name}_rbf_loss.png')  # 保存
     plt.close()
 
+plt.close()
 # ヒストグラムの作成
-plt.hist(count_0, bins=range(2, 15), alpha=0.5, label='Data 1', color='blue', edgecolor='black')
-plt.hist(count_1, bins=range(2, 15), alpha=0.5, label='Data 2', color='orange', edgecolor='black')
-plt.hist(count_2, bins=range(2, 15), alpha=0.5, label='Data 3', color='green', edgecolor='black')
+# 要素のインデックス
+indices = np.arange(len(count_0))  # 0, 1, 2, ... の配列を作成
+
+# 棒グラフの幅
+width = 0.25  
+
+# 棒グラフの作成
+plt.bar(indices, count_0, width, label='Data 1', color='blue')
+plt.bar(indices + width, count_1, width, label='Data 2', color='orange')
+plt.bar(indices + 2 * width, count_2, width, label='Data 3', color='green')
 
 # グラフの設定
-plt.xlabel('Values')
-plt.ylabel('Frequency')
-plt.title('Histogram of Data')
-plt.xticks(range(2, 15))  # 横軸の目盛りを設定
-plt.legend(loc='upper right')  # 凡例の表示
+plt.xlabel('Index')
+plt.ylabel('Values')
+plt.title('Comparison of Data')
+plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
+#plt.legend(loc='upper right')  # 凡例の表示
 
+# グラフを表示
+plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
