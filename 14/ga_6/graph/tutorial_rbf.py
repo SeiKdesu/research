@@ -233,6 +233,8 @@ if not os.path.exists(name):
     os.makedirs(name)
 # ファイルのパスを指定
     file_path = os.path.join(name, "population.txt")
+    file_path2 = os.path.join(name,"weight.txt")
+    file_path3 = os.path.join(name,"matrix.txt")
 
 def make_file_path():
     return file_path
@@ -325,30 +327,39 @@ def get_yt():
     return yt
 tmp = yt[0]
 print('ここは',tmp[0])
-if compiled_available:
-    ########### The RBF model
 
-    t = RBF(print_prediction=False, poly_degree=0)
-    print(xt.shape,yt.shape)
-    t.set_training_values(xt, yt)
-    print(xt[0,0])
-    t.train()
-    with open(file_path, "a") as file:
-        file.write(f"{xt}\n")
+########### The RBF model
 
-    # Prediction of the validation points
-    y = t.predict_values(xtest)
-    print("RBF,  err: " + str(compute_rms_error(t, xtest, ytest)))
-    # Plot prediction/true values
-    if plot_status:
-        fig = plt.figure()
-        plt.plot(ytest, ytest, "-", label="$y_{true}$")
-        plt.plot(ytest, y, "r.", label=r"$\hat{y}$")
+t = RBF(print_prediction=False, poly_degree=0)
+print(xt.shape,yt.shape)
+t.set_training_values(xt, yt)
+print(xt[0,0])
+t.train()
+with open(file_path, "a") as file:
+    file.write(f"{xt}\n")
+with open(file_path2, "a") as file:
+    file.write(f"{t.sol}\n")
+with open(file_path3, "a") as file:
+    file.write(f"{t.mtx}\n")
+def matrix():
+    return t.mtx.tolist()
+def weight():
 
-        plt.xlabel("$y_{true}$")
-        plt.ylabel(r"$\hat{y}$")
+    return t.sol
 
-        plt.legend(loc="upper left")
-        plt.title("RBF model: validation of the prediction model")
-        plt.savefig('RBF model: validation of the prediction model.png')
+# Prediction of the validation points
+y = t.predict_values(xtest)
+print("RBF,  err: " + str(compute_rms_error(t, xtest, ytest)))
+# Plot prediction/true values
+if plot_status:
+    fig = plt.figure()
+    plt.plot(ytest, ytest, "-", label="$y_{true}$")
+    plt.plot(ytest, y, "r.", label=r"$\hat{y}$")
+
+    plt.xlabel("$y_{true}$")
+    plt.ylabel(r"$\hat{y}$")
+
+    plt.legend(loc="upper left")
+    plt.title("RBF model: validation of the prediction model")
+    plt.savefig('RBF model: validation of the prediction model.png')
 
