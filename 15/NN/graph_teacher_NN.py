@@ -425,16 +425,16 @@ for epoch in range(1, epochs + 1):
         best_label=gnn_labels
         best_epoch=epoch
     count=0
-    for i in range(6): 
+    for i in range(30): 
         if gnn_labels[i]==dataset.y[i]:
             count += 1
-    acc=count/6
+    acc=count/30
     
-    accuracy.append(count/6)
+    accuracy.append(count/30)
     # print(count/2)
-    print(gnn_labels)
+    # print(gnn_labels)
     if acc > 0.5:
-        print('acc 90%',gnn_labels,epoch,acc)
+        print('acc 50%',gnn_labels,epoch,acc)
         # break
     # Early stoppingの条件確認
     if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
