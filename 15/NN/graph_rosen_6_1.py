@@ -1,15 +1,3 @@
-import os 
-import numpy as np
-import torch 
-from torch_geometric.data import Data
-
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
-import networkx as nx
-from torch_geometric.utils import to_networkx
-from rosenbrock_nn import weight
-from torch import optim
-
 # -*- coding: utf-8 -*-
 """GAT_Simplified_Graham,_Jessica_GAE_Clustering_Phase_1_KMeans.ipynb
 
@@ -31,7 +19,7 @@ from datetime import datetime
 # 現在の時刻を取得
 current_time = datetime.now()
 name = f'{current_time}_Spectural'
-def visualize_graph(G, color,i):
+def visualize_graph(G, color,i,file_dir_name):
     plt.figure(figsize=(3, 3))
     plt.xticks([])
     plt.yticks([])
@@ -40,7 +28,7 @@ def visualize_graph(G, color,i):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1], [2, 3, 4, 5, 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31], [32]]
+    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
@@ -62,9 +50,9 @@ def visualize_graph(G, color,i):
 
     # 画像を保存
     if(i==1):
-        plt.savefig(f'acc_loss/{name}_rosencrok_teacher_.png')  # 保存
+        plt.savefig(f'{file_dir_name}/teacher_.png')  # 保存
 
-    plt.savefig(f'acc_loss/{name}_rosencrok_predict_.png')  # 保存
+    plt.savefig(f'{file_dir_name}/predict_.png')  # 保存
 
 
 import os
@@ -75,7 +63,7 @@ import random
 import datetime
 
 # libraries for the files in google drive
-from pydrive.auth import GoogleAuth
+# from pydrive.auth import GoogleAuth
 # from google.colab import drive
 # from pydrive.drive import GoogleDrive
 # from google.colab import auth
@@ -115,6 +103,7 @@ import torch.nn.functional as F
 
 
 
+
 """### Import the Dataset
 
 Process the Data Frame - Modified Code from - https://github.com/jegraham/csv_to_dataframe_to_graph/blob/master/.idea/csv_to_datadrame_conversion.py
@@ -136,7 +125,7 @@ os.makedirs(folder_path, exist_ok=True)
 
 
 # Define the Number of Clusters
-num_clusters = 4
+num_clusters = 3
 
 K = num_clusters
 clusters = []
@@ -147,7 +136,7 @@ clusters = []
 # max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
-in_channels = 1
+in_channels = 6
 hidden_channels = 20
 out_channels = 1
 
@@ -159,55 +148,48 @@ learn_rate = 0.0001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 500
+epochs = 300
 n = 1000
+count_0 = [0]*6
+count_1 = [0]*6
+count_2 = [0]*6
 
-"""# Run GNN
 
-## InMemory Dataset
-
-Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
-"""
-
-count_0 = [0]*30
-count_1 = [0]*30
-count_2= [0] *30
-count_3 = [0]*30
 
 class GCNEncoder(torch.nn.Module):
     def __init__(self, in_channels, hidden_size, out_channels):
-        super(GCNEncoder, self).__init__()
+      super(GCNEncoder, self).__init__()
 
-        # GCN
-        # self.conv1 = GCNConv(in_channels, hidden_size, cached=True) # cached only for transductive learning
-        # self.conv2 = GCNConv(hidden_size, out_channels, cached=True) # cached only for transductive learning
+      # GCN
+      # self.conv1 = GCNConv(in_channels, hidden_size, cached=True) # cached only for transductive learning
+      # self.conv2 = GCNConv(hidden_size, out_channels, cached=True) # cached only for transductive learning
 
-        # SAGE
-        # self.conv1 = SAGEConv(in_channels, hidden_channels, cached=True) # cached only for transductive learning
-        # self.conv2 = SAGEConv(hidden_channels, out_channels, cached=True) # cached only for transductive learning
+      # SAGE
+      # self.conv1 = SAGEConv(in_channels, hidden_channels, cached=True) # cached only for transductive learning
+      # self.conv2 = SAGEConv(hidden_channels, out_channels, cached=True) # cached only for transductive learning
 
-        # GAT
-        self.in_head = 8
-        self.out_head = 1
-        hidden_channels2 = 10
-        hidden_channels3=5
-        hidden_channels4 =3
-        self.conv1 = GATConv(in_channels, hidden_channels, heads=self.in_head, dropout=0.6)
-        self.conv2 = GATConv(hidden_channels*self.in_head,hidden_channels2)
-        self.conv3 = GATConv(hidden_channels2,hidden_channels3)
-        self.conv4 = GATConv(hidden_channels3,hidden_channels4)
-        self.conv5 = GATConv(hidden_channels4, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
+      # GAT
+      self.in_head = 8
+      self.out_head = 1
+      hidden_channels2 = 10
+      hidden_channels3=5
+      hidden_channels4 =3
+      self.conv1 = GATConv(in_channels, hidden_channels, heads=self.in_head, dropout=0.6)
+      self.conv2 = GATConv(hidden_channels*self.in_head,hidden_channels2)
+      self.conv3 = GATConv(hidden_channels2,hidden_channels3)
+      self.conv4 = GATConv(hidden_channels3,hidden_channels4)
+      self.conv5 = GATConv(hidden_channels4, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
 
 
     def forward(self, x, edge_index):
-        x = self.conv1(x, edge_index).relu()
-        x = F.dropout(x, p=0.6, training=self.training)
-        x = self.conv2(x,edge_index).relu()
-        x = self.conv3(x, edge_index).relu()
-        x = self.conv4(x, edge_index).relu()
-        x = self.conv5(x,edge_index)
-        return x
-
+      x = self.conv1(x, edge_index).relu()
+      x = F.dropout(x, p=0.6, training=self.training)
+      x = self.conv2(x,edge_index).relu()
+      x = self.conv3(x, edge_index).relu()
+      x = self.conv4(x, edge_index).relu()
+      x = self.conv5(x,edge_index)
+      return x
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(dt):
     model.train()
     optimizer.zero_grad()
@@ -221,11 +203,19 @@ def train(dt):
 def test(dt):
     model.eval()
     with torch.no_grad():
-        z = model.encode(dt.x, dt.pos_edge_label_index)
-
+      z = model.encode(dt.x, dt.pos_edge_label_index)
+  
     return model.test(z, dt.pos_edge_label_index, dt.neg_edge_label_index)
-for ko in range(30):
+"""# Run GNN
 
+## InMemory Dataset
+
+Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
+"""
+from tutorial_rbf import *
+from rosenbrock_nn import *
+for com in range(20):
+    
     weight_edge,row_indices,col_indices=weight()
     # エッジのインデックス（ノード間の接続）を定義
     #row_indices = torch.tensor([0, 0, 0, 0,0,1,1,1,1,1,1,1,2,3,4,4,4,4,5,5,6,6,7,7,8,8,8,8,8,8,8,9,9,9,9,9,9,9,10,10,10,11,11,11,12,12,13,13,13,14,14,14,15,15,15,16,16,16,16,16,16,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,23,28,28,28,28,28,28,28,28,29,29,29,29,29,29,30,30,30,30])
@@ -269,23 +259,31 @@ for ko in range(30):
     print(y)
 
 
-    # visualize_graph(G,color=dataset.y)
+    """## Graph AutoEncoder GAE
+
+    Graph AutoEncoders GAE &  
+    Variational Graph Autoencoders VGAE    
+
+    [Tutorial 6 paper](https://arxiv.org/pdf/1611.07308.png)  
+    [Tutorial 6 code](https://github.com/rusty1s/pytorch_geometric/blob/master/examples/autoencoder.py)
+
+    ### Load the data
+    """
 
 
-    print('==============================================================')
 
-    dataset=Data(x=x,edge_index=edge_index.t(),edge_attr=edge_attr,y=y,num_classes=4)
-    Data.train_mask=np.array([0 for i in range(30)])
+    dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
+    Data.train_mask=np.array([1 for i in range(len(y))])
 
 
 
     data = dataset
-    print(dataset)
-    G=to_networkx(dataset, to_undirected=True)
-    # visualize_graph(G,color=dataset.y,i=1)
+    G=to_networkx(dataset, to_undirected=False)
+    dir_file = dirs()
+    visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
     # transform = RemoveDuplicatedEdges()
     # data = transform(data)
-
+    print(data)
 
     transform = RandomLinkSplit(
         num_val=0.05,
@@ -310,7 +308,7 @@ for ko in range(30):
     print('test data', test_data)
     print('------------')
 
-    # print(data.is_directed())
+    print(data.is_directed())
 
     """## Build Graph for Visualization
 
@@ -321,32 +319,29 @@ for ko in range(30):
     G = to_networkx(data)
     G = G.to_directed()
 
-    X = data.x[:,[0]].cpu().detach().numpy()
+    X = data.x[:,[0,1]].cpu().detach().numpy()
     pos = dict(zip(range(X[:, 0].size), X))
 
 
     # Draw the Graph
-    # fig, ax = plt.subplots(figsize=(10, 10))
-    # ax.scatter(X[:,0], data.y,s=20, color='grey')
-    # nx.draw_networkx_nodes(G, pos, node_color='black', node_size=20, ax=ax)
-    # nx.draw_networkx_edges(G, pos, edge_color='grey', ax=ax)
-    # ax.set_xlabel('X')
-    # ax.set_ylabel('Y')
-    # plt.savefig(f'{folder_path}{run_id}_{version}-initial-graph', format='eps', dpi=300)
+    fig, ax = plt.subplots(figsize=(10, 10))
+    ax.scatter(X[:,0], X[:,1], s=20, color='grey')
+    nx.draw_networkx_nodes(G, pos, node_color='black', node_size=20, ax=ax)
+    nx.draw_networkx_edges(G, pos, edge_color='grey', ax=ax)
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    plt.savefig(f'{folder_path}{run_id}_{version}-initial-graph', format='eps', dpi=300)
 
 
     """### Define the Encoder
     Change the Encoder based on the type testing against
     """
 
-  
-
     """### Define the Autoencoder
 
 
     """
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # Initialize the Model
     model = GAE(GCNEncoder(in_channels, hidden_channels, out_channels))
 
@@ -358,6 +353,7 @@ for ko in range(30):
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
     print(model)
+
 
 
     auc_values=[]
@@ -375,6 +371,7 @@ for ko in range(30):
     accuracy=[]
     best_label=[]
     best_loss= 100000000000000
+
     for epoch in range(1, epochs + 1):
         acc=0
         # 訓練データでのlossを取得
@@ -432,16 +429,16 @@ for ko in range(30):
             best_label=gnn_labels
             best_epoch=epoch
         count=0
-        for i in range(30): 
+        for i in range(6): 
             if gnn_labels[i]==dataset.y[i]:
                 count += 1
-        acc=count/30
+        acc=count/6
         
-        accuracy.append(count/30)
+        accuracy.append(count/6)
         # print(count/2)
-        # print(gnn_labels)
+        print(gnn_labels)
         if acc > 0.5:
-            print('acc 50%',gnn_labels,epoch,acc)
+            print('acc 90%',gnn_labels,epoch,acc)
             # break
         # Early stoppingの条件確認
         if (auc >= (best_auc - 0.01 * best_auc)) and (ap >= (best_ap - 0.01 * best_ap)):
@@ -463,11 +460,7 @@ for ko in range(30):
             print(gnn_labels,epoch)
             break
     # visualize_graph(G,color=best_label,i=0)
-    print(epoch,gnn_labels,loss)
-    print(best_label,best_epoch,best_auc,best_loss)
-
-
-    for i in range(30): 
+    for i in range(6): 
         if gnn_labels[i]== 0:
             print(i)
             count_0[i] += 1
@@ -476,133 +469,49 @@ for ko in range(30):
             count_1[i] += 1
         if gnn_labels[i]== 2:
             count_2[i] += 1
-        if gnn_labels[i] == 3:
-            count_3[i] += 1
-
-print(count_0,count_1,count_2,count_3)
-# 訓練終了後にlossとAUCをプロット
-plt.figure()
-
-
+    print(epoch,gnn_labels,loss)
+    print(best_label,best_epoch,best_auc,best_loss)
+    print(count_0,count_1,count_2)
+    visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
+    # 訓練終了後にlossとAUCをプロット
+    plt.figure()
 
 
-# Lossのプロット
-plt.subplot(2, 1, 1)
-plt.plot(range(1, len(loss_values) + 1), loss_values, label='loss')
-plt.xlabel('Epoch')
-plt.ylabel('LOss')
-plt.title('Loss per Epoch')
-plt.legend()
-plt.savefig(f'acc_loss/{name}_rbf_loss.png')  # 保存
+
+
+    # Lossのプロット
+    plt.subplot(2, 1, 1)
+    plt.plot(range(1, len(loss_values) + 1), loss_values, label='loss')
+    plt.xlabel('Epoch')
+    plt.ylabel('LOss')
+    plt.title('Loss per Epoch')
+    plt.legend()
+    plt.savefig(f'acc_loss/{name}_rbf_loss.png')  # 保存
+    plt.close()
+
 plt.close()
+# ヒストグラムの作成
+# 要素のインデックス
+indices = np.arange(len(count_0))  # 0, 1, 2, ... の配列を作成
+file_path_count = os.path.join(dir_file,"count.txt")
+with open(file_path_count, "a") as file:
+    file.write(f"{count_0},{count_1},{count_2}\n")
+# 棒グラフの幅
+width = 0.25  
 
+# 棒グラフの作成
+plt.bar(indices, count_0, width, label='Data 1', color='blue')
+plt.bar(indices + width, count_1, width, label='Data 2', color='orange')
+plt.bar(indices + 2 * width, count_2, width, label='Data 3', color='green')
 
+# グラフの設定
+plt.xlabel('Index')
+plt.ylabel('Values')
+plt.title('Comparison of Data')
+plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
+#plt.legend(loc='upper right')  # 凡例の表示
 
-
-# from torch_geometric.nn.conv.gcn_conv import GCNConv
-
-# class Net(torch.nn.Module):
-#     def __init__(self):
-#         super(Net,self).__init__()
-#         hidden_size = 20
-       
-#         self.conv1=GCNConv(dataset.num_node_features,hidden_size)
-#         self.conv2=GCNConv(hidden_size,25)
-       
-#         self.conv3=GCNConv(25,20)
-#         self.conv4=GCNConv(20,10)
-
-#         self.linear=torch.nn.Linear(10,dataset.num_classes)
-
-#     def forward(self,data):
-#         x = data.x
-       
-#         edge_index = data.edge_index
-
-#         x = self.conv1(x,edge_index)
-#         x=F.relu(x)
-
-#         x=self.conv2(x,edge_index)
-#         x=F.relu(x)
-#         # x=self.conv7(x,edge_index)
-#         # x=F.relu(x)
-#         x=self.conv3(x,edge_index)
-#         x=F.relu(x)
-#         x=self.conv4(x,edge_index)
-#         x=F.relu(x)
-       
-        
-   
-#         x=self.linear(x)
-#         return x
-
-# # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# # model =Net()
-# # model.to(device)
-# # dataset.to(device)
-# # model.train()
-
-# model =Net()
-# model.to('cpu')
-# dataset.to('cpu')
-# model.train()
-# optimizer=torch.optim.Adam(model.parameters(),lr=0.003)
-# # scheduler = optim.lr_scheduler.CosineAnnealingLR(
-# #     optimizer,
-# #     T_max = 4000
-# # )
-# loss_func = torch.nn.CrossEntropyLoss()
-# losses=[]
-# acces=[]
-# for epoch in range(1500):
-#     optimizer.zero_grad()
-#     dataset.to('cpu')
-#     out = model(dataset)
-#     loss = loss_func(out,dataset.y)
-#     losses.append(loss)
-#     loss.backward()
-
-#     optimizer.step()
-
-    
-
-#     model.eval()
-
-#     _,pred = model(dataset).max(dim=1)
-#     # scheduler.step()
- 
-#     predict=pred.cpu()
-#     data_y=dataset.y.cpu()
-#     count=0
-#     for i in range(len(predict)): 
-#         if predict[i]==data_y[i]:
-#             count += 1
-#     acces.append(count/len(data_y))
-#     print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/len(data_y)))
-# print("結果：",predict)
-# print("真値：",data_y)
-# # visualize_graph(G,color=predict)
-# # リスト内の各テンソルをdetachしてnumpy配列に変換
-# losses_np = [loss.detach().numpy() for loss in losses]
-# # acces_np=   [acc.detach().numpy() for acc in acces]
-# import matplotlib.pyplot as plt
-# plt.figure(figsize=(10, 5))
-# plt.plot(losses_np, label='Training Loss')
-# plt.xlabel('Epoch')
-# plt.ylabel('Loss')
-
-# plt.title('Loss vs. Epoch')
-# plt.legend()
-# plt.grid(True)
-# plt.savefig('Graph Neural Network')
-# plt.close()
-# plt.figure(figsize=(10, 5))
-# plt.plot(acces, label='Accracy')
-# plt.xlabel('Epoch')
-# plt.ylabel('Accracy')
-# # plt.ylim(0,0.8)
-# plt.title('Accracy GNN')
-# plt.legend()
-# plt.grid(True)
-# plt.savefig('GNN_ACC')
-# plt.close()
+# グラフを表示
+plt.tight_layout()  # レイアウトの調整
+# グラフを表示
+plt.savefig(f'{dir_file}/hist.png')
