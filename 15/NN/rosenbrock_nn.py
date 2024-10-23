@@ -181,54 +181,54 @@ def convert_bool_to_int(bool_list):
     return train
 
 
-#枝刈りを行うコード
-def param_weights(t):
-    param_weight = []
-    key_list=[]
-    param_list=[]
+# #枝刈りを行うコード
+# def param_weights(t):
+#     param_weight = []
+#     key_list=[]
+#     param_list=[]
     
-    for key,param in model.state_dict().items():
-        key_list.append(key)
-        param_list.append(model.state_dict()[key].cpu().numpy())
-    j=0
-    print(key_list)
-    """
-    for i in range(len(key_list)):
-        for row in param_list[i]:
-            j += 1
-            for element in row:
-                param_weight.append(element)
-    param_weight = torch.tensor(param_weight)
-    print('更新前',param_weight)
+#     for key,param in model.state_dict().items():
+#         key_list.append(key)
+#         param_list.append(model.state_dict()[key].cpu().numpy())
+#     j=0
+#     print(key_list)
+#     """
+#     for i in range(len(key_list)):
+#         for row in param_list[i]:
+#             j += 1
+#             for element in row:
+#                 param_weight.append(element)
+#     param_weight = torch.tensor(param_weight)
+#     print('更新前',param_weight)
     
-    """
-    param_weight1=model.state_dict()['linear_relu_stack.0.weight']
-    train_mask=[]
-    train_mask=param_weight1 < torch.quantile(param_weight1,0.9-t*0.004)
-    train_mask = train_mask.to(torch.int64)
-    print(train_mask)
-    param_weight1 = train_mask * param_weight1
+#     """
+#     param_weight1=model.state_dict()['linear_relu_stack.0.weight']
+#     train_mask=[]
+#     train_mask=param_weight1 < torch.quantile(param_weight1,0.9-t*0.004)
+#     train_mask = train_mask.to(torch.int64)
+#     print(train_mask)
+#     param_weight1 = train_mask * param_weight1
     
-    param_weight2=model.state_dict()['linear_relu_stack.1.weight']
-    train_mask=[]
-    train_mask=param_weight2 < torch.quantile(param_weight2,0.9-t*0.004)
-    print(0.9-t*0.01)
-    train_mask = train_mask.to(torch.int64)
-    param_weight2 = train_mask * param_weight2
+#     param_weight2=model.state_dict()['linear_relu_stack.1.weight']
+#     train_mask=[]
+#     train_mask=param_weight2 < torch.quantile(param_weight2,0.9-t*0.004)
+#     print(0.9-t*0.01)
+#     train_mask = train_mask.to(torch.int64)
+#     param_weight2 = train_mask * param_weight2
 
 
-    param_weight3=model.state_dict()['linear_relu_stack.2.weight']
-    train_mask=[]
-    train_mask=param_weight3 < torch.quantile(param_weight3,0.9-t*0.004)
-    train_mask = train_mask.to(torch.int64)
-    param_weight3 = train_mask * param_weight3
+#     param_weight3=model.state_dict()['linear_relu_stack.2.weight']
+#     train_mask=[]
+#     train_mask=param_weight3 < torch.quantile(param_weight3,0.9-t*0.004)
+#     train_mask = train_mask.to(torch.int64)
+#     param_weight3 = train_mask * param_weight3
 
-    param_weight4=model.state_dict()['linear_relu_stack.3.weight']
-    train_mask=[]
-    train_mask=param_weight4 < torch.quantile(param_weight4,0.9-t*0.004)
-    train_mask = train_mask.to(torch.int64)
-    param_weight4 = train_mask * param_weight4
-    return param_weight1,param_weight2,param_weight3,param_weight4
+#     param_weight4=model.state_dict()['linear_relu_stack.3.weight']
+#     train_mask=[]
+#     train_mask=param_weight4 < torch.quantile(param_weight4,0.9-t*0.004)
+#     train_mask = train_mask.to(torch.int64)
+#     param_weight4 = train_mask * param_weight4
+#     return param_weight1,param_weight2,param_weight3,param_weight4
 
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
