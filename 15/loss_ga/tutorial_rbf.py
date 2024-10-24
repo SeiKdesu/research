@@ -118,13 +118,13 @@ def Rosenbrock(x, n):
     value = 0
     for i in range(0,2):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    print('valueのshapeです',value)
+
     return value
 def Rosenbrock1(x, n):
     value = 0
     for i in range(3,4):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    print('valueのshapeです',value)
+
     return value
 def dixon_price(x):
     n = len(x)
@@ -185,7 +185,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
     population = init_population(pop_size, dim, bound)
     for generation in range(max_gen):
         fitness = evaluate_population(population)
-        print(generation,population,fitness)
+        # print(generation,population,fitness)
     return population, fitness
 
 
@@ -287,6 +287,9 @@ ntest = 200  # 500
 
 population_test, fitness_test = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
 
+def QOL():
+    population_test, fitness_test = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
+    return population_test,fitness_test
 
 
 xtest = np.array(population_test, dtype=np.double)    
@@ -318,7 +321,7 @@ Mixture of experts technique will be used to compare different surrogate models.
 """# 6. RBF Model
 Here we implement the RBF model.
 """
-print('これがyr',yt)
+
 
 def get_xt():
     return xt
@@ -328,14 +331,14 @@ def xt_all():
 def get_yt():
     return yt
 tmp = yt[0]
-print('ここは',tmp[0])
+
 
 ########### The RBF model
 
 t = RBF(print_prediction=False, poly_degree=0)
-print(xt.shape,yt.shape)
+
 t.set_training_values(xt, yt)
-print(xt[0,0])
+
 t.train()
 with open(file_path, "a") as file:
     file.write(f"{xt}\n")
@@ -365,4 +368,5 @@ if plot_status:
     plt.legend(loc="upper left")
     plt.title("RBF model: validation of the prediction model")
     plt.savefig('RBF model: validation of the prediction model.png')
-
+def t_preditct(xtest):
+    return t.predict_values(xtest)

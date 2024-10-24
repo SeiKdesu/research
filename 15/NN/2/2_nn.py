@@ -34,7 +34,7 @@ def rastrigin(x, n):
     A = 10
     return A * n + sum([(x[i]**2 - A * np.cos(2 * np.pi * x[i])) for i in range(n)])
 def objective_function(x,dim):
-    return rastrigin(x,dim)
+    return Rosenbrock(x,dim)
     # n_rosenbrock = 3
     # n_dixon=3
     # n_powell=4
@@ -98,12 +98,12 @@ class NeuralNetwork(nn.Module):
         self.flatten = nn.Flatten(start_dim=1)
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(2, 3),
-            nn.Tanh(),
+            nn.ReLU(),
             nn.Linear(3, 5),
-            nn.Tanh(),
+            nn.Sigmoid(),
             nn.Linear(5,3),
             nn.Sigmoid(),
-            nn.Tanh(3,1),
+            nn.Linear(3,1),
           
         )
 
