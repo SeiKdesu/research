@@ -408,7 +408,8 @@ for com in range(20):
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
-    loss_func = torch.nn.CrossEntropyLoss()
+    # loss_func = torch.nn.CrossEntropyLoss()
+    loss_func = nn.MSELoss()
     print(model)
 
 
@@ -441,7 +442,35 @@ for com in range(20):
         ff_out = t_preditct(pp)
         ff_real = objective_function(pp,dim)
 
-        print('ここをみたい',out)
+        classfication = out[1]
+        mal_list0=[]
+        mal_list1=[]
+        mal_list2=[]
+        print(classfication)
+        for count in range(dim):
+            if classfication[count] == 0:
+                mal_list0.append(1)
+            else:
+                mal_list0.append(0)
+            if classfication[count] == 1:
+                mal_list1.append(1)
+            else:
+                mal_list1.append(0)
+            if classfication[count] == 2:
+                mal_list2.append(1)
+            else:
+                mal_list2.append(0)
+        print(mal_list0,mal_list1,mal_list2)
+        for i in range(num_clusters):
+
+            input = pp*mal_list0
+            prediction = t_preditct(input)
+            input2 = pp*mal_list1
+            prediction1 = t_preditct(input2)
+            input3 = pp*mal_list2 
+            prediction2 = t_preditct(input3)
+            all_prediction = prediction + prediction1 + prediction2
+        loss = loss(ff_real,all_prediction)
         loss = loss_func(out,dataset.y)
         losses.append(loss)
         loss.backward()
