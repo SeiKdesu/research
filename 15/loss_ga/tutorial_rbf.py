@@ -117,7 +117,7 @@ from torchinfo import summary
 def Rosenbrock(x, n):
     value = 0
     for i in range(n-1):
-        value += 100 * (x[i+1] - x[i]**2)**2 + (0 - x[i])**2
+        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 
     return value
 def Rosenbrock1(x, n):
@@ -147,10 +147,10 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    print('ここのshapeがおしえててほしいいいいいいいいい',x)
+    
     tmp1 = Rosenbrock(x,dim)
     tmp2 = Rosenbrock1(x,dim)
-    print(tmp1,"こここがｇじゃがｇんｆｊｄｆｓｄｋｌ")
+ 
     return tmp1+tmp2
 
     # n_rosenbrock = 3

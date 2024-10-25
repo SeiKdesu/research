@@ -145,11 +145,11 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.05
+learn_rate = 0.0005
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 300
+epochs = 1000
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -443,12 +443,14 @@ for com in range(20):
         out = model(dataset).max(dim=1)
 
         pp,ff = QOL()
-  
-        ff_out =ff
+ 
+        ff_out =ff[0]
+        pp= pp[0]
+
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
-        mal_list0=[0,0,0,0,0,0]
+        mal_list0=[1,1,1,0,0,0]
         mal_list1=[0,0,0,1,1,1]
         mal_list2=[0,0,0,0,0,0]
      
@@ -469,20 +471,20 @@ for com in range(20):
         mal_list0= np.array(mal_list0)
         mal_list1 = np.array(mal_list1)
         mal_list2=np.array(mal_list2)
-        for i in range(num_clusters):
-
-            input = pp*mal_list0
-
-            prediction = objective_function(input,dim)
-            input2 = pp*mal_list1
-            prediction1 = objective_function(input2,dim)
-            input3 = pp*mal_list2 
-            prediction2 = objective_function(input3,dim)
-            all_prediction = prediction + prediction1 + prediction2
         
-        print('ここですここ',prediction)
+
+        input = pp*mal_list0
+
+        prediction = objective_function(input,dim)
+        input2 = pp*mal_list1
+        prediction1 = objective_function(input2,dim)
+        input3 = pp*mal_list2 
+        prediction2 = objective_function(input3,dim)
+        all_prediction = prediction + prediction1 + prediction2
+    
+    
         ff_out = np.array(ff_out,dtype = np.float32)
-        ff_out = ff_out.reshape(20,1)
+        # ff_out = ff_out.reshape(20,1)
 
         
         # print(ff.shape,all_prediction.shape)
@@ -521,19 +523,19 @@ for com in range(20):
         # visualize_graph(G,color=predict)
         # リスト内の各テンソルをdetachしてnumpy配列に変換
 
-losses_np = [los.detach().numpy() for los in losses]
-# acces_np=   [acc.detach().numpy() for acc in acces]
-import matplotlib.pyplot as plt
-plt.figure(figsize=(10, 5))
-plt.plot(losses_np, label='Training Loss')
-plt.xlabel('Epoch')
-plt.ylabel('Loss')
+        losses_np = [los.detach().numpy() for los in losses]
+        # acces_np=   [acc.detach().numpy() for acc in acces]
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(10, 5))
+        plt.plot(losses_np, label='Training Loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
 
-plt.title('Loss vs. Epoch')
-plt.legend()
-plt.grid(True)
-plt.savefig('Graph Neural Network')
-plt.close()
+        plt.title('Loss vs. Epoch')
+        plt.legend()
+        plt.grid(True)
+        plt.savefig('Graph Neural Network')
+        plt.close()
         # plt.figure(figsize=(10, 5))
         # plt.plot(acces, label='Accracy')
         # plt.xlabel('Epoch')
