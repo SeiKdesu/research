@@ -116,20 +116,20 @@ from torchinfo import summary
 
 def Rosenbrock(x, n):
     value = 0
-    for i in range(n-1):
+    for i in n:
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 
     return value
 def Rosenbrock1(x, n):
     value = 0
-    for i in range(n-1):
+    for i in [3,4]:
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 
     return value
 def dixon_price(x,n):
-    n = len(x)
+    # n = len(x)
     term1 = (x[0] - 1) ** 2
-    term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in range(1, n)])
+    term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in n])
     return term1 + term2
 
 def powell(x):
@@ -147,12 +147,18 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    
-    tmp1 = Rosenbrock(x,dim)
-    tmp2 = Rosenbrock1(x,dim)
+    dim1=[0,1]
+    dim2=[4,5]
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = dixon_price(x,dim2)
  
     return tmp1+tmp2
-
+def objective_function1(x,dim1,dim2):
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = dixon_price(x,dim2)
+ 
+    return tmp1+tmp2
+    
     # n_rosenbrock = 3
     # n_dixon=3
     # n_powell=4

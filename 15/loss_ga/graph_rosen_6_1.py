@@ -145,11 +145,11 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.00005
+learn_rate = 0.005
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 1000
+epochs = 10
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -445,7 +445,7 @@ for com in range(20):
 
         pp,ff = QOL()
         print('teacher_input',pp)
-        ff_out =t_preditct(pp)
+        ff_out =objective_function(pp,dim)
         
         ff_out = ff_out[0]
         pp= pp
@@ -453,58 +453,50 @@ for com in range(20):
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
-        mal_list0=[1,1,1,0,0,0]
+        mal_list0=[0,1]
         list0_count=0
-        mal_list1=[0,0,0,1,1,1]
+        mal_list1=[4,5]
         list1_count =0
-        mal_list2=[0,0,0,0,0,0]
-        list2_count =dim
+        # mal_list2=[]
+        # list2_count =dim
      
-        # for count in range(dim):
+        # for count in range(dim-1):
         #     if classfication[count] == 0:
-        #         mal_list0.append(1)
-        #     else:
-        #         mal_list0.append(0)
+        #         mal_list0.append(count)
         #         list0_count += 1
         #     if classfication[count] == 1:
-        #         mal_list1.append(1)
-        #     else:
-        #         mal_list1.append(0)
-        #         list1_count += 1
-        #     if classfication[count] == 2:
-        #         mal_list2.append(1)
-        #     else:
-        #         mal_list2.append(0)
-        #         mal_list2 += 1
+        #         mal_list1.append(count)
 
         mal_list0= np.array(mal_list0)
         mal_list1 = np.array(mal_list1)
-        mal_list2=np.array(mal_list2)
+
         
 
-        input = pp*mal_list0
+    
         prediction=[]
         prediction1=[]
         prediction2 = []
-        if list0_count != dim : 
-            prediction = t_preditct(input)
-        else:
-            prediction[0] = 0
-        input2 = pp*mal_list1
-        if list1_count != dim:
-            prediction1 = t_preditct(input2)
-        else:
-            prediction1.append(0.0)
-        input3 = pp*mal_list2
-        if list2_count == dim: 
-            prediction2.append(0.0)
-        else:
-            prediction2 = t_preditct(input3)
+        
+        
+        # if list0_count != dim : 
+        #     prediction = t_preditct(input)
+        # else:
+        #     prediction[0] = 0
+        # input2 = pp*mal_list1
+        # if list1_count != dim:
+        #     prediction1 = t_preditct(input2)
+        # else:
+        #     prediction1.append(0.0)
+        # input3 = pp*mal_list2
+        # if list2_count == dim: 
+        #     prediction2.append(0.0)
+        # else:
+        #     prediction2 = t_preditct(input3)
+        print(pp[0]-pp[0])
+        print(mal_list0,mal_list1)
+        all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
-   
-        all_prediction = prediction[0] + prediction1[0] + prediction2[0]
-        print('input',input,input2,input3)
-        print('output',ff_out, prediction2[0], prediction1[0],prediction[0])
+        print('output',ff_out,all_prediction[0])
     
         ff_out = np.array(ff_out,dtype = np.float32)
         # ff_out = ff_out.reshape(20,1)
@@ -520,7 +512,7 @@ for com in range(20):
         all_prediction = torch.tensor(all_prediction)
         loss = loss_func(ff_out,all_prediction)
         # loss = loss_func(out,dataset.y)
-        print('all',all_prediction)
+       
         print(loss)
         losses.append(loss)
         loss.backward()
@@ -544,6 +536,7 @@ for com in range(20):
             print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/6))
             print("結果：",predict)
             print("真値：",data_y)
+        print("結果：",predict)
         # visualize_graph(G,color=predict)
         # リスト内の各テンソルをdetachしてnumpy配列に変換
 
