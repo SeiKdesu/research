@@ -145,7 +145,7 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.0005
+learn_rate = 0.00005
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
@@ -412,7 +412,8 @@ for com in range(20):
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
     # loss_func = torch.nn.CrossEntropyLoss()
-    loss_func = nn.MSELoss()
+    # loss_func = nn.MSELoss()
+    loss_func =nn.L1Loss()
     print(model)
 
 
@@ -446,27 +447,33 @@ for com in range(20):
  
         ff_out =ff[0]
         pp= pp[0]
-
+        print('inputs',pp,ff[0])
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
         mal_list0=[1,1,1,0,0,0]
+        list0_count=0
         mal_list1=[0,0,0,1,1,1]
+        list1_count =0
         mal_list2=[0,0,0,0,0,0]
+        list2_count =dim
      
         # for count in range(dim):
         #     if classfication[count] == 0:
         #         mal_list0.append(1)
         #     else:
         #         mal_list0.append(0)
+        #         list0_count += 1
         #     if classfication[count] == 1:
         #         mal_list1.append(1)
         #     else:
         #         mal_list1.append(0)
+        #         list1_count += 1
         #     if classfication[count] == 2:
         #         mal_list2.append(1)
         #     else:
         #         mal_list2.append(0)
+        #         mal_list2 += 1
 
         mal_list0= np.array(mal_list0)
         mal_list1 = np.array(mal_list1)
@@ -474,14 +481,22 @@ for com in range(20):
         
 
         input = pp*mal_list0
-
-        prediction = objective_function(input,dim)
+        if list0_count != dim : 
+            prediction = objective_function(input,dim)
+        else:
+            prediction = 0
         input2 = pp*mal_list1
-        prediction1 = objective_function(input2,dim)
-        input3 = pp*mal_list2 
-        prediction2 = objective_function(input3,dim)
+        if list1_count != dim:
+            prediction1 = objective_function(input2,dim)
+        else:
+            prediction1 = 0
+        input3 = pp*mal_list2
+        if list2_count == dim: 
+            prediction2 =0 
+        else:
+            prediction2 = objective_function(input3,dim)
         all_prediction = prediction + prediction1 + prediction2
-    
+        print('input',prediction2, input,input2,input3)
     
         ff_out = np.array(ff_out,dtype = np.float32)
         # ff_out = ff_out.reshape(20,1)
@@ -497,6 +512,7 @@ for com in range(20):
         all_prediction = torch.tensor(all_prediction)
         loss = loss_func(ff_out,all_prediction)
         # loss = loss_func(out,dataset.y)
+        print('all',all_prediction)
         print(loss)
         losses.append(loss)
         loss.backward()
