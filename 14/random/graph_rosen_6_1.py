@@ -553,7 +553,9 @@ with open(file_path_count, "a") as file:
     file.write(f"{count_0},{count_1},{count_2}\n")
 # 棒グラフの幅
 width = 0.25  
-
+count_0=[20,20,20,0,0,0]
+cout_1 =[0,0,0,20,20,20]
+cout_2 =[0,0,0,0,0,0]
 # 棒グラフの作成
 plt.bar(indices, count_0, width, label='Data 1', color='blue')
 plt.bar(indices + width, count_1, width, label='Data 2', color='orange')

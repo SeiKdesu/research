@@ -100,6 +100,7 @@ from torch_geometric.nn import GCNConv, SAGEConv, GAE, GINConv, GATConv
 from torch_geometric.utils import train_test_split_edges, to_networkx, from_networkx, to_dense_adj
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
+from sklearn.metrics import mean_squared_error
 
 
 
@@ -144,7 +145,7 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.0001
+learn_rate = 0.05
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
@@ -374,8 +375,10 @@ for com in range(20):
 
     G = to_networkx(data)
     G = G.to_directed()
+    
+    X = data.x[:,[0,1]].cpu().numpy()
 
-    X = data.x[:,[0,1]].cpu().detach().numpy()
+    # X = data.x[:,[0,1]].cpu().detach().numpy()
     pos = dict(zip(range(X[:, 0].size), X))
 
 
@@ -423,6 +426,7 @@ for com in range(20):
 
     import matplotlib.pyplot as plt
 
+
     # 各エポックのlossとAUCの値を保存するリスト
     loss_values = []
     auc_values = []
@@ -433,45 +437,65 @@ for com in range(20):
     acces=[]
 
     for epoch in range(1, epochs + 1):
-         
-        optimizer.zero_grad()
+        if com == 0:
+            optimizer.zero_grad()
         # dataset.to('cpu')
         out = model(dataset).max(dim=1)
 
         pp,ff = QOL()
-        ff_out = t_preditct(pp)
-        ff_real = objective_function(pp,dim)
-
+  
+        ff_out =ff
+        # ff_real = objective_function(pp,dim)
+        pp = np.array(pp)
         classfication = out[1]
-        mal_list0=[]
-        mal_list1=[]
-        mal_list2=[]
-        print(classfication)
-        for count in range(dim):
-            if classfication[count] == 0:
-                mal_list0.append(1)
-            else:
-                mal_list0.append(0)
-            if classfication[count] == 1:
-                mal_list1.append(1)
-            else:
-                mal_list1.append(0)
-            if classfication[count] == 2:
-                mal_list2.append(1)
-            else:
-                mal_list2.append(0)
-        print(mal_list0,mal_list1,mal_list2)
+        mal_list0=[0,0,0,0,0,0]
+        mal_list1=[0,0,0,1,1,1]
+        mal_list2=[0,0,0,0,0,0]
+     
+        # for count in range(dim):
+        #     if classfication[count] == 0:
+        #         mal_list0.append(1)
+        #     else:
+        #         mal_list0.append(0)
+        #     if classfication[count] == 1:
+        #         mal_list1.append(1)
+        #     else:
+        #         mal_list1.append(0)
+        #     if classfication[count] == 2:
+        #         mal_list2.append(1)
+        #     else:
+        #         mal_list2.append(0)
+
+        mal_list0= np.array(mal_list0)
+        mal_list1 = np.array(mal_list1)
+        mal_list2=np.array(mal_list2)
         for i in range(num_clusters):
 
             input = pp*mal_list0
-            prediction = t_preditct(input)
+
+            prediction = objective_function(input,dim)
             input2 = pp*mal_list1
-            prediction1 = t_preditct(input2)
+            prediction1 = objective_function(input2,dim)
             input3 = pp*mal_list2 
-            prediction2 = t_preditct(input3)
+            prediction2 = objective_function(input3,dim)
             all_prediction = prediction + prediction1 + prediction2
-        loss = loss(ff_real,all_prediction)
-        loss = loss_func(out,dataset.y)
+        
+        print('ここですここ',prediction,prediction1,prediction2)
+        ff_out = np.array(ff_out,dtype = np.float32)
+        ff_out = ff_out.reshape(20,1)
+
+        
+        # print(ff.shape,all_prediction.shape)
+        # print("Size of ff:", type(dataset.y.size))
+        # print(ff)
+        # print("Size of all_prediction:", type(all_prediction))
+
+        # loss= mean_squared_error(ff, all_prediction)
+        ff_out = torch.tensor(ff_out,requires_grad=True,dtype=float)
+        all_prediction = torch.tensor(all_prediction)
+        loss = loss_func(ff_out,all_prediction)
+        # loss = loss_func(out,dataset.y)
+        print(loss)
         losses.append(loss)
         loss.backward()
 
@@ -485,29 +509,31 @@ for com in range(20):
         predict=pred.cpu()
         data_y=dataset.y.cpu()
         count=0
-        for i in range(len(predict)): 
+        for i in range(6): 
             if predict[i]==data_y[i]:
                 count += 1
-        acces.append(count/len(data_y))
-        print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/len(data_y)))
-        print("結果：",predict)
-        print("真値：",data_y)
+        acc = count/6
+        acces.append(count/6)
+        if acc>0.5:
+            print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/6))
+            print("結果：",predict)
+            print("真値：",data_y)
         # visualize_graph(G,color=predict)
         # リスト内の各テンソルをdetachしてnumpy配列に変換
 
-        # losses_np = [los.detach().numpy() for los in losses]
-        # # acces_np=   [acc.detach().numpy() for acc in acces]
-        # import matplotlib.pyplot as plt
-        # plt.figure(figsize=(10, 5))
-        # plt.plot(losses_np, label='Training Loss')
-        # plt.xlabel('Epoch')
-        # plt.ylabel('Loss')
+losses_np = [los.detach().numpy() for los in losses]
+# acces_np=   [acc.detach().numpy() for acc in acces]
+import matplotlib.pyplot as plt
+plt.figure(figsize=(10, 5))
+plt.plot(losses_np, label='Training Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
 
-        # plt.title('Loss vs. Epoch')
-        # plt.legend()
-        # plt.grid(True)
-        # plt.savefig('Graph Neural Network')
-        # plt.close()
+plt.title('Loss vs. Epoch')
+plt.legend()
+plt.grid(True)
+plt.savefig('Graph Neural Network')
+plt.close()
         # plt.figure(figsize=(10, 5))
         # plt.plot(acces, label='Accracy')
         # plt.xlabel('Epoch')
