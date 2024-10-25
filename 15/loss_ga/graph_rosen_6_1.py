@@ -145,11 +145,11 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.005
+learn_rate = 0.001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 10
+epochs = 100
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -218,6 +218,7 @@ def test(dt):
 Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
 """
 from tutorial_rbf import *
+best_loss= 100000000000000
 for com in range(20):
     
     src=[]
@@ -433,7 +434,7 @@ for com in range(20):
     auc_values = []
     accuracy=[]
     best_label=[]
-    best_loss= 100000000000000
+
     losses=[]
     acces=[]
 
@@ -447,25 +448,25 @@ for com in range(20):
         print('teacher_input',pp)
         ff_out =objective_function(pp,dim)
         
-        ff_out = ff_out[0]
+        # ff_out = ff_out[0]
         pp= pp
         # print('inputs',pp,ff[0])
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
-        mal_list0=[0,1]
+        mal_list0=[]
         list0_count=0
-        mal_list1=[4,5]
+        mal_list1=[]
         list1_count =0
         # mal_list2=[]
         # list2_count =dim
      
-        # for count in range(dim-1):
-        #     if classfication[count] == 0:
-        #         mal_list0.append(count)
-        #         list0_count += 1
-        #     if classfication[count] == 1:
-        #         mal_list1.append(count)
+        for count in range(dim-1):
+            if classfication[count] == 0:
+                mal_list0.append(count)
+                list0_count += 1
+            if classfication[count] == 1:
+                mal_list1.append(count)
 
         mal_list0= np.array(mal_list0)
         mal_list1 = np.array(mal_list1)
@@ -496,7 +497,7 @@ for com in range(20):
         print(mal_list0,mal_list1)
         all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
-        print('output',ff_out,all_prediction[0])
+        print('output',ff_out[0],all_prediction[0])
     
         ff_out = np.array(ff_out,dtype = np.float32)
         # ff_out = ff_out.reshape(20,1)
@@ -512,7 +513,10 @@ for com in range(20):
         all_prediction = torch.tensor(all_prediction)
         loss = loss_func(ff_out,all_prediction)
         # loss = loss_func(out,dataset.y)
-       
+        if loss < best_loss:
+            best_loss = loss
+            best_mal_0 = mal_list0
+            best_mal_1 = mal_list1
         print(loss)
         losses.append(loss)
         loss.backward()
@@ -553,6 +557,7 @@ for com in range(20):
         plt.grid(True)
         plt.savefig('Graph Neural Network')
         plt.close()
+print(best_loss,best_mal_0,best_mal_1)
         # plt.figure(figsize=(10, 5))
         # plt.plot(acces, label='Accracy')
         # plt.xlabel('Epoch')
