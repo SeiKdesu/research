@@ -480,7 +480,7 @@ for com in range(20):
             prediction2 = objective_function(input3,dim)
             all_prediction = prediction + prediction1 + prediction2
         
-        print('ここですここ',prediction,prediction1,prediction2)
+        print('ここですここ',prediction)
         ff_out = np.array(ff_out,dtype = np.float32)
         ff_out = ff_out.reshape(20,1)
 

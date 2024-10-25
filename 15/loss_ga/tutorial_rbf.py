@@ -116,8 +116,8 @@ from torchinfo import summary
 
 def Rosenbrock(x, n):
     value = 0
-    for i in range(0,2):
-        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+    for i in range(n-1):
+        value += 100 * (x[i+1] - x[i]**2)**2 + (0 - x[i])**2
 
     return value
 def Rosenbrock1(x, n):
@@ -147,9 +147,12 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
+    print('ここのshapeがおしえててほしいいいいいいいいい',x)
     tmp1 = Rosenbrock(x,dim)
     tmp2 = Rosenbrock1(x,dim)
+    print(tmp1,"こここがｇじゃがｇんｆｊｄｆｓｄｋｌ")
     return tmp1+tmp2
+
     # n_rosenbrock = 3
     # n_dixon=3
     # n_powell=4
@@ -179,10 +182,12 @@ def init_population(pop_size, dim, bound):
 # 適合度の計算
 def evaluate_population(population):
     # return objective_function(population,dim)
+
     return [objective_function(individual, dim) for individual in population]
 
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
     population = init_population(pop_size, dim, bound)
+
     for generation in range(max_gen):
         fitness = evaluate_population(population)
         # print(generation,population,fitness)
