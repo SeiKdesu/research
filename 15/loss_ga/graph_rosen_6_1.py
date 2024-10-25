@@ -444,10 +444,12 @@ for com in range(20):
         out = model(dataset).max(dim=1)
 
         pp,ff = QOL()
- 
-        ff_out =ff[0]
-        pp= pp[0]
-        print('inputs',pp,ff[0])
+        print('teacher_input',pp)
+        ff_out =t_preditct(pp)
+        
+        ff_out = ff_out[0]
+        pp= pp
+        # print('inputs',pp,ff[0])
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
@@ -481,22 +483,28 @@ for com in range(20):
         
 
         input = pp*mal_list0
+        prediction=[]
+        prediction1=[]
+        prediction2 = []
         if list0_count != dim : 
-            prediction = objective_function(input,dim)
+            prediction = t_preditct(input)
         else:
-            prediction = 0
+            prediction[0] = 0
         input2 = pp*mal_list1
         if list1_count != dim:
-            prediction1 = objective_function(input2,dim)
+            prediction1 = t_preditct(input2)
         else:
-            prediction1 = 0
+            prediction1.append(0.0)
         input3 = pp*mal_list2
         if list2_count == dim: 
-            prediction2 =0 
+            prediction2.append(0.0)
         else:
-            prediction2 = objective_function(input3,dim)
-        all_prediction = prediction + prediction1 + prediction2
-        print('input',prediction2, input,input2,input3)
+            prediction2 = t_preditct(input3)
+
+   
+        all_prediction = prediction[0] + prediction1[0] + prediction2[0]
+        print('input',input,input2,input3)
+        print('output',ff_out, prediction2[0], prediction1[0],prediction[0])
     
         ff_out = np.array(ff_out,dtype = np.float32)
         # ff_out = ff_out.reshape(20,1)

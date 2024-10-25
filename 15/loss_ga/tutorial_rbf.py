@@ -122,7 +122,7 @@ def Rosenbrock(x, n):
     return value
 def Rosenbrock1(x, n):
     value = 0
-    for i in range(3,4):
+    for i in range(n-1):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 
     return value
@@ -148,8 +148,8 @@ def powell(x):
     return sum_term
 def objective_function(x,dim):
     
-    tmp1 = dixon_price(x,dim)
-    tmp2 = dixon_price(x,dim)
+    tmp1 = Rosenbrock(x,dim)
+    tmp2 = Rosenbrock1(x,dim)
  
     return tmp1+tmp2
 
