@@ -109,7 +109,6 @@
 
 
 ## 開発技術
-<img width="100%" alt="開発技術の概要図" src="https://github.com/jphacks/NG_2305/assets/103105513/6fc83e97-27b3-4802-b044-31bab11f751b">
 
 
 ### 活用した技術
