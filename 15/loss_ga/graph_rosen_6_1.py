@@ -145,11 +145,11 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.001
+learn_rate = 0.000001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 100
+epochs = 200
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -219,7 +219,7 @@ Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthed
 """
 from tutorial_rbf import *
 best_loss= 100000000000000
-for com in range(20):
+for com in range(1):
     
     src=[]
     dst=[]
