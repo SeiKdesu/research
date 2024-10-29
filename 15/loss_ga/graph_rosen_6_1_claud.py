@@ -529,7 +529,7 @@ for com in range(1):
             best_mal_1 = mal_list1
         print(loss)
         losses.append(loss)
-        loss=loss/100
+        loss=loss
         loss.backward()
 
         optimizer.step()
