@@ -211,7 +211,7 @@ def train(dt):
     loss.backward()
 
     optimizer.step()
-    scheduler.step(loss)
+    
     return float(loss)
 
 
@@ -535,7 +535,7 @@ for com in range(1):
         optimizer.step()
 
         model.eval()
-
+        
         _,pred = model(dataset).max(dim=1)
         # scheduler.step()
     

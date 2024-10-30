@@ -351,7 +351,7 @@ def weight():
     # print(row_indices)#エッジの上の部分の情報
     # print(col_indices)#エッジの下の部分の情報
     return param_weight,row_indices,col_indices
-weight()
+# weight()
 
 def correct_data():
     return x_data.T

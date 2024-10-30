@@ -430,7 +430,7 @@ for com in range(20):
         loss = train(train_data)
     
         loss_values.append(loss)
-
+        
         # テストデータでのAUCとAPを取得
         auc, ap = test(test_data)
         auc_values.append(auc)
