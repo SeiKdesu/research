@@ -6,7 +6,7 @@ from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 from sklearn import svm
 import warnings
-
+from tutorial_rbf import * 
 warnings.filterwarnings("ignore")
 
 # grid search range on key hyperparameters
@@ -16,14 +16,17 @@ f_correct = [0, 0.1, 0.5, 0.9]
 
 def main(name, n_features, n_iters, n_repeats):
     np.random.seed(0) # for reproducibility
-    data = scipy.io.loadmat('data/' + name)
-    x = data['X'].astype(float)
-    if name == 'colon' or name == 'leukemia':
-        y = np.int64(data['Y'])
-        y[y == -1] = 0
-    else:
-        y = np.int64(data['Y']) - 1
-    y = y.reshape(-1)
+    # data = scipy.io.loadmat('data/' + name)
+    # x = data['X'].astype(float)
+    # if name == 'colon' or name == 'leukemia':
+    #     y = np.int64(data['Y'])
+    #     y[y == -1] = 0
+    # else:
+    #     y = np.int64(data['Y']) - 1
+    # y = y.reshape(-1)
+    x = get_xt()
+    y = get_yt()
+
     auc_test = np.zeros(n_iters)
     seeds = np.random.choice(range(100), n_iters, replace=False) # for reproducibility
     for iter in tqdm(range(n_iters)):

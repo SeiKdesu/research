@@ -161,6 +161,8 @@ class GRACES:
     def select(self, x, y):
         x = torch.tensor(x)
         y = torch.tensor(y)
+        # print('xですい',x.shape)
+        # print('yですう',y.shape)
         self.f_scores = torch.tensor(self.f_test(x, y))
         self.f_scores[torch.isnan(self.f_scores)] = 0
         self.f_scores = self.f_scores / self.f_scores.norm(p=2)
