@@ -102,13 +102,23 @@ class GRACES:
         train_set = []
         for i in range(x.shape[0]):
             train_set.append([x[i, :], y[i]])
-        train_loader = torch.utils.data.DataLoader(train_set, batch_size=self.batch_size, shuffle=True)
+        train_dataset = torch.utils.data.TensorDataset(x,y)
+        train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
         for e in range(self.epochs):
-            for data, label in train_loader:
-                input_0 = data.view(data.shape[0], -1)
+            for data,label in train_loader:
+                # label = torch.tensor([0,0,0,1,1,1])
+                # data = torch.tensor(data)
+                # input_0 = data.reshape(data.shape[0], -1).float()
+                # len = len(x)
+                # label = torch.randn(4,1)
+                print(data,label)
+                input_0 = data.float()
                 optimizer.zero_grad()
                 output = self.model(input_0.float())
-                loss = self.loss_fn(output, label)
+                print('label.shapeです',label.shape)
+                label = label.view(-1)
+                loss = self.loss_fn(output, label.long())
+                print('loss',loss)
                 loss.backward()
                 optimizer.step()
         self.last_model = copy.deepcopy(self.model)

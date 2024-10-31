@@ -27,11 +27,15 @@ def main(name, n_features, n_iters, n_repeats):
     x = get_xt()
     y = get_yt()
 
+    x= torch.tensor(x,dtype=torch.float64)
+    y = torch.tensor(y,dtype=torch.int64)
+    y = y.squeeze()
+    print(x.shape,y.shape)
     auc_test = np.zeros(n_iters)
     seeds = np.random.choice(range(100), n_iters, replace=False) # for reproducibility
     for iter in tqdm(range(n_iters)):
-        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=seeds[iter], stratify=y)
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=2/7, random_state=seeds[iter], stratify=y_train)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=seeds[iter])
+        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=2/7, random_state=seeds[iter])
         auc_grid = np.zeros((len(dropout_prob), len(f_correct)))
         loss_grid = np.zeros((len(dropout_prob), len(f_correct)))
         for i in range(len(dropout_prob)):
