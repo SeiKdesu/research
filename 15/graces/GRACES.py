@@ -18,7 +18,8 @@ class GraphConvNet(nn.Module):
         self.input = nn.Linear(self.input_size, self.hidden_size[0], bias=False)
         self.alpha = alpha
         self.hiddens = nn.ModuleList([gnn.SAGEConv(self.hidden_size[h], self.hidden_size[h + 1]) for h in range(len(self.hidden_size) - 1)])
-        self.output = nn.Linear(32, 3)
+        # self.Linear  = nn.Linear(32,6)
+        self.output = nn.Linear(32,6)
 
     def forward(self, x):
 
@@ -29,8 +30,10 @@ class GraphConvNet(nn.Module):
         for hidden in self.hiddens:
             x = hidden(x, edge_index)
             x = self.relu(x)
-            print('xここのあたいだと、GNNのノードの分類なのでは？',x)
-
+            
+        
+        # x = self.Linear(x)
+        # print('xここのあたいだと、GNNのノードの分類なのでは？',x.max(dim=1))
         x = self.output(x)
 
         x = self.softmax(x)
