@@ -13,6 +13,14 @@ warnings.filterwarnings("ignore")
 dropout_prob = [0.1, 0.5, 0.75]
 f_correct = [0, 0.1, 0.5, 0.9]
 
+def calculate_multiclass_roc_auc(y_true, y_pred_proba):
+    """
+    Calculate ROC AUC score for multiclass classification using OvR strategy
+    """
+    y_pred_binary = y_pred_proba.max(axis=1)
+    y_true_binary = (y_true == y_true.max()).astype(int)
+    return roc_auc_score(y_true_binary, y_pred_binary)
+
 
 def main(name, n_features, n_iters, n_repeats):
     np.random.seed(0) # for reproducibility
@@ -28,27 +36,34 @@ def main(name, n_features, n_iters, n_repeats):
     y = get_yt()
 
     x= torch.tensor(x,dtype=torch.float64)
+
     y = torch.tensor(y,dtype=torch.int64)
     y = y.squeeze()
     print(x.shape,y.shape)
     auc_test = np.zeros(n_iters)
-    seeds = np.random.choice(range(100), n_iters, replace=False) # for reproducibility
+    # seeds = np.random.choice(range(100), n_iters, replace=False) # for reproducibility
     for iter in tqdm(range(n_iters)):
-        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=seeds[iter])
-        x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=2/7, random_state=seeds[iter])
+        print('わけて次元数がへる？',x.shape)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7)
+        # x_train, x_val, y_train, y_val = train_test_split(x, y, train_size=2/7)
+        # x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=seeds[iter])
+        # x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, train_size=2/7, random_state=seeds[iter])
+        print(f"x_train shape: {x_train.shape}, x_test shape: {x_test.shape}")
         auc_grid = np.zeros((len(dropout_prob), len(f_correct)))
         loss_grid = np.zeros((len(dropout_prob), len(f_correct)))
         for i in range(len(dropout_prob)):
             for j in range(len(f_correct)):
                 for r in range(n_repeats):
                     slc_g = GRACES(n_features=n_features, dropout_prob=dropout_prob[i], f_correct=f_correct[j])
+                    print('mainでのx',x_train)
                     selection_g = slc_g.select(x_train, y_train)
                     x_train_red_g = x_train[:, selection_g]
                     x_val_red = x_val[:, selection_g]
                     clf_g = svm.SVC(probability=True)
                     clf_g.fit(x_train_red_g, y_train)
                     y_val_pred = clf_g.predict_proba(x_val_red)
-                    auc_grid[i, j] += roc_auc_score(y_val, y_val_pred[:, 1])
+                    # auc_grid[i, j] += roc_auc_score(y_val, y_val_pred[:, 1])
+                    auc_grid[i, j] += calculate_multiclass_roc_auc(y_val, y_val_pred)
                     loss_grid[i, j] += -np.sum(y_val * np.log(y_val_pred[:, 1]))
         index_i, index_j = np.where(auc_grid == np.max(auc_grid))
         best_index = np.argmin(loss_grid[index_i, index_j]) # break tie based on cross-entropy loss

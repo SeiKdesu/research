@@ -378,5 +378,6 @@ if plot_status:
     plt.legend(loc="upper left")
     plt.title("RBF model: validation of the prediction model")
     plt.savefig('RBF model: validation of the prediction model.png')
+    plt.close()
 def t_preditct(xtest):
     return t.predict_values(xtest)
