@@ -198,6 +198,7 @@ class Net(torch.nn.Module):
         x=F.relu(x)
    
         x=self.linear(x)
+        x=F.softmax(x)
         return x
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
