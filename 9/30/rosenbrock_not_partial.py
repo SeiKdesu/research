@@ -9,85 +9,24 @@ from smt.problems import Rosenbrock
 
 def Rosenbrock(x, n):
     value = 0
-    for i in range(50):
+    for i in range(n-1):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
     return value
-def dixon_price(x,n):
-    n = len(x)
-    term1 = (x[0] - 1) ** 2
-    term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in range(51, 100)])
-    return term1 + term2
-def Rosenbrock1(x, n):
-    value = 0
-    for i in range(101,150):
-        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    return value
-# def booth(xy):
-#     """
-#     Booth関数を計算します。
-
-#     引数:
-#     xy : array-like
-#         入力ベクトル [x, y]
-    
-#     戻り値:
-#     float
-#         Booth関数の値
-#     """
-#     x, y = xy[0], xy[1]
-    
-#     term1 = x + 2*y - 7
-#     term2 = 2*x + y - 5
-    
-#     return term1**2 + term2**2
-
-# def matyas_function(x):
-#     return 0.26 * (x[0]**2 + x[1]**2) - 0.48 * x[0] * x[1]
 
 
-def trid(x,n):
-    """
-    指定された次元数Dに対してTrid関数を計算します。
-
-    引数:
-    n : int
-        次元数（変数の数）
-    
-    戻り値:
-    float
-        Trid関数の値
-    """
-    # 入力ベクトル x を生成（例として 1 から n までの整数）
-   # x = np.arange(1, n + 1)
-    
-    # 最初の和の計算
-    sum1 = 0
-    for i in range(n):
-        sum1 += (x[i] - 1)**2
-    
-    # 2つ目の和の計算（隣接する要素の積）
-    sum2 = 0
-    for i in range(1, n):
-        sum2 += x[i] * x[i-1]
-    
-    return sum1 - sum2
 def objective_function(x,dim):
-    n_rosenbrock = 50
-    n_dixon=50
-    n_powell=100
+    n_rosenbrock = dim
+   
     rosen_value = Rosenbrock(x, n_rosenbrock)
-    dixon_value = dixon_price(x,n_dixon)
-    rosen_value2 = Rosenbrock1(x, n_rosenbrock)
-    # powell_value= trid(x,n_powell)
-    # return rosen_value + dixon_value+ powell_value
-    return rosen_value+dixon_value
+ 
+    return rosen_value
 
 # パラメータの設定
-dim = 151
+dim = 10
 
 max_gen = 900
 pop_size = 200
-offspring_size = 200
+offspring_size = 30
 bound_rastrigin = 5.12
 bound = 30  # Typical bound for Rosenbrock function
 
@@ -184,7 +123,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             best_individual = population[fitness.index(current_best_fitness)]
-            print('chage')
+       
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
 
