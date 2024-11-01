@@ -166,9 +166,11 @@ class Net(torch.nn.Module):
        
         self.conv1=GCNConv(dataset.num_node_features,hidden_size)
         self.conv2=GCNConv(hidden_size,25)
-       
-        self.conv3=GCNConv(25,20)
-        self.conv4=GCNConv(20,10)
+        self.conv3=GCNConv(25,30)
+        self.conv4=GCNConv(30,40)
+        self.conv5=GCNConv(40,30)
+        self.conv6=GCNConv(30,20)
+        self.conv7=GCNConv(20,10)
 
         self.linear=torch.nn.Linear(10,dataset.num_classes)
 
@@ -188,8 +190,12 @@ class Net(torch.nn.Module):
         x=F.relu(x)
         x=self.conv4(x,edge_index)
         x=F.relu(x)
-       
-        
+        x=self.conv5(x,edge_index)
+        x=F.relu(x)
+        x=self.conv6(x,edge_index)
+        x=F.relu(x)
+        x=self.conv7(x,edge_index)
+        x=F.relu(x)
    
         x=self.linear(x)
         return x
@@ -412,9 +418,9 @@ for com in range(1):
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
-    # loss_func = torch.nn.CrossEntropyLoss()
+    loss_func = torch.nn.CrossEntropyLoss()
     # loss_func = nn.MSELoss()
-    loss_func =nn.L1Loss()
+    # loss_func =nn.MSELoss()
     print(model)
 
 
