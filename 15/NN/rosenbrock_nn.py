@@ -356,3 +356,16 @@ def weight():
 def correct_data():
     return x_data.T
 
+param_weight = []
+key_list=[]
+param_list=[]
+for key,param in model.state_dict().items():
+    key_list.append(key)
+    param_list.append(model.state_dict()[key].cpu().numpy())
+j=0
+print(key_list)
+print(param_list)
+print(param_list[0])
+for i in range(0,7,2):
+    argmax_index = np.argmax(param_list[i],axis=0)
+    print(argmax_index)
