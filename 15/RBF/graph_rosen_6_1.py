@@ -92,7 +92,7 @@ from sklearn.cluster import KMeans, MeanShift, AffinityPropagation, FeatureAgglo
 from sklearn.impute import SimpleImputer
 from sklearn.mixture import GaussianMixture
 from sklearn.metrics import confusion_matrix, pairwise_distances, davies_bouldin_score, silhouette_score, calinski_harabasz_score, adjusted_rand_score, normalized_mutual_info_score
-from torch_geometric.data import Data, InMemoryDataset, download_url
+from torch_geometric.data import Data
 from torch_geometric.loader import DataLoader
 from torch_geometric.datasets import Planetoid, TUDataset
 import torch_geometric.transforms as T
