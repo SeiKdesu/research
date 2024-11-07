@@ -114,7 +114,7 @@ import matplotlib.pyplot as plt
 from torchinfo import summary
 import numpy as np
 from smt.utils.misc import compute_rms_error
-
+from sklearn.metrics import mean_squared_error
 # from smt.problems import Rosenbrock
 from smt.sampling_methods import LHS
 from smt.surrogate_models import LS, QP, KPLS, KRG, KPLSK, GEKPLS, MGP
@@ -201,7 +201,7 @@ offspring_size = 300
 bound = 5
 from datetime import datetime
 loss_histroy =[]
-for i in range(20,100):
+for i in range(3,100,10):
     pop_size = i
     # 現在の時刻を取得
     current_time = datetime.now()
@@ -336,8 +336,9 @@ for i in range(20,100):
 
     # Prediction of the validation points
     y = t.predict_values(xtest)
-    loss_histroy.append(compute_rms_error(t, xtest, ytest))
+    loss_histroy.append(mean_squared_error(y,ytest))
     print("RBF,  err: " + str(compute_rms_error(t, xtest, ytest)))
+    print(mean_squared_error(y,ytest))
     # Plot prediction/true values
     if plot_status:
         fig = plt.figure()
@@ -351,7 +352,7 @@ for i in range(20,100):
         plt.title("RBF model: validation of the prediction model")
         plt.savefig('RBF model: validation of the prediction model.png')
         plt.close()
-pops=np.arange(20,100)
+pops=np.arange(3,100,10)
 # プロット
 plt.figure(figsize=(8, 6))
 plt.plot(pops, loss_histroy, marker='o', linestyle='-', color='b', label='pop Loss')
