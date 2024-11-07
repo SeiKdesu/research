@@ -367,5 +367,9 @@ print(key_list)
 print(param_list)
 print(param_list[0])
 for i in range(0,7,2):
+  
     argmax_index = np.argmax(param_list[i],axis=0)
     print(argmax_index)
+column_means = np.mean(param_list[0], axis=1)
+
+print("各列の平均:", column_means)

@@ -150,13 +150,13 @@ def Rosenbrock(x, n):
     value = 0
     for i in range(0,2):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    print('valueのshapeです',value)
+
     return value
 def Rosenbrock1(x, n):
     value = 0
     for i in range(3,4):
         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
-    print('valueのshapeです',value)
+    
     return value
 def dixon_price(x):
     n = len(x)
@@ -201,7 +201,7 @@ offspring_size = 300
 bound = 5
 from datetime import datetime
 loss_histroy =[]
-for i in range(3,100,10):
+for i in range(3,200,10):
     pop_size = i
     # 現在の時刻を取得
     current_time = datetime.now()
@@ -219,14 +219,14 @@ for i in range(3,100,10):
     current_time = datetime.now()
     name = f'{current_time}'
     # 保存するディレクトリを作成
-    if not os.path.exists(name):
-        os.makedirs(name)
-    def dirs():
-        return name
-    # ファイルのパスを指定
-    file_path = os.path.join(name, "population.txt")
-    file_path2 = os.path.join(name,"weight.txt")
-    file_path3 = os.path.join(name,"matrix.txt")
+    # if not os.path.exists(name):
+    #     os.makedirs(name)
+    # def dirs():
+    #     return name
+    # # ファイルのパスを指定
+    # file_path = os.path.join(name, "population.txt")
+    # file_path2 = os.path.join(name,"weight.txt")
+    # file_path3 = os.path.join(name,"matrix.txt")
 
     def make_file_path():
         return file_path
@@ -321,12 +321,12 @@ for i in range(3,100,10):
     t.set_training_values(xt, yt)
 
     t.train()
-    with open(file_path, "a") as file:
-        file.write(f"{xt}\n")
-    with open(file_path2, "a") as file:
-        file.write(f"{t.sol}\n")
-    with open(file_path3, "a") as file:
-        file.write(f"{t.mtx}\n")
+    # with open(file_path, "a") as file:
+    #     file.write(f"{xt}\n")
+    # with open(file_path2, "a") as file:
+    #     file.write(f"{t.sol}\n")
+    # with open(file_path3, "a") as file:
+    #     file.write(f"{t.mtx}\n")
     def matrix():
         return t.mtx.tolist()
     def weight():
@@ -352,7 +352,7 @@ for i in range(3,100,10):
         plt.title("RBF model: validation of the prediction model")
         plt.savefig('RBF model: validation of the prediction model.png')
         plt.close()
-pops=np.arange(3,100,10)
+pops=np.arange(3,200,10)
 # プロット
 plt.figure(figsize=(8, 6))
 plt.plot(pops, loss_histroy, marker='o', linestyle='-', color='b', label='pop Loss')
