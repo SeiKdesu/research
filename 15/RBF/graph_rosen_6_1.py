@@ -573,3 +573,5 @@ plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
 plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
+
+
