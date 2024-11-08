@@ -166,6 +166,8 @@ for epoch in range(1500):
     dataset.to('cpu')
     out = model(dataset)
     loss = loss_func(out,dataset.y)
+    print(dataset.y)
+    print(loss)
     losses.append(loss)
     loss.backward()
 
