@@ -502,6 +502,7 @@ for com in range(1):
         #     prediction2 = t_preditct(input3)
         print(pp[0]-pp[0])
         print(mal_list0,mal_list1)
+        
         all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
         print('output',ff_out[0],all_prediction[0])
