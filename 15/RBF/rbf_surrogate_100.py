@@ -61,7 +61,7 @@ ndoe_test=200
 
 loss_history=[]
 
-ndoe=20
+ndoe=100
 
 # Generating training data
 sampling = LHS(xlimits=np.array([[-5.0,5.0]]*ndim), criterion="ese", random_state=1)
@@ -105,6 +105,9 @@ def weight():
 y_test_pred = sm.predict_values(x_test)
 print("\nMSE: {}".format(mean_squared_error(y_test, y_test_pred)))
 loss_history.append(mean_squared_error(y_test,y_test_pred))
+
+weight_max = weight()
+print(f"max:{np.amax(weight_max)},min:{np.amin(weight_max)},ave:{np.average(weight_max)},分散:{np.var(weight_max)}")
 # Plotting
 # plt.plot(x_train, y_train, 'ro', label="Training data")
 # plt.plot(x_test, y_test, 'b--', label="True function")
