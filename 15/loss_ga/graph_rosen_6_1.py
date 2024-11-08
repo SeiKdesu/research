@@ -145,7 +145,7 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.001
+learn_rate = 0.1
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
@@ -505,11 +505,6 @@ for com in range(1):
         #     prediction2 = t_preditct(input3)
         print(pp[0]-pp[0])
         print(mal_list0,mal_list1)
-<<<<<<< HEAD
-        
-=======
-
->>>>>>> refs/remotes/origin/main
         all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
         print('output',ff_out[0],all_prediction[0])
