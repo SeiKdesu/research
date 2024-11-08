@@ -145,11 +145,11 @@ out_channels = 1
 transform_set = True
 
 # Optimizer Parameters (learning rate)
-learn_rate = 0.000001
+learn_rate = 0.001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 200
+epochs = 20000
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -199,6 +199,7 @@ class Net(torch.nn.Module):
    
         x=self.linear(x)
         x=F.softmax(x)
+        print(x)
         return x
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -418,10 +419,11 @@ for com in range(1):
     data_ = data.to(device)
 
     # Inizialize the Optimizer
-    optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
-    loss_func = torch.nn.CrossEntropyLoss()
+    # optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.1)
+    # loss_func = torch.nn.CrossEntropyLoss()
     # loss_func = nn.MSELoss()
-    # loss_func =nn.MSELoss()
+    loss_func =nn.MSELoss()
     print(model)
 
 
@@ -461,6 +463,7 @@ for com in range(1):
         # ff_real = objective_function(pp,dim)
         pp = np.array(pp)
         classfication = out[1]
+        # classfication = [0,0,2,1,1,2]
         mal_list0=[]
         list0_count=0
         mal_list1=[]
@@ -468,7 +471,7 @@ for com in range(1):
         # mal_list2=[]
         # list2_count =dim
      
-        for count in range(dim-1):
+        for count in range(dim):
             if classfication[count] == 0:
                 mal_list0.append(count)
                 list0_count += 1
@@ -502,6 +505,7 @@ for com in range(1):
         #     prediction2 = t_preditct(input3)
         print(pp[0]-pp[0])
         print(mal_list0,mal_list1)
+
         all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
         print('output',ff_out[0],all_prediction[0])
@@ -515,21 +519,34 @@ for com in range(1):
         # print(ff)
         # print("Size of all_prediction:", type(all_prediction))
 
-        # loss= mean_squared_error(ff, all_prediction)
+        # loss_mse= mean_squared_error(ff, all_prediction)
         ff_out = torch.tensor(ff_out,requires_grad=True,dtype=float)
         all_prediction = torch.tensor(all_prediction)
         loss = loss_func(ff_out,all_prediction)
-        # loss = loss_func(out,dataset.y)
+        label = [0,0,2,1,1,2]
+        label = torch.tensor(label,dtype=float)
+        # loss = loss_func(out[1],label)
+        # ターゲットの最大値と最小値を使って最大MSEを計算
+
+        y_min=0
+        y_max=50000
+        mse_max = (y_max - y_min) ** 2
+
+        # MSEを0～1に正規化
+        mse_normalized = loss / mse_max
+        loss=mse_normalized
         if loss < best_loss:
             best_loss = loss
             best_mal_0 = mal_list0
             best_mal_1 = mal_list1
-        print(loss/100)
+    
         losses.append(loss)
-        loss=loss/100
+        
+        print(loss)
         loss.backward()
 
         optimizer.step()
+        
 
         model.eval()
 
