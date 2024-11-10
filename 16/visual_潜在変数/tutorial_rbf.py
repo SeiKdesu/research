@@ -381,3 +381,25 @@ if plot_status:
     plt.savefig('RBF model: validation of the prediction model.png')
 def t_preditct(xtest):
     return t.predict_values(xtest)
+
+
+from scipy.cluster.hierarchy import dendrogram
+def plot_dendrogram(model, **kwargs):
+    # Create counts of samples in each cluster
+    counts = np.zeros(model.children_.shape[0])
+    n_samples = len(model.labels_)
+    
+    for i, merge in enumerate(model.children_):
+        current_count = 0
+        for child_idx in merge:
+            if child_idx < n_samples:
+                current_count += 1  # leaf node
+            else:
+                current_count += counts[child_idx - n_samples]
+        counts[i] = current_count
+    
+    # Create the linkage matrix for the dendrogram
+    linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
+    
+    # Generate the dendrogram plot
+    dendrogram(linkage_matrix, **kwargs)

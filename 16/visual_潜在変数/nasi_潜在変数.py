@@ -216,12 +216,14 @@ def train(dt):
     # gnn_labels = res_spkm.labels_
 
 
+
+
     # SVMの分類器を訓練
     spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, affinity='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
-  
+    
     pp,ff = QOL()
     print('teacher_input',pp)
     ff_out =objective_function(pp,dim)
@@ -295,7 +297,7 @@ def train(dt):
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
-    return float(loss),gnn_labels
+    return float(loss),gnn_labels,res_spkm
 
 
 def test(dt):
@@ -531,7 +533,7 @@ for com in range(1):
     for epoch in range(1, epochs + 1):
         acc=0
         # 訓練データでのlossを取得
-        loss,gnn_labels = train(train_data)
+        loss,gnn_labels,model_cluster = train(train_data)
     
         loss_values.append(loss)
         
@@ -560,6 +562,15 @@ for com in range(1):
             best_label=gnn_labels
             best_epoch=epoch
             visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
+            # print(model_cluster.distances_)
+            # plot_dendrogram(model_cluster,model_cluster.distances_ ,truncate_mode='lastp', p=3)
+         
+            # plt.figure(figsize=(10, 7))
+            # plot_dendrogram(model_cluster)
+            # plt.title("Hierarchical Clustering Dendrogram")
+            # plt.xlabel("Sample index")
+            # plt.ylabel("Distance")
+            # plt.show()
             # center_point = res_spkm
         count=0
         for i in range(6): 

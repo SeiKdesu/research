@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
 %%Creator: Matplotlib v3.5.3, https://matplotlib.org/
-%%CreationDate: Sun Nov 10 14:18:31 2024
+%%CreationDate: Sun Nov 10 14:49:36 2024
 %%Orientation: portrait
 %%BoundingBox: -54 36 666 756
 %%HiResBoundingBox: -54.000000 36.000000 666.000000 756.000000
@@ -299,7 +299,6 @@ fill
 grestore
 stroke
 grestore
-0.620 0.855 0.898 setrgbcolor
 gsave
 558 554.4 90 79.2 clipbox
 622.636 104.4 p0_0
@@ -308,7 +307,6 @@ fill
 grestore
 stroke
 grestore
-0.549 0.337 0.294 setrgbcolor
 gsave
 558 554.4 90 79.2 clipbox
 622.636 104.4 p0_0
@@ -325,7 +323,6 @@ fill
 grestore
 stroke
 grestore
-0.620 0.855 0.898 setrgbcolor
 gsave
 558 554.4 90 79.2 clipbox
 115.364 104.4 p0_0
@@ -361,37 +358,37 @@ grestore
 /DejaVuSans 8.000 selectfont
 gsave
 
-638.100683 104.682006 translate
+622.066654 103.589113 translate
 0.000000 rotate
 0.000000 0 m /zero glyphshow
 grestore
 gsave
 
-598.563111 103.336340 translate
+617.726447 102.835234 translate
 0.000000 rotate
 0.000000 0 m /one glyphshow
 grestore
 gsave
 
-630.199534 96.482077 translate
+621.199311 98.995289 translate
 0.000000 rotate
 0.000000 0 m /two glyphshow
 grestore
 gsave
 
-616.589139 101.585895 translate
+619.705240 101.854587 translate
 0.000000 rotate
 0.000000 0 m /three glyphshow
 grestore
 gsave
 
-593.643922 603.728579 translate
+617.186447 604.814068 translate
 0.000000 rotate
 0.000000 0 m /four glyphshow
 grestore
 gsave
 
-121.624775 104.921103 translate
+113.783654 103.723062 translate
 0.000000 rotate
 0.000000 0 m /five glyphshow
 grestore
