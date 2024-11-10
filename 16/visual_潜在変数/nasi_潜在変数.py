@@ -711,7 +711,7 @@ legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(
 ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
 plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
 plt.savefig(f'{dir_file}/潜在変数.pdf')
-
+plt.close()
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
