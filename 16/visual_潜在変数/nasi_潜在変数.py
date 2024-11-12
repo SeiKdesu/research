@@ -690,7 +690,7 @@ ax.scatter(gnn_df_with_cluster['X'], gnn_df_with_cluster['Y'], s=20, color='grey
 # ノードをクラスタごとに色分けして描画
 cmap = plt.get_cmap('tab20')
 
-nx.draw_networkx_nodes(gnn_G, gnn_pos, cmap=cmap, node_color = gnn_labels, node_size=80, ax=ax)
+nx.draw_networkx_nodes(gnn_G, gnn_pos, cmap=cmap, node_color = gnn_labels, node_size=1000, ax=ax)
 nx.draw_networkx_edges(gnn_G, gnn_pos, edge_color='grey', ax=ax)
 # ノード番号（ラベル）を追加
 # ラベルを少しずつずらすためのオフセット
@@ -699,7 +699,7 @@ offset_y = 0.0  # Y方向に少しずらす
 # ノードの位置を変更してラベルをずらす
 gnn_pos_adjusted = {node: (x + offset_x, y + offset_y * node) for node, (x, y) in gnn_pos.items()}
 # ノードラベルをずらして描画
-nx.draw_networkx_labels(gnn_G, gnn_pos_adjusted, font_size=8, font_color='black', ax=ax)
+nx.draw_networkx_labels(gnn_G, gnn_pos_adjusted, font_size=30, font_color='black', ax=ax)
 
 # nx.draw_networkx_labels(gnn_G, gnn_pos, font_size=8, font_color='black', ax=ax)
 print(gnn_G)
@@ -721,7 +721,7 @@ from matplotlib.lines import Line2D
 legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(i / float(max(gnn_labels) + 1)), markersize=10, label=f'Cluster {i}') for i in range(max(gnn_labels) + 1)]
 ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
 plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
-plt.savefig(f'{dir_file}/潜在変数.pdf')
+plt.savefig(f'{dir_file}/潜在変数.png')
 plt.close()
 import numpy as np
 import matplotlib.pyplot as plt
@@ -745,7 +745,7 @@ fig, ax = plt.subplots(figsize=(10, 10))
 # ノードをクラスタごとに色分けして描画
 cmap = plt.get_cmap('tab20')
 nx.draw_networkx_nodes(gnn_G_selected, gnn_pos_selected, cmap=cmap, 
-                       node_color=gnn_labels_selected, node_size=200, ax=ax)
+                       node_color=gnn_labels_selected, node_size=1000, ax=ax)
 
 # エッジを描画
 nx.draw_networkx_edges(gnn_G_selected, gnn_pos_selected, edge_color='grey', ax=ax)
@@ -759,7 +759,7 @@ for i, label in enumerate(selected_nodes):
     # ラベルをずらして重ならないようにする
     ax.text(x_pos + np.random.uniform(-label_offset, label_offset), 
             y_pos + np.random.uniform(-label_offset, label_offset), 
-            str(label), fontsize=8, ha='center', va='center')
+            str(label), fontsize=25, ha='center', va='center')
 
 # 軸ラベルを設定
 ax.set_xlabel('X')

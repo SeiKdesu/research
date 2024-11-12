@@ -101,6 +101,8 @@ from torch_geometric.utils import train_test_split_edges, to_networkx, from_netw
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
 from sklearn import cluster
+# 学習率スケジューラー
+from torch.optim import lr_scheduler
 
 
 
@@ -143,12 +145,11 @@ out_channels = 1
 # Transform Parameters
 transform_set = True
 
-# Optimizer Parameters (learning rate)
-learn_rate = 0.00000001
+
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 300
+epochs = 500
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -217,7 +218,7 @@ def train(dt):
 
 
     # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
+    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, affinity='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
@@ -505,9 +506,13 @@ for com in range(1):
     train_data = train_data.to(device)
     test_data = test_data.to(device)
     data_ = data.to(device)
+    # Optimizer Parameters (learning rate)
+    learn_rate = 0.001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
+    # 5. CosineAnnealingLR
+    scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     print(model)
 
 
@@ -527,7 +532,7 @@ for com in range(1):
     accuracy=[]
     best_label=[]
     best_loss= 100000000000000
-
+    
     for epoch in range(1, epochs + 1):
         acc=0
         # 訓練データでのlossを取得
@@ -546,6 +551,8 @@ for com in range(1):
         # 100エポックごとに表示
         # if (epoch % 100 == 0):
         print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+        # 学習率の更新    
+        scheduler.step()
         model.eval()
 
 

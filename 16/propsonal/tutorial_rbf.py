@@ -150,13 +150,13 @@ def objective_function(x,dim):
     dim1=[0,1]
     dim2=[3,4]
     tmp1 = Rosenbrock(x,dim1)
-    tmp2 = dixon_price(x,dim2)
+    tmp2 = Rosenbrock(x,dim2)
     return tmp1+tmp2
 
 def objective_function1(x,dim1,dim2):
     
     tmp1 = Rosenbrock(x,dim1)
-    tmp2 = dixon_price(x,dim2)
+    tmp2 = Rosenbrock(x,dim2)
     return tmp1+tmp2
     
     # n_rosenbrock = 3

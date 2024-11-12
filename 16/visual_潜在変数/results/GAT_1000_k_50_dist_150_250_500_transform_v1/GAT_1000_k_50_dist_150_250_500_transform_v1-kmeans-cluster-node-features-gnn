@@ -1,7 +1,7 @@
 %!PS-Adobe-3.0 EPSF-3.0
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
 %%Creator: Matplotlib v3.5.3, https://matplotlib.org/
-%%CreationDate: Sun Nov 10 14:51:00 2024
+%%CreationDate: Sun Nov 10 15:04:21 2024
 %%Orientation: portrait
 %%BoundingBox: -54 36 666 756
 %%HiResBoundingBox: -54.000000 36.000000 666.000000 756.000000
@@ -266,15 +266,15 @@ grestore
 /p0_0 {
 newpath
 translate
-0 -7.071068 m
-1.875269 -7.071068 3.673985 -6.326016 5 -5 c
-6.326016 -3.673985 7.071068 -1.875269 7.071068 0 c
-7.071068 1.875269 6.326016 3.673985 5 5 c
-3.673985 6.326016 1.875269 7.071068 0 7.071068 c
--1.875269 7.071068 -3.673985 6.326016 -5 5 c
--6.326016 3.673985 -7.071068 1.875269 -7.071068 0 c
--7.071068 -1.875269 -6.326016 -3.673985 -5 -5 c
--3.673985 -6.326016 -1.875269 -7.071068 0 -7.071068 c
+0 -15.811388 m
+4.193229 -15.811388 8.215279 -14.145401 11.18034 -11.18034 c
+14.145401 -8.215279 15.811388 -4.193229 15.811388 0 c
+15.811388 4.193229 14.145401 8.215279 11.18034 11.18034 c
+8.215279 14.145401 4.193229 15.811388 0 15.811388 c
+-4.193229 15.811388 -8.215279 14.145401 -11.18034 11.18034 c
+-14.145401 8.215279 -15.811388 4.193229 -15.811388 0 c
+-15.811388 -4.193229 -14.145401 -8.215279 -11.18034 -11.18034 c
+-8.215279 -14.145401 -4.193229 -15.811388 0 -15.811388 c
 cl
 
 } bind def
@@ -285,33 +285,7 @@ cl
 0.122 0.467 0.706 setrgbcolor
 gsave
 558 554.4 90 79.2 clipbox
-115.364 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-gsave
-558 554.4 90 79.2 clipbox
-115.364 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-0.620 0.855 0.898 setrgbcolor
-gsave
-558 554.4 90 79.2 clipbox
-115.364 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-0.549 0.337 0.294 setrgbcolor
-gsave
-558 554.4 90 79.2 clipbox
-115.364 104.4 p0_0
+115.364 608.4 p0_0
 gsave
 fill
 grestore
@@ -325,10 +299,35 @@ fill
 grestore
 stroke
 grestore
+0.549 0.337 0.294 setrgbcolor
+gsave
+558 554.4 90 79.2 clipbox
+115.364 608.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+558 554.4 90 79.2 clipbox
+115.364 608.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+gsave
+558 554.4 90 79.2 clipbox
+115.364 104.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
 0.620 0.855 0.898 setrgbcolor
 gsave
 558 554.4 90 79.2 clipbox
-622.636 104.4 p0_0
+622.636 608.4 p0_0
 gsave
 fill
 grestore
@@ -358,40 +357,40 @@ gsave
 648 633.6 l
 stroke
 grestore
-/DejaVuSans 8.000 selectfont
+/DejaVuSans 25.000 selectfont
 gsave
 
-115.680047 103.718288 translate
+113.541723 602.735338 translate
 0.000000 rotate
 0.000000 0 m /zero glyphshow
 grestore
 gsave
 
-109.394658 102.894463 translate
+100.082692 602.067264 translate
 0.000000 rotate
 0.000000 0 m /one glyphshow
 grestore
 gsave
 
-114.423981 98.698239 translate
+110.852083 598.664378 translate
 0.000000 rotate
 0.000000 0 m /two glyphshow
 grestore
 gsave
 
-112.260302 101.822829 translate
+106.218953 601.198234 translate
 0.000000 rotate
 0.000000 0 m /three glyphshow
 grestore
 gsave
 
-108.612642 604.685768 translate
+98.408146 96.276145 translate
 0.000000 rotate
 0.000000 0 m /four glyphshow
 grestore
 gsave
 
-621.489721 103.864665 translate
+617.681585 602.854041 translate
 0.000000 rotate
 0.000000 0 m /five glyphshow
 grestore
