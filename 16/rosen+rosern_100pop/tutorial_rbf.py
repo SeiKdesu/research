@@ -131,18 +131,7 @@ def dixon_price(x,n):
     term1 = (x[0] - 1) ** 2
     term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in n])
     return term1 + term2
-import math
 
-def ackley(x, n):
-    a=20
-    b=0.2
-    c=2*math.pi
-    # term1, term2 を定義
-    term1 = -a * math.exp(-b * math.sqrt(sum([xi**2 for xi in x]) / n))
-    term2 = -math.exp(sum([math.cos(c * xi) for xi in x]) / n)
-    
-    # 最終的なAckley関数の値を返す
-    return term1 + term2 + a + math.e
 def powell(x):
     n = len(x)
     if n % 4 != 0:
@@ -158,13 +147,17 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    tmp1 = ackley(x,dim)
-    return tmp1
+    dim1=[0,1,2]
+    dim2=[3,4]
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = Rosenbrock(x,dim2)
+    return tmp1+tmp2
 
 def objective_function1(x,dim1,dim2):
-    
-    tmp1 = ackley(x,dim)
-    return tmp1
+    print(dim1,dim2)
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = Rosenbrock(x,dim2)
+    return tmp1+tmp2
     
     # n_rosenbrock = 3
     # n_dixon=3
@@ -177,7 +170,7 @@ def objective_function1(x,dim1,dim2):
 # パラメータの設定
 dim = 6
 max_gen = 10
-pop_size = 20
+pop_size = 100
 offspring_size = 300
 bound = 5
 from datetime import datetime
@@ -299,7 +292,7 @@ population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, 
 
 xt = np.array(population, dtype=np.double)    
 yt = np.array(fitness, dtype=np.double)
-yt=yt.reshape(20,1)
+yt=yt.reshape(100,1)
 # Construction of the validation points
 ntest = 200  # 500
 
@@ -312,7 +305,7 @@ def QOL():
 
 xtest = np.array(population_test, dtype=np.double)    
 ytest = np.array(fitness_test, dtype=np.double)
-ytest=ytest.reshape(20,1)
+ytest=ytest.reshape(100,1)
 
 
 # xtest = [arr.tolist() for arr in population_test]
