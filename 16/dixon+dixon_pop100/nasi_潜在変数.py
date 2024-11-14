@@ -19,7 +19,7 @@ from datetime import datetime
 # 現在の時刻を取得
 current_time = datetime.now()
 name = f'{current_time}_Spectural'
-def visualize_graph(G, color, i, file_dir_name):
+def visualize_graph(G, color,i,file_dir_name):
     plt.figure(figsize=(3, 3))
     plt.xticks([])
     plt.yticks([])
@@ -28,19 +28,14 @@ def visualize_graph(G, color, i, file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 107)), [107]]
+    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
     for r in ranges:
-        if r == ranges[0]:  # 最初の範囲に間隔を追加
-            y_offset = -2  # 間隔を広げるために大きな負の値を設定
-        else:
-            y_offset = -1  # 通常の間隔
-
         for i, node in enumerate(r):
-            pos[node] = (x_offset, y_offset * i)  # Y座標は間隔に基づいて設定
-        x_offset += 10  # 次の列に移動
+            pos[node] = (x_offset, -i)  # Y座標は負の値に設定
+        x_offset += 1  # 次の列に移動
 
     # エッジの重みに基づいて太さを決定
     weights = nx.get_edge_attributes(G, 'weight')
@@ -54,11 +49,10 @@ def visualize_graph(G, color, i, file_dir_name):
     nx.draw_networkx_edges(G, pos, width=edge_widths, edge_color='gray', arrows=True)
 
     # 画像を保存
-    if i == 1:
+    if(i==1):
         plt.savefig(f'{file_dir_name}/teacher_.png')  # 保存
 
     plt.savefig(f'{file_dir_name}/predict_.png')  # 保存
-
 
 
 import os
@@ -107,8 +101,6 @@ from torch_geometric.utils import train_test_split_edges, to_networkx, from_netw
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
 from sklearn import cluster
-# 学習率スケジューラー
-from torch.optim import lr_scheduler
 
 
 
@@ -146,16 +138,17 @@ clusters = []
 # Channel Parameters & GAE MODEL
 in_channels = 6
 hidden_channels = 20
-out_channels = 3
+out_channels = 1
 
 # Transform Parameters
 transform_set = True
 
-
+# Optimizer Parameters (learning rate)
+learn_rate = 0.00000001
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 500
+epochs = 300
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -178,17 +171,15 @@ class GCNEncoder(torch.nn.Module):
       # GAT
       self.in_head = 8
       self.out_head = 1
-      hidden_channels2 = 100
-      hidden_channels3=80
-      hidden_channels4 =40
-      hidden_channels5= 20
+      hidden_channels2 = 10
+      hidden_channels3=5
+      hidden_channels4 =3
       self.conv1 = GATConv(in_channels, hidden_channels, heads=self.in_head, dropout=0.6)
       self.conv2 = GATConv(hidden_channels*self.in_head,hidden_channels2)
       self.conv3 = GATConv(hidden_channels2,hidden_channels3)
       self.conv4 = GATConv(hidden_channels3,hidden_channels4)
-      self.conv5 = GATConv(hidden_channels4, hidden_channels5)#, heads=self.out_head, dropout=0.6)
-      self.conv6 = GATConv(hidden_channels5, out_channels, concat=False)
-      
+      self.conv5 = GATConv(hidden_channels4, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
+
 
     def forward(self, x, edge_index):
       x = self.conv1(x, edge_index).relu()
@@ -196,8 +187,7 @@ class GCNEncoder(torch.nn.Module):
       x = self.conv2(x,edge_index).relu()
       x = self.conv3(x, edge_index).relu()
       x = self.conv4(x, edge_index).relu()
-      x = self.conv5(x,edge_index).relu()
-      x = self.conv6(x,edge_index)
+      x = self.conv5(x,edge_index)
       return x
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(dt):
@@ -226,6 +216,8 @@ def train(dt):
     # gnn_labels = res_spkm.labels_
 
 
+
+
     # SVMの分類器を訓練
     spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, affinity='manhattan', linkage='complete')
 
@@ -233,12 +225,12 @@ def train(dt):
     gnn_labels = res_spkm.labels_
     
     pp,ff = QOL()
-
+    print('teacher_input',pp)
     ff_out =objective_function(pp,dim)
     
     # ff_out = ff_out[0]
     pp= pp
-
+    # print('inputs',pp,ff[0])
     # ff_real = objective_function(pp,dim)
     pp = np.array(pp)
     classfication = gnn_labels
@@ -282,27 +274,30 @@ def train(dt):
     #     prediction2.append(0.0)
     # else:
     #     prediction2 = t_preditct(input3)
-
+    print(pp[0]-pp[0])
+    print(mal_list0,mal_list1)
     all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
+    print('output',ff_out[0],all_prediction[0])
 
     ff_out = np.array(ff_out,dtype = np.float32)
     # ff_out = ff_out.reshape(20,1)
 
     
-
+    # print(ff.shape,all_prediction.shape)
+    # print("Size of ff:", type(dataset.y.size))
+    # print(ff)
+    # print("Size of all_prediction:", type(all_prediction))
 
     # loss_mse= mean_squared_error(ff, all_prediction)
     ff_out = torch.tensor(ff_out,requires_grad=True,dtype=float)
     all_prediction = torch.tensor(all_prediction)
     loss_func=nn.L1Loss()
-
     loss = loss_func(ff_out,all_prediction)
-    
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
-    return float(loss),gnn_labels
+    return float(loss),gnn_labels,res_spkm
 
 
 def test(dt):
@@ -323,17 +318,17 @@ for com in range(1):
     src=[]
     dst=[]
     for j in range(6):
-        for i in range(101):
+        for i in range(21):
             src.append(j)
 
-    for i in range(6,107):
+    for i in range(6,27):
         src.append(i)
 
     for j in range(6):
-        for i in range(6,107):
+        for i in range(6,27):
             dst.append(i)
-    for i in range(101):
-        dst.append(107)
+    for i in range(21):
+        dst.append(27)
     edge_index=torch.tensor([src,dst],dtype=torch.long)
 
 
@@ -359,6 +354,7 @@ for com in range(1):
         params.append(item)
     params = torch.tensor(params)
     edge_attr=params
+    np.random.seed(1234)
 
 #########################################################################
 
@@ -415,7 +411,7 @@ for com in range(1):
         y_tmp.append(0)
     for i in range(3):
         y_tmp.append(1)
-    for i in range(102):
+    for i in range(22):
         y_tmp.append(2)
 
     y = torch.tensor(y_tmp)
@@ -435,16 +431,17 @@ for com in range(1):
 
 
     dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
-    Data.train_mask=np.array([1 for i in range(6)])
+    Data.train_mask=np.array([1 for i in range(len(y))])
 
 
 
     data = dataset
     G=to_networkx(dataset, to_undirected=False)
     dir_file = dirs()
-    # visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
+    visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
     # transform = RemoveDuplicatedEdges()
     # data = transform(data)
+    print(data)
 
     transform = RandomLinkSplit(
         num_val=0.05,
@@ -510,13 +507,9 @@ for com in range(1):
     train_data = train_data.to(device)
     test_data = test_data.to(device)
     data_ = data.to(device)
-    # Optimizer Parameters (learning rate)
-    learn_rate = 0.000001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
-    # 5. CosineAnnealingLR
-    scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     print(model)
 
 
@@ -536,15 +529,12 @@ for com in range(1):
     accuracy=[]
     best_label=[]
     best_loss= 100000000000000
-    
+
     for epoch in range(1, epochs + 1):
         acc=0
-        acc_num = 0
         # 訓練データでのlossを取得
-        loss,gnn_labels = train(train_data)
-        # loss = int(loss)
-        # if loss == 0:
-        #     break
+        loss,gnn_labels,model_cluster = train(train_data)
+    
         loss_values.append(loss)
         
         # テストデータでのAUCとAPを取得
@@ -557,9 +547,7 @@ for com in range(1):
 
         # 100エポックごとに表示
         # if (epoch % 100 == 0):
-        # print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
-        # 学習率の更新    
-        scheduler.step()
+        print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
         model.eval()
 
 
@@ -574,12 +562,21 @@ for com in range(1):
             best_label=gnn_labels
             best_epoch=epoch
             visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
+            # print(model_cluster.distances_)
+            # plot_dendrogram(model_cluster,model_cluster.distances_ ,truncate_mode='lastp', p=3)
+         
+            # plt.figure(figsize=(10, 7))
+            # plot_dendrogram(model_cluster)
+            # plt.title("Hierarchical Clustering Dendrogram")
+            # plt.xlabel("Sample index")
+            # plt.ylabel("Distance")
+            # plt.show()
+            # center_point = res_spkm
         count=0
         for i in range(6): 
             if gnn_labels[i]==dataset.y[i]:
                 count += 1
         acc=count/6
-        
         
         # accuracy.append(count/6)
         # # print(count/2)
@@ -607,14 +604,20 @@ for com in range(1):
     #         print(gnn_labels,epoch)
     #         break
     # # visualize_graph(G,color=best_label,i=0)
-
-        if acc > 0.8:
-            print(epoch,gnn_labels,loss)
-            print(best_label,best_epoch,best_auc,best_loss)
+    # for i in range(6): 
+    #     if gnn_labels[i]== 0:
+    #         print(i)
+    #         count_0[i] += 1
+    #     if gnn_labels[i]== 1:
+            
+    #         count_1[i] += 1
+    #     if gnn_labels[i]== 2:
+    #         count_2[i] += 1
+    print(epoch,gnn_labels,loss)
+    print(best_label,best_epoch,best_auc,best_loss)
     # print(count_0,count_1,count_2)
     # visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
     # 訓練終了後にlossとAUCをプロット
-    print(best_label,best_epoch,best_auc,best_loss)
     plt.figure()
 
 
@@ -656,6 +659,11 @@ plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
 plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
+plt.close()
+
+
+
+
 
 
 # 洗剤変数空間の可視化

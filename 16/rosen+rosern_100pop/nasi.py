@@ -506,7 +506,7 @@ for com in range(1):
     test_data = test_data.to(device)
     data_ = data.to(device)
     # Optimizer Parameters (learning rate)
-    learn_rate = 0.000001
+    learn_rate = 0.00001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
@@ -653,3 +653,113 @@ plt.tight_layout()  # レイアウトの調整
 plt.savefig(f'{dir_file}/hist.png')
 
 
+
+
+# 洗剤変数空間の可視化
+gnn_kmeans= best_label
+gnn_eval_data = data_
+gnn_X = gnn_eval_data.x[:,[0,1]].cpu().detach().numpy()
+gnn_df = pd.DataFrame(gnn_X, columns = ['X','Y'])
+
+# Adding cluster labels to the DataFrame
+gnn_df_with_cluster = gnn_df.copy(deep=True)
+gnn_df_with_cluster['cluster'] = best_label
+
+gnn_G = to_networkx(gnn_eval_data)
+gnn_G = gnn_G.to_undirected()
+gnn_labels = best_label
+# gnn_cluster_centers = gnn_kmeans.cluster_centers_
+
+
+gnn_pos = dict(zip(range(gnn_X[:, 0].size), gnn_X))
+
+
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.scatter(gnn_df_with_cluster['X'], gnn_df_with_cluster['Y'], s=20, color='grey')
+# ノードをクラスタごとに色分けして描画
+cmap = plt.get_cmap('tab20')
+
+nx.draw_networkx_nodes(gnn_G, gnn_pos, cmap=cmap, node_color = gnn_labels, node_size=1000, ax=ax)
+nx.draw_networkx_edges(gnn_G, gnn_pos, edge_color='grey', ax=ax)
+# ノード番号（ラベル）を追加
+# ラベルを少しずつずらすためのオフセット
+offset_x = 0.1
+offset_y = 0.0  # Y方向に少しずらす
+# ノードの位置を変更してラベルをずらす
+gnn_pos_adjusted = {node: (x + offset_x, y + offset_y * node) for node, (x, y) in gnn_pos.items()}
+# ノードラベルをずらして描画
+nx.draw_networkx_labels(gnn_G, gnn_pos_adjusted, font_size=30, font_color='black', ax=ax)
+
+# nx.draw_networkx_labels(gnn_G, gnn_pos, font_size=8, font_color='black', ax=ax)
+print(gnn_G)
+print(gnn_pos)
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+# x軸とy軸に目盛りを表示
+ax.tick_params(axis='both', which='major', labelsize=10)
+ax.grid(True)  # グリッドを有効化（必要に応じて）
+# # x軸とy軸の範囲を設定し、目盛りを自動的に表示
+# ax.set_xlim(gnn_df_with_cluster['X'].min() - 10.1, gnn_df_with_cluster['X'].max() + 10.1)
+# ax.set_ylim(gnn_df_with_cluster['Y'].min() - 10.1, gnn_df_with_cluster['Y'].max() + 10.1)
+
+# # 自動的に目盛りを有効にする
+# ax.xaxis.set_major_locator(plt.AutoLocator())
+# ax.yaxis.set_major_locator(plt.AutoLocator())
+# 凡例を表示（クラスタの番号と色を示す）
+from matplotlib.lines import Line2D
+legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(i / float(max(gnn_labels) + 1)), markersize=10, label=f'Cluster {i}') for i in range(max(gnn_labels) + 1)]
+ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
+plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
+plt.savefig(f'{dir_file}/潜在変数.png')
+plt.close()
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+from sklearn.cluster import KMeans
+import pandas as pd
+
+# 使用するノードのインデックスを指定（0~5番目のノードを使用）
+selected_nodes = list(range(6))  # 0~5のノードを選択
+
+# 使用するノードの位置とラベルを選択
+gnn_pos_selected = {k: gnn_pos[k] for k in selected_nodes}  # ノードの位置を選択したノードのみに絞り込む
+gnn_labels_selected = gnn_labels[selected_nodes]  # クラスタラベルを選択したノードのみに絞り込む
+
+# 使用するノードを含むサブグラフを作成
+gnn_G_selected = gnn_G.subgraph(selected_nodes)
+
+# Draw the Graph
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# ノードをクラスタごとに色分けして描画
+cmap = plt.get_cmap('tab20')
+nx.draw_networkx_nodes(gnn_G_selected, gnn_pos_selected, cmap=cmap, 
+                       node_color=gnn_labels_selected, node_size=1000, ax=ax)
+
+# エッジを描画
+nx.draw_networkx_edges(gnn_G_selected, gnn_pos_selected, edge_color='grey', ax=ax)
+
+# ノード番号（ラベル）を追加
+label_offset = 0.03  # ラベルをずらす距離
+
+# 各ノードに対して、ラベルを表示する
+for i, label in enumerate(selected_nodes):
+    x_pos, y_pos = gnn_pos_selected[label]
+    # ラベルをずらして重ならないようにする
+    ax.text(x_pos + np.random.uniform(-label_offset, label_offset), 
+            y_pos + np.random.uniform(-label_offset, label_offset), 
+            str(label), fontsize=25, ha='center', va='center')
+
+# 軸ラベルを設定
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+
+
+# # 凡例を表示（クラスタの番号と色を示す）
+# from matplotlib.lines import Line2D
+# legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(i / float(max(gnn_labels_selected) + 1)), markersize=10, label=f'Cluster {i}') for i in range(max(gnn_labels_selected) + 1)]
+# ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
+
+# グラフを保存して表示
+plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
+plt.savefig(f"{dir_file}/only_6.png")
