@@ -28,13 +28,13 @@ def visualize_graph(G, color, i, file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 107)), [107]]
+    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 108)), [108]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
     for r in ranges:
         if r == ranges[0]:  # 最初の範囲に間隔を追加
-            y_offset = -2  # 間隔を広げるために大きな負の値を設定
+            y_offset = -10  # 間隔を広げるために大きな負の値を設定
         else:
             y_offset = -1  # 通常の間隔
 
@@ -109,8 +109,7 @@ import torch.nn.functional as F
 from sklearn import cluster
 # 学習率スケジューラー
 from torch.optim import lr_scheduler
-
-
+from torch import nn
 
 """### Import the Dataset
 
@@ -317,7 +316,8 @@ def test(dt):
 
 Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
 """
-from tutorial_rbf import *
+# from tutorial_rbf import *
+from rbf_surrogate_100 import *
 for com in range(1):
     
     src=[]
@@ -333,7 +333,7 @@ for com in range(1):
         for i in range(6,107):
             dst.append(i)
     for i in range(101):
-        dst.append(107)
+        dst.append(108)
     edge_index=torch.tensor([src,dst],dtype=torch.long)
 
 

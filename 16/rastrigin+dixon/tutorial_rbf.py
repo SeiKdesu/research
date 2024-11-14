@@ -147,16 +147,17 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    dim1=[0,1]
-    dim2=[3,4]
+    dim1=[0,1,2]
+    dim2=[3,4,5]
     tmp1 = Rosenbrock(x,dim1)
     tmp2 = dixon_price(x,dim2)
     return tmp1+tmp2
 
 def objective_function1(x,dim1,dim2):
-    
+    print(dim1,dim2)
+
     tmp1 = Rosenbrock(x,dim1)
-    tmp2 = dixon_price(x,dim2)
+    tmp2 =dixon_price(x,dim2)
     return tmp1+tmp2
     
     # n_rosenbrock = 3
@@ -170,7 +171,7 @@ def objective_function1(x,dim1,dim2):
 # パラメータの設定
 dim = 6
 max_gen = 10
-pop_size = 20
+pop_size = 100
 offspring_size = 300
 bound = 5
 from datetime import datetime
@@ -292,7 +293,7 @@ population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, 
 
 xt = np.array(population, dtype=np.double)    
 yt = np.array(fitness, dtype=np.double)
-yt=yt.reshape(20,1)
+yt=yt.reshape(100,1)
 # Construction of the validation points
 ntest = 200  # 500
 
@@ -305,7 +306,7 @@ def QOL():
 
 xtest = np.array(population_test, dtype=np.double)    
 ytest = np.array(fitness_test, dtype=np.double)
-ytest=ytest.reshape(20,1)
+ytest=ytest.reshape(100,1)
 
 
 # xtest = [arr.tolist() for arr in population_test]
