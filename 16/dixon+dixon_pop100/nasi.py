@@ -436,7 +436,7 @@ for com in range(1):
 
 
     dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
-    Data.train_mask=np.array([1 for i in range(len(y))])
+    Data.train_mask=np.array([1 for i in range(6)])
 
 
 
@@ -512,7 +512,7 @@ for com in range(1):
     test_data = test_data.to(device)
     data_ = data.to(device)
     # Optimizer Parameters (learning rate)
-    learn_rate = 0.000001
+    learn_rate = 0.00001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
