@@ -149,7 +149,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 500
+epochs = 50000000   
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -218,7 +218,7 @@ def train(dt):
 
 
     # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, affinity='manhattan', linkage='complete')
+    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
