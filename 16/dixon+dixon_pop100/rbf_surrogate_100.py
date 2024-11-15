@@ -38,10 +38,13 @@ def objective_function(x,dim):
 #     return tmp1+tmp2
 
 def objective_function1(x,dim1,dim2):
-    
-    tmp1 = dixon_price(x,dim1)
-    tmp2 = dixon_price(x,dim2)
-    return tmp1+tmp2
+    values=[]
+
+    for tmp in x:
+        tmp1 = dixon_price(tmp,dim1)
+        tmp2 = dixon_price(tmp,dim2)
+        values.append(tmp1+tmp2)
+    return np.array(values).reshape(-1,1)
 
 random_state = 25 # fixes the seed for consistent results
 

@@ -1,13 +1,14 @@
 %!PS-Adobe-3.0 EPSF-3.0
+%%LanguageLevel: 3
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
-%%Creator: Matplotlib v3.5.3, https://matplotlib.org/
-%%CreationDate: Thu Nov 14 11:44:58 2024
+%%Creator: Matplotlib v3.9.1, https://matplotlib.org/
+%%CreationDate: Fri Nov 15 09:22:40 2024
 %%Orientation: portrait
-%%BoundingBox: -54 36 666 756
-%%HiResBoundingBox: -54.000000 36.000000 666.000000 756.000000
+%%BoundingBox: 0 0 720 720
+%%HiResBoundingBox: 0.000000 0.000000 720.000000 720.000000
 %%EndComments
 %%BeginProlog
-/mpldict 11 dict def
+/mpldict 9 dict def
 mpldict begin
 /_d { bind def } bind def
 /m { moveto } _d
@@ -16,18 +17,6 @@ mpldict begin
 /c { curveto } _d
 /cl { closepath } _d
 /ce { closepath eofill } _d
-/box {
-      m
-      1 index 0 r
-      0 exch r
-      neg 0 r
-      cl
-    } _d
-/clipbox {
-      box
-      clip
-      newpath
-    } _d
 /sc { setcachedevice } _d
 %!PS-Adobe-3.0 Resource-Font
 %%Creator: Converted from TrueType to Type 3 by Matplotlib.
@@ -229,15 +218,15 @@ FontName currentdict end definefont pop
 end
 %%EndProlog
 mpldict begin
--54 36 translate
-720 720 0 0 clipbox
+0 0 translate
+0 0 720 720 rectclip
 gsave
 0 0 m
 720 0 l
 720 720 l
 0 720 l
 cl
-1.000 setgray
+1 setgray
 fill
 grestore
 gsave
@@ -246,22 +235,23 @@ gsave
 648 633.6 l
 90 633.6 l
 cl
-1.000 setgray
+1 setgray
 fill
 grestore
-0.000 setgray
+0 setgray
 /DejaVuSans 10.000 selectfont
 gsave
 
-365.570312 67.606250 translate
-0.000000 rotate
-0.000000 0 m /X glyphshow
+365.57 67.6062 translate
+0 rotate
+0 0 m /X glyphshow
 grestore
+/DejaVuSans 10.000 selectfont
 gsave
 
-83.921875 353.345313 translate
-90.000000 rotate
-0.000000 0 m /Y glyphshow
+83.9219 353.345 translate
+90 rotate
+0 0 m /Y glyphshow
 grestore
 /p0_0 {
 newpath
@@ -278,13 +268,40 @@ translate
 cl
 
 } bind def
-1.000 setlinewidth
+1 setlinewidth
 1 setlinejoin
 0 setlinecap
 [] 0 setdash
+0.122 0.467 0.706 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
+622.636 104.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+0.62 0.855 0.898 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
+622.636 104.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
 0.549 0.337 0.294 setrgbcolor
 gsave
-558 554.4 90 79.2 clipbox
+90 79.2 558 554.4 rectclip
+622.636 104.4 p0_0
+gsave
+fill
+grestore
+stroke
+grestore
+0.62 0.855 0.898 setrgbcolor
+gsave
+90 79.2 558 554.4 rectclip
 622.636 104.4 p0_0
 gsave
 fill
@@ -293,52 +310,26 @@ stroke
 grestore
 0.122 0.467 0.706 setrgbcolor
 gsave
-558 554.4 90 79.2 clipbox
-622.636 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-0.549 0.337 0.294 setrgbcolor
-gsave
-558 554.4 90 79.2 clipbox
-622.636 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-0.122 0.467 0.706 setrgbcolor
-gsave
-558 554.4 90 79.2 clipbox
-622.636 104.4 p0_0
-gsave
-fill
-grestore
-stroke
-grestore
-0.620 0.855 0.898 setrgbcolor
-gsave
-558 554.4 90 79.2 clipbox
+90 79.2 558 554.4 rectclip
 622.636 608.4 p0_0
 gsave
 fill
 grestore
 stroke
 grestore
+0.62 0.855 0.898 setrgbcolor
 gsave
-558 554.4 90 79.2 clipbox
+90 79.2 558 554.4 rectclip
 115.364 104.4 p0_0
 gsave
 fill
 grestore
 stroke
 grestore
-0.800 setlinewidth
+0.8 setlinewidth
 0 setlinejoin
 2 setlinecap
-0.000 setgray
+0 setgray
 gsave
 90 79.2 m
 90 633.6 l
@@ -362,39 +353,44 @@ grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-612.928144 93.832705 translate
-0.000000 rotate
-0.000000 0 m /zero glyphshow
+614.962 100.47 translate
+0 rotate
+0 0 m /zero glyphshow
 grestore
+/DejaVuSans 25.000 selectfont
 gsave
 
-607.538425 101.700307 translate
-0.000000 rotate
-0.000000 0 m /one glyphshow
+620.347 95.2395 translate
+0 rotate
+0 0 m /one glyphshow
 grestore
+/DejaVuSans 25.000 selectfont
 gsave
 
-610.515668 97.971295 translate
-0.000000 rotate
-0.000000 0 m /two glyphshow
+620.348 100.027 translate
+0 rotate
+0 0 m /two glyphshow
 grestore
+/DejaVuSans 25.000 selectfont
 gsave
 
-622.750833 98.724702 translate
-0.000000 rotate
-0.000000 0 m /three glyphshow
+605.568 92.7786 translate
+0 rotate
+0 0 m /three glyphshow
 grestore
+/DejaVuSans 25.000 selectfont
 gsave
 
-615.804541 602.331300 translate
-0.000000 rotate
-0.000000 0 m /four glyphshow
+610.055 601.813 translate
+0 rotate
+0 0 m /four glyphshow
 grestore
+/DejaVuSans 25.000 selectfont
 gsave
 
-99.172667 97.421099 translate
-0.000000 rotate
-0.000000 0 m /five glyphshow
+101.874 94.5547 translate
+0 rotate
+0 0 m /five glyphshow
 grestore
 
 end

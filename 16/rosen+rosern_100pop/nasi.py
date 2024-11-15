@@ -19,7 +19,7 @@ from datetime import datetime
 # 現在の時刻を取得
 current_time = datetime.now()
 name = f'{current_time}_Spectural'
-def visualize_graph(G, color,i,file_dir_name):
+def visualize_graph(G, color, i, file_dir_name):
     plt.figure(figsize=(3, 3))
     plt.xticks([])
     plt.yticks([])
@@ -28,14 +28,19 @@ def visualize_graph(G, color,i,file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
+    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 108)), [108]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
     for r in ranges:
+        if r == ranges[0]:  # 最初の範囲に間隔を追加
+            y_offset = -10  # 間隔を広げるために大きな負の値を設定
+        else:
+            y_offset = -1  # 通常の間隔
+
         for i, node in enumerate(r):
-            pos[node] = (x_offset, -i)  # Y座標は負の値に設定
-        x_offset += 1  # 次の列に移動
+            pos[node] = (x_offset, y_offset * i)  # Y座標は間隔に基づいて設定
+        x_offset += 10  # 次の列に移動
 
     # エッジの重みに基づいて太さを決定
     weights = nx.get_edge_attributes(G, 'weight')
@@ -49,10 +54,11 @@ def visualize_graph(G, color,i,file_dir_name):
     nx.draw_networkx_edges(G, pos, width=edge_widths, edge_color='gray', arrows=True)
 
     # 画像を保存
-    if(i==1):
+    if i == 1:
         plt.savefig(f'{file_dir_name}/teacher_.png')  # 保存
 
     plt.savefig(f'{file_dir_name}/predict_.png')  # 保存
+
 
 
 import os
@@ -103,8 +109,7 @@ import torch.nn.functional as F
 from sklearn import cluster
 # 学習率スケジューラー
 from torch.optim import lr_scheduler
-
-
+from torch import nn
 
 """### Import the Dataset
 
@@ -221,7 +226,7 @@ def train(dt):
 
 
     # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, affinity='manhattan', linkage='complete')
+    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
@@ -244,7 +249,8 @@ def train(dt):
     # mal_list2=[]
     # list2_count =dim
     
-    for count in range(dim):
+    # ROsenbrockの場合には-1
+    for count in range(dim-1):
         if classfication[count] == 0:
             mal_list0.append(count)
             list0_count += 1
@@ -311,7 +317,8 @@ def test(dt):
 
 Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
 """
-from tutorial_rbf import *
+# from tutorial_rbf import *
+from rbf_surrogate_100 import *
 for com in range(1):
     
     src=[]
@@ -327,7 +334,7 @@ for com in range(1):
         for i in range(6,107):
             dst.append(i)
     for i in range(101):
-        dst.append(107)
+        dst.append(108)
     edge_index=torch.tensor([src,dst],dtype=torch.long)
 
 
@@ -353,7 +360,6 @@ for com in range(1):
         params.append(item)
     params = torch.tensor(params)
     edge_attr=params
-    np.random.seed(1234)
 
 #########################################################################
 
@@ -430,7 +436,7 @@ for com in range(1):
 
 
     dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
-    Data.train_mask=np.array([1 for i in range(len(y))])
+    Data.train_mask=np.array([1 for i in range(6)])
 
 
 
@@ -506,7 +512,7 @@ for com in range(1):
     test_data = test_data.to(device)
     data_ = data.to(device)
     # Optimizer Parameters (learning rate)
-    learn_rate = 0.00001
+    learn_rate = 0.000001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
@@ -564,11 +570,11 @@ for com in range(1):
         # res_spkm = spkm.fit(z)
         # gnn_labels = res_spkm.labels_
 
-        if best_loss > loss and loss > 0.0015:
+        if best_loss > loss:
             best_loss = loss
             best_label=gnn_labels
             best_epoch=epoch
-            # visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
+            visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
         count=0
         for i in range(6): 
             if gnn_labels[i]==dataset.y[i]:
@@ -603,7 +609,7 @@ for com in range(1):
     #         break
     # # visualize_graph(G,color=best_label,i=0)
 
-        if acc > 0.75:
+        if acc > 0.8:
             print(epoch,gnn_labels,loss)
             print(best_label,best_epoch,best_auc,best_loss)
     # print(count_0,count_1,count_2)
@@ -651,8 +657,6 @@ plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
 plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
-
-
 
 
 # 洗剤変数空間の可視化
