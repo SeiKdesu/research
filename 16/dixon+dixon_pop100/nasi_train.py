@@ -209,7 +209,7 @@ def train(dt):
 
 
 
-    # gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
+    spkm = KMeans(n_clusters=num_clusters, n_init=n)
     # gnn_labels = gnn_kmeans.labels_
 
     # from sklearn import cluster
@@ -226,11 +226,11 @@ def train(dt):
 
 
     # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
+    # spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
-    
+    print(gnn_labels)
     pp,ff = QOL()
 
     ff_out =objective_function(pp,dim)
@@ -298,7 +298,7 @@ def train(dt):
     loss_func=nn.L1Loss()
 
     loss = loss_func(ff_out,all_prediction)
-    
+    print(loss)
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
