@@ -25,10 +25,11 @@ val_loader = DataLoader(dataset=val_data, batch_size=BATCH_SIZE, shuffle=True, n
 images, labels = next(iter(train_loader))
 print("images_size:", images.size())   # images_size: torch.Size([100, 1, 28, 28])
 print("label:", labels[:10])   # label: tensor([7, 6, 0, 6, 4, 8, 5, 2, 2, 3])
-
+train_data , label_data = data_loader()
 image_numpy = images.detach().numpy().copy()
 plt.imshow(image_numpy[0, 0, :, :], cmap='gray')
-
+train_data = torch.tensor(train_data)
+label_data = torch.tensor(label_data)
 # Encoderのクラス
 class Encoder(nn.Module):
     def __init__(self, z_dim):
@@ -48,6 +49,7 @@ class Encoder(nn.Module):
         log_dev = self.lr_dev(x)    # log(sigma^2)
         ep = torch.randn_like(ave)   # 平均0分散1の正規分布に従うz_dim次元の乱数
         z = ave + torch.exp(log_dev / 2) * ep   # 再パラメータ化トリック
+   
         return z, ave, log_dev
 
 # Decoderのクラス
@@ -56,7 +58,7 @@ class Decoder(nn.Module):
         super().__init__()
         self.lr = nn.Linear(z_dim, 100)
         self.lr2 = nn.Linear(100, 300)
-        self.lr3 = nn.Linear(300, 28*28)
+        self.lr3 = nn.Linear(300, 7)
         self.relu = nn.ReLU()
   
     def forward(self, z):
@@ -82,7 +84,10 @@ class VAE(nn.Module):
 
 def criterion(predict, target, ave, log_dev):
     # target も predict に合わせて 784 次元に変形
-    target = target.view(-1, 28*28)
+    # target = target.view(-1, 28*28)
+    print(target)
+    print(f"target min: {predict.min()}, max: {predict.max()}")
+
     bce_loss = F.binary_cross_entropy(predict, target, reduction='sum')
     kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
     loss = bce_loss + kl_loss
@@ -104,7 +109,7 @@ history = {"train_loss": [], "val_loss": [], "ave": [], "log_dev": [], "z": [], 
 for epoch in range(num_epochs):
     model.train()
     for i, (x, labels) in enumerate(zip(train_data,label_data)):
-        input = x.view(-1, 28*28).to(device).float()  # 入力を (batch_size, 28*28) に変形
+        input = x.view(-1, 7).to(device).float()  # 必要に応じて 7 次元に変更 # 入力を (batch_size, 28*28) に変形
         output, z, ave, log_dev = model(input)
 
         
@@ -112,7 +117,13 @@ for epoch in range(num_epochs):
         history["log_dev"].append(log_dev)
         history["z"].append(z)
         history["labels"].append(labels)
-        
+    # 0～255の範囲を0～1に正規化
+        # 各バッチに対して、テンソルを 0 ~ 1 に正規化
+        min_val = input.min(dim=1, keepdim=True)[0]-1  # 各行の最小値
+        max_val = input.max(dim=1, keepdim=True)[0] +1 # 各行の最大値
+
+        # Min-Max正規化の公式を使用
+        input = (input - min_val) / (max_val - min_val)
         loss = criterion(output, input, ave, log_dev)
         optimizer.zero_grad()
         loss.backward()
@@ -149,11 +160,14 @@ labels_np = labels_tensor.cpu().detach().numpy()
 
 batch_num = 10
 plt.figure(figsize=[10,10])
-for label in range(10):
-    x = z_np[:batch_num, :, 0][labels_np[:batch_num, :] == label]
-    y = z_np[:batch_num, :, 1][labels_np[:batch_num, :] == label]
-    plt.scatter(x, y, label=label, s=15)
-    plt.annotate(label, xy=(np.mean(x), np.mean(y)), size=20, color="black")
-plt.legend(loc="upper left")
+for label in range(100):
+    x = z_np[:batch_num, :, 0][label_data[:batch_num] == label]
+    y = z_np[:batch_num, :, 1][label_data[:batch_num] == label]
+    # x = z_np[:batch_num, :, 0][label_data[:batch_num, :] == label]
+    # y = z_np[:batch_num, :, 1][label_data[:batch_num, :] == label]
+    plt.scatter(x, y, label=label_data, s=15)
+    # plt.annotate(label_data, xy=(np.mean(x), np.mean(y)), size=20, color="black")
+# plt.legend(loc="upper left")
+plt.savefig('潜在変数.png')
 
 model.to("cpu")
