@@ -131,7 +131,18 @@ def dixon_price(x,n):
     term1 = (x[0] - 1) ** 2
     term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in n])
     return term1 + term2
+import math
 
+def ackley(x, n):
+    a=20
+    b=0.2
+    c=2*math.pi
+    # term1, term2 を定義
+    term1 = -a * math.exp(-b * math.sqrt(sum([xi**2 for xi in x]) / n))
+    term2 = -math.exp(sum([math.cos(c * xi) for xi in x]) / n)
+    
+    # 最終的なAckley関数の値を返す
+    return term1 + term2 + a + math.e
 def powell(x):
     n = len(x)
     if n % 4 != 0:
@@ -147,17 +158,13 @@ def powell(x):
     
     return sum_term
 def objective_function(x,dim):
-    dim1=[1,2]
-    dim2=[4,5]
-    tmp1 = dixon_price(x,dim1)
-    tmp2 = dixon_price(x,dim2)
-    return tmp1+tmp2
+    tmp1 = ackley(x,dim)
+    return tmp1
 
 def objective_function1(x,dim1,dim2):
     
-    tmp1 = dixon_price(x,dim1)
-    tmp2 = dixon_price(x,dim2)
-    return tmp1+tmp2
+    tmp1 = ackley(x,dim)
+    return tmp1
     
     # n_rosenbrock = 3
     # n_dixon=3

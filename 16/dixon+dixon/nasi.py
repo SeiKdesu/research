@@ -28,7 +28,7 @@ def visualize_graph(G, color,i,file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
+    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 107)), [107]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
@@ -311,8 +311,8 @@ def test(dt):
 
 Convert Dataset to same format as Planetoid - https://pytorch-geometric.readthedocs.io/en/latest/tutorial/create_dataset.html
 """
-from tutorial_rbf import *
-
+# from tutorial_rbf import *
+from rbf_surrogate_100 import *
     
 src=[]
 dst=[]

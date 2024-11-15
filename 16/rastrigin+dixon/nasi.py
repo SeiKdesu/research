@@ -19,7 +19,7 @@ from datetime import datetime
 # 現在の時刻を取得
 current_time = datetime.now()
 name = f'{current_time}_Spectural'
-def visualize_graph(G, color,i,file_dir_name):
+def visualize_graph(G, color, i, file_dir_name):
     plt.figure(figsize=(3, 3))
     plt.xticks([])
     plt.yticks([])
@@ -28,14 +28,19 @@ def visualize_graph(G, color,i,file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1,2,3,4,5], [ 6, 7, 8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26], [27]]
+    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 107)), [107]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
     for r in ranges:
+        if r == ranges[0]:  # 最初の範囲に間隔を追加
+            y_offset = -2  # 間隔を広げるために大きな負の値を設定
+        else:
+            y_offset = -1  # 通常の間隔
+
         for i, node in enumerate(r):
-            pos[node] = (x_offset, -i)  # Y座標は負の値に設定
-        x_offset += 1  # 次の列に移動
+            pos[node] = (x_offset, y_offset * i)  # Y座標は間隔に基づいて設定
+        x_offset += 10  # 次の列に移動
 
     # エッジの重みに基づいて太さを決定
     weights = nx.get_edge_attributes(G, 'weight')
@@ -49,10 +54,11 @@ def visualize_graph(G, color,i,file_dir_name):
     nx.draw_networkx_edges(G, pos, width=edge_widths, edge_color='gray', arrows=True)
 
     # 画像を保存
-    if(i==1):
+    if i == 1:
         plt.savefig(f'{file_dir_name}/teacher_.png')  # 保存
 
     plt.savefig(f'{file_dir_name}/predict_.png')  # 保存
+
 
 
 import os
@@ -101,6 +107,8 @@ from torch_geometric.utils import train_test_split_edges, to_networkx, from_netw
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
 from sklearn import cluster
+# 学習率スケジューラー
+from torch.optim import lr_scheduler
 
 
 
@@ -138,17 +146,16 @@ clusters = []
 # Channel Parameters & GAE MODEL
 in_channels = 6
 hidden_channels = 20
-out_channels = 1
+out_channels = 3
 
 # Transform Parameters
 transform_set = True
 
-# Optimizer Parameters (learning rate)
-learn_rate = 0.00000001
+
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 300
+epochs = 500
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -171,15 +178,17 @@ class GCNEncoder(torch.nn.Module):
       # GAT
       self.in_head = 8
       self.out_head = 1
-      hidden_channels2 = 10
-      hidden_channels3=5
-      hidden_channels4 =3
+      hidden_channels2 = 100
+      hidden_channels3=80
+      hidden_channels4 =40
+      hidden_channels5= 20
       self.conv1 = GATConv(in_channels, hidden_channels, heads=self.in_head, dropout=0.6)
       self.conv2 = GATConv(hidden_channels*self.in_head,hidden_channels2)
       self.conv3 = GATConv(hidden_channels2,hidden_channels3)
       self.conv4 = GATConv(hidden_channels3,hidden_channels4)
-      self.conv5 = GATConv(hidden_channels4, out_channels, concat=False)#, heads=self.out_head, dropout=0.6)
-
+      self.conv5 = GATConv(hidden_channels4, hidden_channels5)#, heads=self.out_head, dropout=0.6)
+      self.conv6 = GATConv(hidden_channels5, out_channels, concat=False)
+      
 
     def forward(self, x, edge_index):
       x = self.conv1(x, edge_index).relu()
@@ -187,7 +196,8 @@ class GCNEncoder(torch.nn.Module):
       x = self.conv2(x,edge_index).relu()
       x = self.conv3(x, edge_index).relu()
       x = self.conv4(x, edge_index).relu()
-      x = self.conv5(x,edge_index)
+      x = self.conv5(x,edge_index).relu()
+      x = self.conv6(x,edge_index)
       return x
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def train(dt):
@@ -223,12 +233,12 @@ def train(dt):
     gnn_labels = res_spkm.labels_
     
     pp,ff = QOL()
-    print('teacher_input',pp)
+
     ff_out =objective_function(pp,dim)
     
     # ff_out = ff_out[0]
     pp= pp
-    # print('inputs',pp,ff[0])
+
     # ff_real = objective_function(pp,dim)
     pp = np.array(pp)
     classfication = gnn_labels
@@ -272,26 +282,23 @@ def train(dt):
     #     prediction2.append(0.0)
     # else:
     #     prediction2 = t_preditct(input3)
-    print(pp[0]-pp[0])
-    print(mal_list0,mal_list1)
+
     all_prediction = objective_function1(pp,mal_list0,mal_list1)
 
-    print('output',ff_out[0],all_prediction[0])
 
     ff_out = np.array(ff_out,dtype = np.float32)
     # ff_out = ff_out.reshape(20,1)
 
     
-    # print(ff.shape,all_prediction.shape)
-    # print("Size of ff:", type(dataset.y.size))
-    # print(ff)
-    # print("Size of all_prediction:", type(all_prediction))
+
 
     # loss_mse= mean_squared_error(ff, all_prediction)
     ff_out = torch.tensor(ff_out,requires_grad=True,dtype=float)
     all_prediction = torch.tensor(all_prediction)
     loss_func=nn.L1Loss()
+
     loss = loss_func(ff_out,all_prediction)
+    
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
@@ -316,17 +323,17 @@ for com in range(1):
     src=[]
     dst=[]
     for j in range(6):
-        for i in range(21):
+        for i in range(101):
             src.append(j)
 
-    for i in range(6,27):
+    for i in range(6,107):
         src.append(i)
 
     for j in range(6):
-        for i in range(6,27):
+        for i in range(6,107):
             dst.append(i)
-    for i in range(21):
-        dst.append(27)
+    for i in range(101):
+        dst.append(107)
     edge_index=torch.tensor([src,dst],dtype=torch.long)
 
 
@@ -352,7 +359,6 @@ for com in range(1):
         params.append(item)
     params = torch.tensor(params)
     edge_attr=params
-    np.random.seed(1234)
 
 #########################################################################
 
@@ -409,7 +415,7 @@ for com in range(1):
         y_tmp.append(0)
     for i in range(3):
         y_tmp.append(1)
-    for i in range(22):
+    for i in range(102):
         y_tmp.append(2)
 
     y = torch.tensor(y_tmp)
@@ -429,17 +435,16 @@ for com in range(1):
 
 
     dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
-    Data.train_mask=np.array([1 for i in range(len(y))])
+    Data.train_mask=np.array([1 for i in range(6)])
 
 
 
     data = dataset
     G=to_networkx(dataset, to_undirected=False)
     dir_file = dirs()
-    visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
+    # visualize_graph(G,color=dataset.y,i=1,file_dir_name=dir_file)
     # transform = RemoveDuplicatedEdges()
     # data = transform(data)
-    print(data)
 
     transform = RandomLinkSplit(
         num_val=0.05,
@@ -505,9 +510,13 @@ for com in range(1):
     train_data = train_data.to(device)
     test_data = test_data.to(device)
     data_ = data.to(device)
+    # Optimizer Parameters (learning rate)
+    learn_rate = 0.0000001
 
     # Inizialize the Optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr = learn_rate)
+    # 5. CosineAnnealingLR
+    scheduler = lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
     print(model)
 
 
@@ -527,12 +536,15 @@ for com in range(1):
     accuracy=[]
     best_label=[]
     best_loss= 100000000000000
-
+    
     for epoch in range(1, epochs + 1):
         acc=0
+        acc_num = 0
         # 訓練データでのlossを取得
         loss,gnn_labels = train(train_data)
-    
+        # loss = int(loss)
+        # if loss == 0:
+        #     break
         loss_values.append(loss)
         
         # テストデータでのAUCとAPを取得
@@ -545,7 +557,9 @@ for com in range(1):
 
         # 100エポックごとに表示
         # if (epoch % 100 == 0):
-        print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+        # print('Epoch: {:03d}, Loss: {:.4f}, AUC: {:.4f}, AP: {:.4f}'.format(epoch, loss, auc, ap))
+        # 学習率の更新    
+        scheduler.step()
         model.eval()
 
 
@@ -565,6 +579,7 @@ for com in range(1):
             if gnn_labels[i]==dataset.y[i]:
                 count += 1
         acc=count/6
+        
         
         # accuracy.append(count/6)
         # # print(count/2)
@@ -592,20 +607,14 @@ for com in range(1):
     #         print(gnn_labels,epoch)
     #         break
     # # visualize_graph(G,color=best_label,i=0)
-    # for i in range(6): 
-    #     if gnn_labels[i]== 0:
-    #         print(i)
-    #         count_0[i] += 1
-    #     if gnn_labels[i]== 1:
-            
-    #         count_1[i] += 1
-    #     if gnn_labels[i]== 2:
-    #         count_2[i] += 1
-    print(epoch,gnn_labels,loss)
-    print(best_label,best_epoch,best_auc,best_loss)
+
+        if acc > 0.8:
+            print(epoch,gnn_labels,loss)
+            print(best_label,best_epoch,best_auc,best_loss)
     # print(count_0,count_1,count_2)
     # visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
     # 訓練終了後にlossとAUCをプロット
+    print(best_label,best_epoch,best_auc,best_loss)
     plt.figure()
 
 
@@ -649,3 +658,111 @@ plt.tight_layout()  # レイアウトの調整
 plt.savefig(f'{dir_file}/hist.png')
 
 
+# 洗剤変数空間の可視化
+gnn_kmeans= best_label
+gnn_eval_data = data_
+gnn_X = gnn_eval_data.x[:,[0,1]].cpu().detach().numpy()
+gnn_df = pd.DataFrame(gnn_X, columns = ['X','Y'])
+
+# Adding cluster labels to the DataFrame
+gnn_df_with_cluster = gnn_df.copy(deep=True)
+gnn_df_with_cluster['cluster'] = best_label
+
+gnn_G = to_networkx(gnn_eval_data)
+gnn_G = gnn_G.to_undirected()
+gnn_labels = best_label
+# gnn_cluster_centers = gnn_kmeans.cluster_centers_
+
+
+gnn_pos = dict(zip(range(gnn_X[:, 0].size), gnn_X))
+
+
+fig, ax = plt.subplots(figsize=(10, 10))
+ax.scatter(gnn_df_with_cluster['X'], gnn_df_with_cluster['Y'], s=20, color='grey')
+# ノードをクラスタごとに色分けして描画
+cmap = plt.get_cmap('tab20')
+
+nx.draw_networkx_nodes(gnn_G, gnn_pos, cmap=cmap, node_color = gnn_labels, node_size=1000, ax=ax)
+nx.draw_networkx_edges(gnn_G, gnn_pos, edge_color='grey', ax=ax)
+# ノード番号（ラベル）を追加
+# ラベルを少しずつずらすためのオフセット
+offset_x = 0.1
+offset_y = 0.0  # Y方向に少しずらす
+# ノードの位置を変更してラベルをずらす
+gnn_pos_adjusted = {node: (x + offset_x, y + offset_y * node) for node, (x, y) in gnn_pos.items()}
+# ノードラベルをずらして描画
+nx.draw_networkx_labels(gnn_G, gnn_pos_adjusted, font_size=30, font_color='black', ax=ax)
+
+# nx.draw_networkx_labels(gnn_G, gnn_pos, font_size=8, font_color='black', ax=ax)
+print(gnn_G)
+print(gnn_pos)
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+# x軸とy軸に目盛りを表示
+ax.tick_params(axis='both', which='major', labelsize=10)
+ax.grid(True)  # グリッドを有効化（必要に応じて）
+# # x軸とy軸の範囲を設定し、目盛りを自動的に表示
+# ax.set_xlim(gnn_df_with_cluster['X'].min() - 10.1, gnn_df_with_cluster['X'].max() + 10.1)
+# ax.set_ylim(gnn_df_with_cluster['Y'].min() - 10.1, gnn_df_with_cluster['Y'].max() + 10.1)
+
+# # 自動的に目盛りを有効にする
+# ax.xaxis.set_major_locator(plt.AutoLocator())
+# ax.yaxis.set_major_locator(plt.AutoLocator())
+# 凡例を表示（クラスタの番号と色を示す）
+from matplotlib.lines import Line2D
+legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(i / float(max(gnn_labels) + 1)), markersize=10, label=f'Cluster {i}') for i in range(max(gnn_labels) + 1)]
+ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
+plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
+plt.savefig(f'{dir_file}/潜在変数.png')
+plt.close()
+import numpy as np
+import matplotlib.pyplot as plt
+import networkx as nx
+from sklearn.cluster import KMeans
+import pandas as pd
+
+# 使用するノードのインデックスを指定（0~5番目のノードを使用）
+selected_nodes = list(range(6))  # 0~5のノードを選択
+
+# 使用するノードの位置とラベルを選択
+gnn_pos_selected = {k: gnn_pos[k] for k in selected_nodes}  # ノードの位置を選択したノードのみに絞り込む
+gnn_labels_selected = gnn_labels[selected_nodes]  # クラスタラベルを選択したノードのみに絞り込む
+
+# 使用するノードを含むサブグラフを作成
+gnn_G_selected = gnn_G.subgraph(selected_nodes)
+
+# Draw the Graph
+fig, ax = plt.subplots(figsize=(10, 10))
+
+# ノードをクラスタごとに色分けして描画
+cmap = plt.get_cmap('tab20')
+nx.draw_networkx_nodes(gnn_G_selected, gnn_pos_selected, cmap=cmap, 
+                       node_color=gnn_labels_selected, node_size=1000, ax=ax)
+
+# エッジを描画
+nx.draw_networkx_edges(gnn_G_selected, gnn_pos_selected, edge_color='grey', ax=ax)
+
+# ノード番号（ラベル）を追加
+label_offset = 0.03  # ラベルをずらす距離
+
+# 各ノードに対して、ラベルを表示する
+for i, label in enumerate(selected_nodes):
+    x_pos, y_pos = gnn_pos_selected[label]
+    # ラベルをずらして重ならないようにする
+    ax.text(x_pos + np.random.uniform(-label_offset, label_offset), 
+            y_pos + np.random.uniform(-label_offset, label_offset), 
+            str(label), fontsize=25, ha='center', va='center')
+
+# 軸ラベルを設定
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+
+
+# # 凡例を表示（クラスタの番号と色を示す）
+# from matplotlib.lines import Line2D
+# legend_elements = [Line2D([0], [0], marker='o', color='w', markerfacecolor=cmap(i / float(max(gnn_labels_selected) + 1)), markersize=10, label=f'Cluster {i}') for i in range(max(gnn_labels_selected) + 1)]
+# ax.legend(handles=legend_elements, loc='upper right', title="Clusters")
+
+# グラフを保存して表示
+plt.savefig(f'{folder_path}{run_id}_{version}-kmeans-cluster-node-features-gnn', format='eps', dpi=300)
+plt.savefig(f"{dir_file}/only_6.png")
