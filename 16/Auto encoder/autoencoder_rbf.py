@@ -98,6 +98,48 @@ x_test = sampling(ndoe_test)
 y_test = objective_function(x_test,ndim)
 
 def data_loader():
+
+    print(train_data)
+    # 3次元目の特定の範囲をマスクする (例: 3次元目の10番目から20番目までをFalseにする)
+    mask = np.ones_like(train_data, dtype=bool)
+    print(mask.shape)
+    mask[0:15, 0] = False
+    masked_data = train_data * mask
+    mask = np.ones_like(train_data, dtype=bool)
+    mask[16:30,1]=False
+    masked_data = train_data * mask
+    mask = np.ones_like(train_data, dtype=bool)
+    mask[31:45,2]=False
+    masked_data = train_data * mask
+    mask = np.ones_like(train_data, dtype=bool)
+    mask[45:60,3]=False
+    masked_data = train_data * mask
+    mask = np.ones_like(train_data, dtype=bool)
+    mask[61:75,4]=False
+    masked_data = train_data * mask
+    mask = np.ones_like(train_data, dtype=bool)
+    mask[75:90,5]=False
+    masked_data = train_data * mask
+    label=[]
+    for i in range(0,16):
+        label.append(0)
+    for i in range(16,31):
+        label.append(1)
+    for i in range(31,46):
+        label.append(2)
+    for i in range(46,61):
+        label.append(3)
+    for i in range(61,76):
+        label.append(4)
+    for i in range(76,91):
+        label.append(5)
+    for i in range(91,101):
+        label.append(6)
+    
+    print(mask)
+    # マスクを適用して、マスクされた要素を0にする
+    masked_data = train_data * mask
     # 1から10までのランダムな整数を10個生成
-    random_integers = np.random.randint(0, 9, size=len(train_data))
-    return train_data,random_integers
+    # random_integers = np.random.randint(0, 9, size=len(train_data))
+    print(masked_data)
+    return masked_data,label

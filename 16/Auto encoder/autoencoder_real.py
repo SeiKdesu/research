@@ -159,12 +159,19 @@ for epoch in range(num_epochs):
 train_loss_tensor = torch.stack(history["train_loss"])
 train_loss_np = train_loss_tensor.to('cpu').detach().numpy().copy()
 plt.plot(train_loss_np)
+print(train_loss_np)
+plt.savefig('train_loss.png')
+plt.close()
 val_loss_tensor = torch.stack(history["val_loss"])
 val_loss_np = val_loss_tensor.to('cpu').detach().numpy().copy()
 plt.plot(val_loss_np)
+plt.savefig('val.png')
+plt.close()
 val_loss_tensor = torch.stack(history["val_loss"])
 val_loss_np = val_loss_tensor.to('cpu').detach().numpy().copy()
 plt.plot(val_loss_np)
+plt.savefig('?.png')
+plt.close()
 ave_tensor = torch.stack(history["ave"])
 log_var_tensor = torch.stack(history["log_dev"])
 z_tensor = torch.stack(history["z"])
@@ -187,14 +194,33 @@ cmap = plt.get_cmap(cmap_keyword)
 
 batch_num =10
 plt.figure(figsize=[10,10])
-for label in range(101):
-  x = z_np[:batch_num, :, 0][label_data[:batch_num] == label]
-  y = z_np[:batch_num, :, 1][label_data[:batch_num] == label]
-  # x = z_np[:batch_num,:,0][label_data[:batch_num,:] == label]
-  # y = z_np[:batch_num,:,1][label_data[:batch_num,:] == label]
-  plt.scatter(x, y, color=cmap(label_data/9), label=label_data, s=15)
+# 例としてデータを生成（実際のデータに置き換えてください）
+z_np = np.random.randn(2020, 1, 2)  # 2020サンプル、2次元 (x, y)
+label_data = np.random.randint(0, 101, size=(2020,))  # 各サンプルのラベル (0〜100)
+
+
+
+# xとyの取得
+x = z_np[:, 0, 0]
+y = z_np[:, 0, 1]
+
+# 散布図の描画
+plt.figure(figsize=(10, 8))
+sc = plt.scatter(x, y, c=labels_tensor, cmap=cmap, s=15)
+# for label in range(101):
+#   x = z_np[:, :, 0]  # 1次元目
+#   y = z_np[:, :, 1]  
+#   # x = z_np[:batch_num, :, 0][label_data[:batch_num] == label]
+#   # y = z_np[:batch_num, :, 1][label_data[:batch_num] == label]
+#   print(z_np)
+#   print(f'ここのｘの数{len(x)}')
+#   print(f'これがy{len(y)}')
+#   # x = z_np[:batch_num,:,0][label_data[:batch_num,:] == label]
+#   # y = z_np[:batch_num,:,1][label_data[:batch_num,:] == label]
+#   plt.scatter(x, y, color=cmap(label_data/9), label=label_data, s=15)
   # plt.annotate(label_data, xy=(np.mean(x),np.mean(y)),size=20,color="black")
 plt.legend(loc="upper left")
+plt.savefig('潜在変数空間.png')
 batch_num = 9580
 plt.figure(figsize=[10,10])
 for label in range(10):

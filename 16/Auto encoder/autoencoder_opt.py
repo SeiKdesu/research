@@ -160,7 +160,7 @@ labels_np = labels_tensor.cpu().detach().numpy()
 
 batch_num = 10
 plt.figure(figsize=[10,10])
-for label in range(100):
+for label in range(2020):
     x = z_np[:batch_num, :, 0][label_data[:batch_num] == label]
     y = z_np[:batch_num, :, 1][label_data[:batch_num] == label]
     # x = z_np[:batch_num, :, 0][label_data[:batch_num, :] == label]
