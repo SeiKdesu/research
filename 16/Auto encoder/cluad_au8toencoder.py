@@ -223,6 +223,85 @@ plt.legend(loc="upper left")
 plt.savefig('潜在変数空間.png')
 batch_num = 9580
 plt.figure(figsize=[10,10])
+
+def analyze_vae_losses(model, data_loader, device):
+    """
+    Analyze different components of VAE loss (reconstruction loss and KL divergence)
+    """
+    model.eval()
+    total_loss = []
+    reconstruction_loss = []
+    kl_loss = []
+    
+    with torch.no_grad():
+        for x, _ in data_loader:
+            input = x.to(device).view(-1, 7).to(torch.float32)
+            
+            # Min-Max normalization
+            min_val = input.min(dim=1, keepdim=True)[0] - 1
+            max_val = input.max(dim=1, keepdim=True)[0] + 1
+            input_normalized = (input - min_val) / (max_val - min_val)
+            
+            # Forward pass
+            output, z, ave, log_dev = model(input_normalized)
+            
+            # Calculate individual losses
+            bce = F.binary_cross_entropy(output, input_normalized, reduction='sum')
+            kl = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
+            loss = bce + kl
+            
+            total_loss.append(loss.item())
+            reconstruction_loss.append(bce.item())
+            kl_loss.append(kl.item())
+            
+    return {
+        'total': torch.tensor(total_loss).mean(),
+        'reconstruction': torch.tensor(reconstruction_loss).mean(),
+        'kl': torch.tensor(kl_loss).mean()
+    }
+
+def plot_loss_components(history):
+    """
+    Plot the components of the VAE loss over training
+    """
+    plt.figure(figsize=(12, 6))
+    
+    # Plot training loss components
+    train_loss = torch.stack(history["train_loss"]).cpu().numpy()
+    epochs = range(len(train_loss))
+    
+    plt.subplot(1, 2, 1)
+    plt.plot(epochs, train_loss, label='Total Loss')
+    plt.title('Training Loss Components')
+    plt.xlabel('Iterations')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.grid(True)
+    
+    # Plot validation loss if available
+    if "val_loss" in history:
+        val_loss = torch.stack(history["val_loss"]).cpu().numpy()
+        plt.subplot(1, 2, 2)
+        plt.plot(epochs, val_loss, label='Validation Loss', color='orange')
+        plt.title('Validation Loss')
+        plt.xlabel('Iterations')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.grid(True)
+    
+    plt.tight_layout()
+    plt.savefig('vae_loss_analysis.png')
+    plt.close()
+
+# Add these lines after your training loop
+losses = analyze_vae_losses(model, train_loader, device)
+print("\nFinal Loss Components:")
+print(f"Total Loss: {losses['total']:.4f}")
+print(f"Reconstruction Loss: {losses['reconstruction']:.4f}")
+print(f"KL Divergence: {losses['kl']:.4f}")
+
+# Plot the loss components
+plot_loss_components(history)
 # for label in range(10):
 #   x = z_np[batch_num:,:,0][labels_np[batch_num:,:] == label]
 #   y = z_np[batch_num:,:,1][labels_np[batch_num:,:] == label]
