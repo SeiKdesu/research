@@ -128,12 +128,15 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
                 new_population.append(mutate(child2, bound))
 
         population = population + new_population
-        population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
-
+        # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
+        fitness = np.squeeze(fitness)
         current_best_fitness = min(fitness)
+        print('cucu',current_best_fitness)
+        print('best',best_fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
-            best_individual = population[fitness.index(current_best_fitness)]
+            index = np.argmin(current_best_fitness)
+            best_individual = population[index]
        
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
@@ -144,7 +147,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
 best_individual, best_fitness, best_fitness_history, avg_fitness_history = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
 print(f"最良個体の適合度：{best_fitness}")
 print(f"最良個体のパラメータ：{best_individual}")
-print(f"surrogate{predict_surrogate(best_individual)}")
+# print(f"surrogate{predict_surrogate(best_individual)}")
 print("objective function",objective_function_ga(best_individual,dim))
 import matplotlib.pyplot as plt
 

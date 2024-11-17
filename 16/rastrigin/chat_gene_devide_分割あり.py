@@ -51,10 +51,12 @@ def roulette_wheel_selection(population, fitness):
     max_val = sum(fitness)
     pick = random.uniform(0, max_val)
     current = 0
-    fitness = np.array(fitness)
-    for i, f in enumerate(fitness):
+    
+    fitness_roulette = np.array(fitness)
+    fitness_roulette= np.squeeze(fitness_roulette)
+    for i, f in enumerate(fitness_roulette):
         current += f
-        if current.any() > pick:
+        if current > pick.any():
             return population[i]
     return population[-1]
 
@@ -124,12 +126,13 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
                 new_population.append(mutate(child2, bound))
 
         population = population + new_population
-        population = sorted(population, key=lambda x: predict_surrogate(x,dim))[:pop_size]
-
+        population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
+        fitness = np.squeeze(fitness)
         current_best_fitness = min(fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
-            best_individual = population[fitness.index(current_best_fitness)]
+            index = np.argmin(current_best_fitness)
+            best_individual = population[index]
        
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
@@ -146,7 +149,7 @@ for i in range(dim):
     best_individual, best_fitness, best_fitness_history, avg_fitness_history = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,pop[i])
     print(f"最良個体の適合度：{best_fitness}")
     print(f"最良個体のパラメータ：{best_individual}")
-    print(f"surrogate{predict_surrogate(best_individual)}")
+    # print(f"surrogate{predict_surrogate(best_individual)}")
     print("objective function",objective_function_ga(best_individual,dim))
 import matplotlib.pyplot as plt
 
