@@ -99,13 +99,14 @@ class VAE(nn.Module):
     x = self.decoder(z)
     return x, z, ave, log_dev
 def criterion(predict, target, ave, log_dev):
-  bce_loss = F.binary_cross_entropy(predict, target, reduction='sum')
-  kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
-  loss = bce_loss + kl_loss
+  loss = nn.L1Loss(predict,target)
+  # bce_loss = F.binary_cross_entropy(predict, target, reduction='sum')
+  # kl_loss = -0.5 * torch.sum(1 + log_dev - ave**2 - log_dev.exp())
+  # loss = bce_loss + kl_loss
   return loss
 
 z_dim = 2
-num_epochs = 20
+num_epochs = 100
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
 model = VAE(z_dim).to(device)
@@ -150,8 +151,8 @@ for epoch in range(num_epochs):
       # Min-Max正規化の公式を使用
       input = (input - min_val) / (max_val - min_val)
       loss = criterion(output, input, ave, log_dev)
-      loss = criterion(output, input, ave, log_dev)
-      history["val_loss"].append(loss)
+      # loss = criterion(output, input, ave, log_dev)
+    history["val_loss"].append(loss)
       
     print(f'Epoch: {epoch+1}, val_loss: {loss: 0.4f}')
   
@@ -167,11 +168,24 @@ val_loss_np = val_loss_tensor.to('cpu').detach().numpy().copy()
 plt.plot(val_loss_np)
 plt.savefig('val.png')
 plt.close()
-val_loss_tensor = torch.stack(history["val_loss"])
-val_loss_np = val_loss_tensor.to('cpu').detach().numpy().copy()
-plt.plot(val_loss_np)
-plt.savefig('?.png')
+# val_loss_tensor = torch.stack(history["val_loss"])
+# val_loss_np = val_loss_tensor.to('cpu').detach().numpy().copy()
+# plt.plot(val_loss_np)
+# plt.savefig('?.png')
+# plt.close()
+val_loss = torch.stack(history["val_loss"]).cpu().numpy()
+epochs = range(len(val_loss))
+plt.plot(epochs, val_loss, label='Validation Loss', color='orange')
+plt.title('Validation Loss')
+plt.xlabel('Iterations')
+plt.ylabel('Loss')
+plt.legend()
+plt.grid(True)
+
+plt.savefig('vae_loss_analysis.png')
 plt.close()
+
+
 ave_tensor = torch.stack(history["ave"])
 log_var_tensor = torch.stack(history["log_dev"])
 z_tensor = torch.stack(history["z"])
