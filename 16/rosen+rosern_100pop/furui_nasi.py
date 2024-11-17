@@ -655,23 +655,31 @@ plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
 plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
+plt.close()
 
-
-
+# graph_array = np.array(best_z,labels = best_label)
 # x座標とy座標をそれぞれ取り出す
-x = best_z[:, 0]
-y = best_z[:, 1]
+# x = best_z[:, 0]
+# y = best_z[:, 1]
+# 散布図のプロット
+# 散布図のプロット
+best_label = np.array(best_label)
+colors = {0: 'red', 1: 'blue', 2: 'green'}
+plt.figure(figsize=(10, 8))
 
-# 散布図を描画
-plt.scatter(x, y)
+for label, color in colors.items():
+    subset = best_z[best_label == label]
+    indices = np.where(best_label == label)[0]
+    plt.scatter(subset[:, 0], subset[:, 1], label=f'Label {label}', color=color, alpha=0.6)
+    # 各点のインデックスを表示
+    for i, (x, y) in zip(indices, subset):
+        plt.text(x, y, str(i), fontsize=8, color=color)
 
-# グラフのタイトルと軸ラベルを設定
-plt.title("散布図")
-plt.xlabel("x")
-plt.ylabel("y")
-
-# グリッド線を表示
-plt.grid(True)
+plt.xlabel('X-axis')
+plt.ylabel('Y-axis')
+plt.title('Scatter Plot with Indices and Labels')
+plt.legend()
+plt.grid()
 plt.savefig(f'{dir_file}/潜在変数空間.png')
 plt.close()
 
