@@ -673,6 +673,7 @@ plt.ylabel("y")
 # グリッド線を表示
 plt.grid(True)
 plt.savefig(f'{dir_file}/潜在変数空間.png')
+plt.close()
 
 
 
