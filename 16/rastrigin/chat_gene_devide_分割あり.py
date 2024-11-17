@@ -6,7 +6,7 @@ import random
 
 from smt.problems import Rosenbrock
 from rbf_surrogate_100_train_rastrigin import predict_surrogate
-from nasi_train_rastrigin_surrogateloss import devide_deminsion
+from nasi_train_rastrigin_surrogateloss import devide_deminsion,keep_indices_as_nonzero
 # def Rosenbrock(x, n):
 #     value = 0
 #     for i in range(n-1):
@@ -32,7 +32,7 @@ dim = 6
 
 max_gen = 100
 pop_size = 100
-offspring_size = 30
+offspring_size = 100
 bound_rastrigin = 5.12
 bound = 5.12 # Typical bound for Rosenbrock function
 
@@ -89,7 +89,7 @@ def mutate(individual, bound, mutation_rate=0.01):
     return individual
 
 # メインの遺伝的アルゴリズム
-def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a):
+def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a,label):
     population = population_a
     print(population)
     #population=population[0]
@@ -126,9 +126,12 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
                 new_population.append(mutate(child2, bound))
 
         population = population + new_population
-        population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
+        population = np.array(population)
+        print(label)
+        population = keep_indices_as_nonzero(population,label)
+        # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
         fitness = np.squeeze(fitness)
-        current_best_fitness = min(fitness)
+        current_best_fitness = np.min(fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             index = np.argmin(current_best_fitness)
@@ -140,19 +143,25 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
     return best_individual, best_fitness, best_fitness_history, avg_fitness_history
 
 # 実行
-gnn_label = [5 ,0 ,4 ,1 ,6 ,1]
+labels_ga = [[5],[0],[4],[1],[2],[1]]
+gnn_label = [5 ,0 ,4 ,1 ,2 ,1]
 gnn_label = np.array(gnn_label)
+global_best_pop = []
+global_best_fitness = []
 for i in range(dim):
     population = init_population(pop_size, dim, bound)
     population0,population1,population2,population3,population4,population5 = devide_deminsion(population,gnn_label)
     pop = [population0,population1,population2,population3,population4,population5]
-    best_individual, best_fitness, best_fitness_history, avg_fitness_history = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,pop[i])
+    best_individual, best_fitness, best_fitness_history, avg_fitness_history = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,pop[i],labels_ga[i])
     print(f"最良個体の適合度：{best_fitness}")
     print(f"最良個体のパラメータ：{best_individual}")
+    global_best_fitness.append(best_fitness)
+    global_best_pop.append(best_individual)
     # print(f"surrogate{predict_surrogate(best_individual)}")
     print("objective function",objective_function_ga(best_individual,dim))
 import matplotlib.pyplot as plt
-
+print('global best pop',global_best_pop)
+print('global bset fitness',global_best_fitness)
 def plot_fitness_history(best_fitness_history, avg_fitness_history):
     plt.figure(figsize=(10, 5))
     plt.plot(best_fitness_history, label='Best Fitness')
@@ -164,4 +173,4 @@ def plot_fitness_history(best_fitness_history, avg_fitness_history):
     plt.legend()
     plt.grid(True)
     plt.savefig('not_opt_rosenbrock.pdf')
-plot_fitness_history(best_fitness_history, avg_fitness_history)
+# plot_fitness_history(best_fitness_history, avg_fitness_history)
