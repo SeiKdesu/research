@@ -140,7 +140,7 @@ clusters = []
 # Channel Parameters & GAE MODEL
 in_channels = 6
 hidden_channels = 20
-out_channels = 3
+out_channels = 2
 
 # Transform Parameters
 transform_set = True
@@ -202,7 +202,7 @@ def train(dt):
         z = model.encode(data_.x, data_.edge_index)
     z = z.cpu().detach().numpy()
 
-    
+
 
     # gnn_kmeans = KMeans(n_clusters=num_clusters, n_init=n).fit(z)
     # gnn_labels = gnn_kmeans.labels_
@@ -531,7 +531,7 @@ for com in range(1):
     accuracy=[]
     best_label=[]
     best_loss= 100000000000000
-    best_z = np.ones_like((108,3))
+    best_z = np.ones_like((108,2))
     for epoch in range(1, epochs + 1):
         acc=0
         acc_num = 0
@@ -608,6 +608,7 @@ for com in range(1):
         if acc > 0.75:
             print(epoch,gnn_labels,loss)
             print(best_label,best_epoch,best_auc,best_loss)
+            print('よぎいっそよ',best_z)
     # print(count_0,count_1,count_2)
     # visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
     # 訓練終了後にlossとAUCをプロット
@@ -657,11 +658,41 @@ plt.savefig(f'{dir_file}/hist.png')
 
 
 
+# x座標とy座標をそれぞれ取り出す
+x = best_z[:, 0]
+y = best_z[:, 1]
+
+# 散布図を描画
+plt.scatter(x, y)
+
+# グラフのタイトルと軸ラベルを設定
+plt.title("散布図")
+plt.xlabel("x")
+plt.ylabel("y")
+
+# グリッド線を表示
+plt.grid(True)
+plt.savefig(f'{dir_file}/潜在変数空間.png')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # 洗剤変数空間の可視化
 gnn_kmeans= best_label
 gnn_eval_data = data_
-print('よぎいっそよ',data_)
+
 gnn_X = gnn_eval_data.x[:,[0,1]].cpu().detach().numpy()
 gnn_df = pd.DataFrame(gnn_X, columns = ['X','Y'])
 
