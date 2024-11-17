@@ -140,7 +140,7 @@ clusters = []
 # Channel Parameters & GAE MODEL
 in_channels = 6
 hidden_channels = 20
-out_channels = 2
+out_channels = 3
 
 # Transform Parameters
 transform_set = True
@@ -664,22 +664,28 @@ plt.close()
 # 散布図のプロット
 # 散布図のプロット
 best_label = np.array(best_label)
-colors = {0: 'red', 1: 'blue', 2: 'green'}
-plt.figure(figsize=(10, 8))
+# 3Dプロットの準備
+fig = plt.figure(figsize=(12, 10))
+ax = fig.add_subplot(111, projection='3d')
 
+# カラーマッピング
+colors = {0: 'red', 1: 'blue', 2: 'green'}
+
+# 散布図のプロット
 for label, color in colors.items():
     subset = best_z[best_label == label]
     indices = np.where(best_label == label)[0]
-    plt.scatter(subset[:, 0], subset[:, 1], label=f'Label {label}', color=color, alpha=0.6)
+    ax.scatter(subset[:, 0], subset[:, 1], subset[:, 2], label=f'Label {label}', color=color, alpha=0.6)
     # 各点のインデックスを表示
-    for i, (x, y) in zip(indices, subset):
-        plt.text(x, y, str(i), fontsize=8, color=color)
+    for i, (x, y, z) in zip(indices, subset):
+        ax.text(x, y, z, str(i), fontsize=30, color=color)
 
-plt.xlabel('X-axis')
-plt.ylabel('Y-axis')
-plt.title('Scatter Plot with Indices and Labels')
-plt.legend()
-plt.grid()
+# 軸ラベルとタイトル
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Z-axis')
+ax.set_title('3D Scatter Plot with Indices and Labels')
+ax.legend()
 plt.savefig(f'{dir_file}/潜在変数空間.png')
 plt.close()
 

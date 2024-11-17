@@ -106,7 +106,7 @@ def criterion(predict, target, ave, log_dev):
   return loss
 
 z_dim = 2
-num_epochs = 100
+num_epochs = 20
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu") 
 model = VAE(z_dim).to(device)

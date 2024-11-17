@@ -302,7 +302,7 @@ def train(dt):
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
-    return float(loss),gnn_labels
+    return float(loss),gnn_labels,z
 
 
 def test(dt):
@@ -542,7 +542,7 @@ for com in range(1):
         acc=0
         acc_num = 0
         # 訓練データでのlossを取得
-        loss,gnn_labels = train(train_data)
+        loss,gnn_labels,best_z = train(train_data)
         # loss = int(loss)
         # if loss == 0:
         #     break
@@ -657,6 +657,47 @@ plt.xticks(indices + width, range(len(count_0)))  # 横軸の目盛りを設定
 plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
+
+best_label = np.array(best_label)
+# 3Dプロットの準備
+fig = plt.figure(figsize=(12, 10))
+ax = fig.add_subplot(111, projection='3d')
+
+# カラーマッピング
+colors = {0: 'red', 1: 'blue', 2: 'green'}
+
+# 散布図のプロット
+for label, color in colors.items():
+    subset = best_z[best_label == label]
+    indices = np.where(best_label == label)[0]
+    ax.scatter(subset[:, 0], subset[:, 1], subset[:, 2], label=f'Label {label}', color=color, alpha=0.6)
+    # 各点のインデックスを表示
+    for i, (x, y, z) in zip(indices, subset):
+        ax.text(x, y, z, str(i), fontsize=30, color=color)
+
+# 軸ラベルとタイトル
+ax.set_xlabel('X-axis')
+ax.set_ylabel('Y-axis')
+ax.set_zlabel('Z-axis')
+ax.set_title('3D Scatter Plot with Indices and Labels')
+ax.legend()
+plt.savefig(f'{dir_file}/潜在変数空間.png')
+plt.close()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # 洗剤変数空間の可視化
