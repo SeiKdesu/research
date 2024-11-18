@@ -24,13 +24,13 @@ def objective_function_ga(x,dim):
     n_rosenbrock = dim
    
     rosen_value = rastrigin(x)
-    print(rosen_value)
+    
     return rosen_value
 
 # パラメータの設定
 dim = 6
 
-max_gen = 100
+max_gen = 70
 pop_size = 100
 offspring_size = 100
 bound_rastrigin = 5.12
@@ -91,7 +91,7 @@ def mutate(individual, bound, mutation_rate=0.01):
 # メインの遺伝的アルゴリズム
 def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a,label):
     population = population_a
-    print(population)
+
     #population=population[0]
     best_individual = None
     best_fitness = float('inf')
@@ -104,7 +104,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
         
                 
         fitness = evaluate_population(population)
-        print(fitness)
+    
         current_best_fitness = min(fitness)
         avg_fitness = np.mean(fitness)
         best_fitness_history.append(current_best_fitness)
@@ -127,15 +127,18 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
 
         population = population + new_population
         population = np.array(population)
-        print(label)
+    
         population = keep_indices_as_nonzero(population,label)
         # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
         fitness = np.squeeze(fitness)
         current_best_fitness = np.min(fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
-            index = np.argmin(current_best_fitness)
-            best_individual = population[index]
+            index = np.argmin(fitness)
+            print('popppppp',population)
+            print('fajga',fitness,index)
+            print('あふぁｄかいが',population[index,:],best_fitness)
+            best_individual = population[index,:]
        
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
@@ -143,10 +146,11 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
     return best_individual, best_fitness, best_fitness_history, avg_fitness_history
 
 # 実行
-labels_ga = [[5],[0],[4],[1],[2],[1]]
-gnn_label = [5 ,0 ,4 ,1 ,2 ,1]
+
+labels_ga = [[5],[0],[4],[3],[2],[1]]
+gnn_label = [5 ,0 ,4 ,3 ,2 ,1]
 gnn_label = np.array(gnn_label)
-global_best_pop = []
+global_best_pop =  np.ones(6)
 global_best_fitness = []
 for i in range(dim):
     population = init_population(pop_size, dim, bound)
@@ -156,12 +160,20 @@ for i in range(dim):
     print(f"最良個体の適合度：{best_fitness}")
     print(f"最良個体のパラメータ：{best_individual}")
     global_best_fitness.append(best_fitness)
-    global_best_pop.append(best_individual)
+    indices = np.asarray(labels_ga[i], dtype=int)
+    global_best_pop[indices] = best_individual[indices]
+    # global_best_pop.append(best_individual)
     # print(f"surrogate{predict_surrogate(best_individual)}")
     print("objective function",objective_function_ga(best_individual,dim))
+
+pop_surrogate = population
+pop_surrogate[0] = global_best_pop
 import matplotlib.pyplot as plt
 print('global best pop',global_best_pop)
 print('global bset fitness',global_best_fitness)
+print('これが世界と戦う結果',objective_function_ga(global_best_pop,dim))
+tmp_fitness = predict_surrogate(pop_surrogate)
+print('surrogate',tmp_fitness[0])
 def plot_fitness_history(best_fitness_history, avg_fitness_history):
     plt.figure(figsize=(10, 5))
     plt.plot(best_fitness_history, label='Best Fitness')

@@ -32,7 +32,7 @@ dim = 6
 
 max_gen = 100
 pop_size = 100
-offspring_size = 30
+offspring_size = 100
 bound_rastrigin = 5.12
 bound = 5.12 # Typical bound for Rosenbrock function
 
@@ -149,6 +149,11 @@ print(f"最良個体の適合度：{best_fitness}")
 print(f"最良個体のパラメータ：{best_individual}")
 # print(f"surrogate{predict_surrogate(best_individual)}")
 print("objective function",objective_function_ga(best_individual,dim))
+pop_surrogate = np.zeros((100,6))
+pop_surrogate[0] = best_individual
+tmp_fitness = predict_surrogate(pop_surrogate)
+print('surrogate',tmp_fitness[0])
+print("suroogate",predict_surrogate(best_individual))
 import matplotlib.pyplot as plt
 
 def plot_fitness_history(best_fitness_history, avg_fitness_history):
