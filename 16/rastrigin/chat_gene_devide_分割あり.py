@@ -130,6 +130,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
     
         population = keep_indices_as_nonzero(population,label)
         # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
+
         fitness = np.squeeze(fitness)
         current_best_fitness = np.min(fitness)
         if current_best_fitness < best_fitness:

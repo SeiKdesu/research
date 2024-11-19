@@ -35,7 +35,8 @@ pop_size = 100
 offspring_size = 100
 bound_rastrigin = 5.12
 bound = 5.12 # Typical bound for Rosenbrock function
-
+best_fitness_history = []
+avg_fitness_history = []   
 # 初期集団の生成
 def init_population(pop_size, dim, bound):
     return [np.random.uniform(-bound, bound, dim) for _ in range(pop_size)]
@@ -44,7 +45,7 @@ def init_population(pop_size, dim, bound):
 def evaluate_population(population,label):
     population = np.array(population)
     pop_devide = np.zeros((population.shape[0],6),dtype=float)
-    label_de = label[0]
+
 
 
     pop_devide[:,label] = population
@@ -105,19 +106,19 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population,l
     best_individual = None
     best_fitness = float('inf')
     fitness_history = []
-    best_fitness_history = []
-    avg_fitness_history = []    
+ 
 
             
     for generation in range(max_gen):
         
                 
         fitness = evaluate_population(population,label)
-    
+        avg_fitness = np.mean(fitness)
+        avg_fitness_history.append(avg_fitness)
         # current_best_fitness = min(fitness)
-        # avg_fitness = np.mean(fitness)
+
         # best_fitness_history.append(current_best_fitness)
-        # avg_fitness_history.append(avg_fitness)
+
         if generation % 100 == 0:
             avg_fitness = np.mean(fitness)
             print(f"Generation {generation}: Best Fitness = {best_fitness}, Average Fitness = {avg_fitness}")
@@ -141,19 +142,25 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population,l
         # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
         fitness = np.squeeze(fitness)
         current_best_fitness = min(fitness)
+
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             index = np.argmin(fitness)
 
             best_individual = population[index,:]
 
+
             ic(index)
             ic(best_fitness)
             ic(population[index])
             ic(evaluate_population(population[index],label))
+            pop_surrogate = np.zeros((100,6))
+            pop_surrogate[0] = best_individual
+            tmp_fitness = predict_surrogate(pop_surrogate)
+            ic(tmp_fitness[0])
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
-
+        best_fitness_history.append(best_fitness)
     return best_individual, best_fitness, best_fitness_history, avg_fitness_history
 
 # 実行
@@ -199,4 +206,4 @@ def plot_fitness_history(best_fitness_history, avg_fitness_history):
     plt.legend()
     plt.grid(True)
     plt.savefig('not_opt_rosenbrock.pdf')
-# plot_fitness_history(best_fitness_history, avg_fitness_history)
+plot_fitness_history(best_fitness_history, avg_fitness_history)
