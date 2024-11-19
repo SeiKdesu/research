@@ -3,6 +3,7 @@ from smt.surrogate_models import RBF
 import matplotlib.pyplot as plt
 from sklearn.metrics import mean_squared_error
 from smt.sampling_methods import LHS
+from icecream import ic
 def Rosenbrock(x,n):
     value = 0
     for i in n:
@@ -141,12 +142,16 @@ def matrix():
 def weight():
 
     return sm.sol
+ic(x_test[:,5])
 
-def predict_surrogate(x):
-    return sm.predict_values(x)
-
+def predict_surrogate(x,dim):
+    return sm.predict_values(x,dim)
+ic(predict_surrogate(x_test,dim=5))
 # Predict at test values
 y_test_pred = sm.predict_values(x_test)
+
+ic(x_test)
+ic(y_test_pred)
 print("\nMSE: {}".format(mean_squared_error(y_test, y_test_pred)))
 loss_history.append(mean_squared_error(y_test,y_test_pred))
 

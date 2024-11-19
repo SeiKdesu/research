@@ -135,7 +135,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
         print('best',best_fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
-            index = np.argmin(current_best_fitness)
+            index = np.argmin(fitness)
             best_individual = population[index]
        
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
