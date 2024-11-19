@@ -42,10 +42,10 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population,label):
-    pop_devide = np.zeros((100,6),dtype=float)
+    population = np.array(population)
+    pop_devide = np.zeros((population.shape[0],6),dtype=float)
     label_de = label[0]
-    ic(label_de)
-    ic(pop_devide)
+
 
     pop_devide[:,label] = population
 
@@ -97,8 +97,9 @@ def mutate(individual, bound, mutation_rate=0.01):
     return individual
 
 # メインの遺伝的アルゴリズム
-def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a,label):
-    population = population_a
+def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population,label):
+
+    population = np.array(population)
 
     #population=population[0]
     best_individual = None
@@ -113,10 +114,10 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
                 
         fitness = evaluate_population(population,label)
     
-        current_best_fitness = min(fitness)
-        avg_fitness = np.mean(fitness)
-        best_fitness_history.append(current_best_fitness)
-        avg_fitness_history.append(avg_fitness)
+        # current_best_fitness = min(fitness)
+        # avg_fitness = np.mean(fitness)
+        # best_fitness_history.append(current_best_fitness)
+        # avg_fitness_history.append(avg_fitness)
         if generation % 100 == 0:
             avg_fitness = np.mean(fitness)
             print(f"Generation {generation}: Best Fitness = {best_fitness}, Average Fitness = {avg_fitness}")
@@ -139,13 +140,17 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
 
         # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
         fitness = np.squeeze(fitness)
-        current_best_fitness = np.min(fitness)
+        current_best_fitness = min(fitness)
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             index = np.argmin(fitness)
 
             best_individual = population[index,:]
-       
+
+            ic(index)
+            ic(best_fitness)
+            ic(population[index])
+            ic(evaluate_population(population[index],label))
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
 
@@ -169,17 +174,18 @@ for i in range(dim):
     print(f"最良個体のパラメータ：{best_individual}")
     global_best_fitness.append(best_fitness)
     indices = np.asarray(labels_ga[i], dtype=int)
-    global_best_pop[indices] = best_individual[indices]
+    global_best_pop[indices] = best_individual
     # global_best_pop.append(best_individual)
     # print(f"surrogate{predict_surrogate(best_individual)}")
     print("objective function",objective_function_ga(best_individual,dim))
 
-pop_surrogate = population
-pop_surrogate[0] = global_best_pop
+
 import matplotlib.pyplot as plt
 print('global best pop',global_best_pop)
 print('global bset fitness',global_best_fitness)
-print('これが世界と戦う結果',objective_function_ga(global_best_pop,dim))
+print('これが世界と戦う結果',objective_function_ga(global_best_pop,dim=6))
+pop_surrogate = np.ones((100,6),dtype=float)
+pop_surrogate[0] = global_best_pop
 tmp_fitness = predict_surrogate(pop_surrogate)
 print('surrogate',tmp_fitness[0])
 def plot_fitness_history(best_fitness_history, avg_fitness_history):

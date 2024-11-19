@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy as np
 import random
-
+from icecream import ic
 from smt.problems import Rosenbrock
 from rbf_surrogate_100_train_rastrigin import predict_surrogate
 
@@ -106,7 +106,7 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
         
                 
         fitness = evaluate_population(population)
-        print(fitness)
+
         current_best_fitness = min(fitness)
         avg_fitness = np.mean(fitness)
         best_fitness_history.append(current_best_fitness)
@@ -131,13 +131,17 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
         # population = sorted(population, key=lambda x: predict_surrogate(population))[:pop_size]
         fitness = np.squeeze(fitness)
         current_best_fitness = min(fitness)
-        print('cucu',current_best_fitness)
-        print('best',best_fitness)
+
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             index = np.argmin(fitness)
             best_individual = population[index]
-       
+            ic(best_fitness)
+            pop_surrogate = np.zeros((100,6))
+            pop_surrogate[0] = best_individual
+            tmp_fitness = predict_surrogate(pop_surrogate)
+            ic(tmp_fitness[0])
+
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
         #     break
 
@@ -153,7 +157,7 @@ pop_surrogate = np.zeros((100,6))
 pop_surrogate[0] = best_individual
 tmp_fitness = predict_surrogate(pop_surrogate)
 print('surrogate',tmp_fitness[0])
-print("suroogate",predict_surrogate(best_individual))
+# print("suroogate",predict_surrogate(best_individual))
 import matplotlib.pyplot as plt
 
 def plot_fitness_history(best_fitness_history, avg_fitness_history):

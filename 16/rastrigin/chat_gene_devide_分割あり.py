@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy as np
 import random
-
+from icecream import ic 
 from smt.problems import Rosenbrock
 from rbf_surrogate_100_train_rastrigin import predict_surrogate
 from nasi_train_rastrigin_surrogateloss import devide_deminsion,keep_indices_as_nonzero
@@ -135,9 +135,9 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
         if current_best_fitness < best_fitness:
             best_fitness = current_best_fitness
             index = np.argmin(fitness)
-            print('popppppp',population)
-            print('fajga',fitness,index)
+
             print('あふぁｄかいが',population[index,:],best_fitness)
+
             best_individual = population[index,:]
        
         # if abs(np.mean(fitness) - best_fitness) < 1e-6 and generation > 1000:
