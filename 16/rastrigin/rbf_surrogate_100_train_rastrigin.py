@@ -142,11 +142,11 @@ def matrix():
 def weight():
 
     return sm.sol
-ic(x_test[:,5])
 
-def predict_surrogate(x,dim):
-    return sm.predict_values(x,dim)
-ic(predict_surrogate(x_test,dim=5))
+def predict_surrogate(x):
+    return sm.predict_values(x)
+# Noneで初期化された配列
+
 # Predict at test values
 y_test_pred = sm.predict_values(x_test)
 
