@@ -128,7 +128,8 @@ def weight():
 
 def predict_surrogate(x):
     return sm.predict_values(x)
-
+from icecream import ic
+ic(x_test.shape)
 # Predict at test values
 y_test_pred = sm.predict_values(x_test)
 print("\nMSE: {}".format(mean_squared_error(y_test, y_test_pred)))
