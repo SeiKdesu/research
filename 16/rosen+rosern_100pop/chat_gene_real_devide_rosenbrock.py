@@ -12,7 +12,10 @@ from rbf_surrogate_100_train import predict_surrogate
 #     for i in range(n-1):
 #         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 #     return value
-
+# シード値の設定
+SEED = 42
+np.random.seed(SEED)
+random.seed(SEED)
 def Rosenbrock(x,n):
     value = 0
     for i in n:
@@ -30,7 +33,14 @@ def objective_function_ga(x,dim):
     values.append(tmp1+tmp2)
     return np.array(values).reshape(-1,1)
 
+def objective_function_fit(x,dim):
+    values=[]
 
+    dim1= np.array((0,1,2,3,4))
+    tmp1 = Rosenbrock(x,dim1)
+
+    values.append(tmp1)
+    return np.array(values)
 # パラメータの設定
 dim = 6
 
@@ -47,12 +57,14 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population,label):
+
     population = np.array(population)
     pop_devide = np.zeros((population.shape[0],6),dtype=float)
 
 
 
     pop_devide[:,label] = population
+    # return [objective_function_fit(individual,dim) for individual in pop_devide]
     return np.abs(predict_surrogate(pop_devide))
     
     # population = keep_indices_as_nonzero(population,label)
@@ -200,7 +212,7 @@ print('これが世界と戦う結果',objective_function_ga(global_best_pop,dim
 pop_surrogate = np.ones((100,6),dtype=float)
 pop_surrogate[0] = global_best_pop
 tmp_fitness = predict_surrogate(pop_surrogate)
-ic(tmp_fitness)
+
 print('surrogate',tmp_fitness[0])
 def plot_fitness_history(best_fitness_history, avg_fitness_history):
     plt.figure(figsize=(10, 5))

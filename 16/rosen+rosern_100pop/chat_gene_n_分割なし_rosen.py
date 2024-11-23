@@ -52,6 +52,19 @@ def objective_function_ga(x,dim):
     tmp2 = Rosenbrock(x,dim2)
     values.append(tmp1+tmp2)
     return np.array(values)
+
+def objective_function_fit(x,dim):
+    values=[]
+
+    dim1= np.array((0,1,2,3,4))
+    tmp1 = Rosenbrock(x,dim1)
+
+    values.append(tmp1)
+    return np.array(values)
+# シード値の設定
+SEED = 42
+np.random.seed(SEED)
+random.seed(SEED)
 # パラメータの設定
 dim = 6
 
@@ -67,9 +80,10 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
+    # return [objective_function_fit(individual,dim) for individual in population]
     return objective_function_ga(population,dim)
 
-    
+
     # eva = np.abs(predict_surrogate(population))
     # return eva
 
