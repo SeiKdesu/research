@@ -126,7 +126,8 @@ def weight():
 
     return sm.sol
 
-
+def predict_surrogate(x):
+    return sm.predict_values(x)
 
 # Predict at test values
 y_test_pred = sm.predict_values(x_test)

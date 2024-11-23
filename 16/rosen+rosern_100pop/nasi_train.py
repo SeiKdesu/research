@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 100
+epochs = 1
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -199,6 +199,53 @@ class GCNEncoder(torch.nn.Module):
       x = self.conv6(x,edge_index)
       return x
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+def keep_indices_as_nonzero(arr, indices):
+    arr = arr
+    indices = np.asarray(indices, dtype=int)
+    # 元の配列と同じ形状でゼロ配列を作成
+    result = np.zeros_like(arr)
+    # 指定されたインデックスに対応する要素をコピー
+    result[:,indices] = arr[:,indices]
+    return result
+
+
+
+def devide_deminsion(pp,labels):
+    pp = np.array(pp)
+    classfication = labels
+    # classfication = [0,0,2,1,1,2]
+    mal_list0=[]
+    list0_count=0
+    mal_list1=[]
+    list1_count =0
+    # mal_list2=[]
+    # list2_count =dim
+    
+    for count in range(dim-1):
+        if classfication[count] == 0:
+            mal_list0.append(count)
+            list0_count += 1
+        if classfication[count] == 1:
+            mal_list1.append(count)
+
+    mal_list0= np.array(mal_list0)
+    mal_list1 = np.array(mal_list1)
+
+    
+
+
+    prediction=[]
+    prediction1=[]
+    prediction2 = []
+
+    pp1 = keep_indices_as_nonzero(pp,mal_list0)
+    pp2 = keep_indices_as_nonzero(pp,mal_list1)
+    return pp1,pp2
+
+
+
+
 def train(dt):
     model.train()
     optimizer.zero_grad()

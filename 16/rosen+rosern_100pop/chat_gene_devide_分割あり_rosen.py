@@ -5,27 +5,30 @@ import numpy as np
 import random
 from icecream import ic 
 from smt.problems import Rosenbrock
-from rbf_surrogate_100_train_rastrigin import predict_surrogate
-from nasi_train_rastrigin_surrogateloss import devide_deminsion,keep_indices_as_nonzero
+from rbf_surrogate_100_train import predict_surrogate
+from nasi_train import devide_deminsion,keep_indices_as_nonzero
 # def Rosenbrock(x, n):
 #     value = 0
 #     for i in range(n-1):
 #         value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
 #     return value
 
-def rastrigin(x):
-    A = 10
-    x = np.asarray(x)  # 入力をNumPy配列に変換
-    n = x.size         # 次元数
-    term1 = A * n
-    term2 = np.sum(x**2 - A * np.cos(2 * np.pi * x))
-    return term1 + term2
+def Rosenbrock(x,n):
+    value = 0
+    for i in n:
+        value += 100 * (x[i+1] - x[i]**2)**2 + (1 - x[i])**2
+    return value
+
+
 def objective_function_ga(x,dim):
-    n_rosenbrock = dim
-   
-    rosen_value = rastrigin(x)
-    
-    return rosen_value
+    values=[]
+    dim1 = [0,1]
+    dim2 = [3,4]
+
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = Rosenbrock(x,dim2)
+    values.append(tmp1+tmp2)
+    return np.array(values).reshape(-1,1)
 
 # パラメータの設定
 dim = 6
@@ -42,7 +45,9 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
-    return [predict_surrogate(population)]
+    return objective_function_ga(population,dim)
+    # eva = np.abs(predict_surrogate(population))
+    # return eva
 
 # ルーレット選択
 def roulette_wheel_selection(population, fitness):
@@ -148,15 +153,17 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,population_a
 
 # 実行
 
-labels_ga = [[5],[0],[4],[3],[2],[1]]
-gnn_label = [5 ,0 ,4 ,3 ,2 ,1]
+
+labels_ga = [[0,1,2],[3,4,5]]
+labels_ga = np.array(labels_ga)
+gnn_label = [0,0,0,1,1,1]
 gnn_label = np.array(gnn_label)
 global_best_pop =  np.ones(6)
 global_best_fitness = []
-for i in range(dim):
+for i in range(2):
     population = init_population(pop_size, dim, bound)
-    population0,population1,population2,population3,population4,population5 = devide_deminsion(population,gnn_label)
-    pop = [population0,population1,population2,population3,population4,population5]
+    population0,population1 = devide_deminsion(population,gnn_label)
+    pop = [population0,population1]
     best_individual, best_fitness, best_fitness_history, avg_fitness_history = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound,pop[i],labels_ga[i])
     print(f"最良個体の適合度：{best_fitness}")
     print(f"最良個体のパラメータ：{best_individual}")

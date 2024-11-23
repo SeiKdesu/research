@@ -5,7 +5,7 @@ import numpy as np
 import random
 from icecream import ic
 from smt.problems import Rosenbrock
-from rbf_surrogate_100_train_rastrigin import predict_surrogate
+from rbf_surrogate_100_train import predict_surrogate
 
 # def Rosenbrock(x, n):
 #     value = 0
@@ -43,15 +43,15 @@ def dixon_price(x,n):
     term2 = sum([i * (2 * x[i]**2 - x[i-1])**2 for i in n])
     return term1 + term2
 
-def objective_function(x,dim):
+def objective_function_ga(x,dim):
     values=[]
     dim1 = [0,1]
     dim2 = [3,4]
-    for tmp in x:
-        tmp1 = Rosenbrock(tmp,dim1)
-        tmp2 = Rosenbrock(tmp,dim2)
-        values.append(tmp1+tmp2)
-    return np.array(values).reshape(-1,1)
+
+    tmp1 = Rosenbrock(x,dim1)
+    tmp2 = Rosenbrock(x,dim2)
+    values.append(tmp1+tmp2)
+    return np.array(values)
 # パラメータの設定
 dim = 6
 
@@ -67,7 +67,11 @@ def init_population(pop_size, dim, bound):
 
 # 適合度の計算
 def evaluate_population(population):
-    return [predict_surrogate(population)]
+    return objective_function_ga(population,dim)
+
+    
+    # eva = np.abs(predict_surrogate(population))
+    # return eva
 
 # ルーレット選択
 def roulette_wheel_selection(population, fitness):
@@ -128,10 +132,10 @@ def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
 
             
     for generation in range(max_gen):
-        
-                
-        fitness = evaluate_population(population)
+        population = np.array(population)
 
+        fitness = evaluate_population(population)
+        ic(fitness)
         current_best_fitness = min(fitness)
         avg_fitness = np.mean(fitness)
         best_fitness_history.append(current_best_fitness)
