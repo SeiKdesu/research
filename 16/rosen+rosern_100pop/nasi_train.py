@@ -249,6 +249,8 @@ def devide_deminsion(pp,labels):
 def train(dt):
     model.train()
     optimizer.zero_grad()
+    print('used',torch.cuda.memory_allocated())  # 現在のメモリ使用量
+    print('残り',torch.cuda.max_memory_allocated())  # 最大メモリ使用量
     z = model.encode(dt.x, dt.pos_edge_label_index)
     with torch.no_grad():
         z = model.encode(data_.x, data_.edge_index)
