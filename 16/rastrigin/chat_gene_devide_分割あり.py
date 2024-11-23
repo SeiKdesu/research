@@ -38,6 +38,7 @@ bound = 5.12 # Typical bound for Rosenbrock function
 
 # 初期集団の生成
 def init_population(pop_size, dim, bound):
+    np.random.seed(42)
     return [np.random.uniform(-bound, bound, dim) for _ in range(pop_size)]
 
 # 適合度の計算
