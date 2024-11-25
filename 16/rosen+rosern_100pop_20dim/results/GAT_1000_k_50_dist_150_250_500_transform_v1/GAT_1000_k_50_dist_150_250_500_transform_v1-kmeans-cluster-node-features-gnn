@@ -2,7 +2,7 @@
 %%LanguageLevel: 3
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
 %%Creator: Matplotlib v3.9.2, https://matplotlib.org/
-%%CreationDate: Sat Nov 23 23:26:58 2024
+%%CreationDate: Mon Nov 25 12:14:25 2024
 %%Orientation: portrait
 %%BoundingBox: 0 0 720 720
 %%HiResBoundingBox: 0.000000 0.000000 720.000000 720.000000
@@ -316,7 +316,6 @@ fill
 grestore
 stroke
 grestore
-0.122 0.467 0.706 setrgbcolor
 gsave
 90 79.2 558 554.4 rectclip
 369 356.4 p0_0
@@ -352,42 +351,42 @@ grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-372.534 410.655 translate
+227.462 421.085 translate
 0 rotate
 0 0 m /zero glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-467.552 436.572 translate
+417.023 448.314 translate
 0 rotate
 0 0 m /one glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-482.303 245.196 translate
+214.315 262.981 translate
 0 rotate
 0 0 m /two glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-348.139 357.76 translate
+301.821 274.466 translate
 0 rotate
 0 0 m /three glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-319.901 418.997 translate
+406.977 412.724 translate
 0 rotate
 0 0 m /four glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-383.434 437.101 translate
+404.486 424.785 translate
 0 rotate
 0 0 m /five glyphshow
 grestore
