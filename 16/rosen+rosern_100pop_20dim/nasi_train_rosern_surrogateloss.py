@@ -30,7 +30,7 @@ def visualize_graph(G, color, i, file_dir_name):
     pos = {}
 
     # 各範囲ごとにノードを縦1列に並べる
-    ranges = [[0, 1, 2, 3, 4, 5], list(range(6, 108)), [108]]
+    ranges = [list(range(dim)), list(range(dim, 100 + dim)), [dim+100+1]]
     x_offset = 0  # X軸のオフセット
 
     # ノードを正しく配置するためにループを修正
@@ -134,7 +134,7 @@ os.makedirs(folder_path, exist_ok=True)
 
 
 # Define the Number of Clusters
-num_clusters = 31
+num_clusters = 3
 dim = 20
 K = num_clusters
 clusters = []
@@ -146,7 +146,7 @@ clusters = []
 
 # Channel Parameters & GAE MODEL
 in_channels = dim
-hidden_channels = 20
+hidden_channels = 40
 out_channels = 3
 
 # Transform Parameters
@@ -192,6 +192,8 @@ class GCNEncoder(torch.nn.Module):
       
 
     def forward(self, x, edge_index):
+      ic(edge_index.shape)
+      ic(edge_index.max(), edge_index.min())
       x = self.conv1(x, edge_index).relu()
       x = F.dropout(x, p=0.6, training=self.training)
       x = self.conv2(x,edge_index).relu()
@@ -202,6 +204,8 @@ class GCNEncoder(torch.nn.Module):
       return x
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 def keep_indices_as_nonzero(arr, indices):
+    ic(arr.shape)
+    ic(indices)
     arr = arr
     indices = np.asarray(indices, dtype=int)
     # 元の配列と同じ形状でゼロ配列を作成
@@ -212,7 +216,7 @@ def keep_indices_as_nonzero(arr, indices):
 
 
 def devide_deminsion(pp,labels):
-    pp = np.array(pp)
+    # pp = np.array(pp)
     classfication = labels
     # classfication = [0,0,2,1,1,2]
     # mal_list0=[]
@@ -247,11 +251,15 @@ def devide_deminsion(pp,labels):
     # mal_list28=[]
     # mal_list29=[]
     # mal_list30=[]
-    mal_lists = [globals()[f'mal_list{i}'] for i in range(dim)]
+    for i in range(dim):
+        globals()[f'mal_list{i}'] = []
     
     # classificationを基にリストを更新
     for idx, value in enumerate(classfication):
-        mal_lists[value].append(idx)  # 各値ごとにインデックスを記録
+        if idx > dim-1:
+            break
+        globals()[f'mal_list{value}'].append(idx)   # 各値ごとにインデックスを記録
+
     # for count in range(dim):
     #     mal_lists[value].append(count)  # 対応するリストに追加
     #     # list0_countをインクリメントする条件
@@ -345,7 +353,7 @@ def devide_deminsion(pp,labels):
 
     
 
-
+    ic(mal_lists)
     prediction=[]
     prediction1=[]
     prediction2 = []
@@ -394,7 +402,7 @@ def train(dt):
 
 
 
-    # spkm = KMeans(n_clusters=num_clusters, n_init=n)
+    spkm = KMeans(n_clusters=num_clusters, n_init=n)
     # gnn_labels = gnn_kmeans.labels_
 
     # from sklearn import cluster
@@ -411,7 +419,7 @@ def train(dt):
 
 
     # SVMの分類器を訓練
-    spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
+    # spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
 
     res_spkm = spkm.fit(z)
     gnn_labels = res_spkm.labels_
@@ -427,6 +435,7 @@ def train(dt):
     pp = np.array(pp)
     classfication = gnn_labels
     pp_list= devide_deminsion(pp,classfication)
+    all_predictions_devide = 0 
     # pp_list の各要素に対して predict_surrogate を実行し、結果を all_predictions に格納
     for pp_item in pp_list[:dim]:  # 最初の 6 要素に対して処理
         all_predictions_devide += (predict_surrogate(pp_item))
@@ -477,17 +486,17 @@ for com in range(1):
     src=[]
     dst=[]
     for j in range(dim):
-        for i in range(101):
+        for i in range(100):
             src.append(j)
 
-    for i in range(dim,101+dim):
+    for i in range(dim,100+dim):
         src.append(i)
 
     for j in range(dim):
-        for i in range(dim,101+dim):
+        for i in range(dim,100+dim):
             dst.append(i)
-    for i in range(101):
-        dst.append(107+dim+1)
+    for i in range(100):
+        dst.append(100+dim+1)
     edge_index=torch.tensor([src,dst],dtype=torch.long)
 
 
@@ -719,7 +728,7 @@ for com in range(1):
             best_loss = loss
             best_label=gnn_labels
             best_epoch=epoch
-            visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
+            # visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
         count=0
         for i in range(dim): 
             if gnn_labels[i]==dataset.y[i]:

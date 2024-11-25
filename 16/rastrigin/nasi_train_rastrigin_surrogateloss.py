@@ -143,7 +143,7 @@ clusters = []
 # max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
-in_channels = 6
+in_channels = 30
 hidden_channels = 20
 out_channels = 3
 
@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 1
+epochs = 100
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
