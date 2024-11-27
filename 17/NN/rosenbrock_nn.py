@@ -368,10 +368,18 @@ j=0
 print(key_list)
 print(param_list)
 print(param_list[0])
+result = []
 for i in range(0,6,2):
     ic(param_list[i])
+    result.append(param_list[i])
     argmax_index = np.argmax(param_list[i],axis=0)
     print(argmax_index)
 column_means = np.mean(param_list[0], axis=0)
 
 print("各列の平均:", column_means)
+
+ic(result)
+
+
+def weight_return():
+    return result
