@@ -1,0 +1,19 @@
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 9 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split9_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 8 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split8_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 7 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split7_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 6 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split6_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 5 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split5_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 4 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split4_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 3 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split3_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 2 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split2_bs1024_dro05_1024_8_idx0_5_3
+
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 1 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split1_bs1024_dro05_1024_8_idx0_5_3
+	
+python train_u2GAN_noPOS_REDDIT.py --dataset REDDITMULTI5K --batch_size 1024 --split_idx 0 --ff_hidden_size 1024 --num_neighbors 8 --num_sampled 512 --num_epochs 50 --num_hidden_layers 5 --learning_rate 0.00005 --model_name REDDITMULTI5K_split0_bs1024_dro05_1024_8_idx0_5_3
