@@ -170,6 +170,7 @@ def evaluate():
         idx = np.arange(len(test_graphs))
         for i in range(0, len(test_graphs), args.batch_size):
             sampled_idx = idx[i:i + args.batch_size]
+            ic(sampled_idx)
             if len(sampled_idx) == 0:
                 continue
             batch_test_graphs = [test_graphs[j] for j in sampled_idx]

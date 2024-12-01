@@ -7,7 +7,7 @@ import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import networkx as nx
 from torch_geometric.utils import to_networkx
-from rosenbrock_nn import weight
+# from rosenbrock_nn import weight
 from torch import optim
 
 # -*- coding: utf-8 -*-
@@ -113,7 +113,7 @@ from torch_geometric.utils import train_test_split_edges, to_networkx, from_netw
 from torch_geometric.transforms import NormalizeFeatures, ToDevice, RandomLinkSplit, RemoveDuplicatedEdges
 import torch.nn.functional as F
 
-
+from dataset_my import *
 
 """### Import the Dataset
 
@@ -136,7 +136,7 @@ os.makedirs(folder_path, exist_ok=True)
 
 
 # Define the Number of Clusters
-num_clusters = 4
+num_clusters = 3
 
 K = num_clusters
 clusters = []
@@ -147,9 +147,9 @@ clusters = []
 # max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
-in_channels = 1
+in_channels = 24
 hidden_channels = 20
-out_channels = 1
+out_channels = num_clusters
 
 # Transform Parameters
 transform_set = True
@@ -224,61 +224,62 @@ def test(dt):
         z = model.encode(dt.x, dt.pos_edge_label_index)
 
     return model.test(z, dt.pos_edge_label_index, dt.neg_edge_label_index)
-for ko in range(30):
+for ko in range(1):
 
-    weight_edge,row_indices,col_indices=weight()
-    # エッジのインデックス（ノード間の接続）を定義
-    #row_indices = torch.tensor([0, 0, 0, 0,0,1,1,1,1,1,1,1,2,3,4,4,4,4,5,5,6,6,7,7,8,8,8,8,8,8,8,9,9,9,9,9,9,9,10,10,10,11,11,11,12,12,13,13,13,14,14,14,15,15,15,16,16,16,16,16,16,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,23,28,28,28,28,28,28,28,28,29,29,29,29,29,29,30,30,30,30])
-    #col_indices = torch.tensor([13,14,15,16,17,10,11,12,13,14,15,17,15,16,10,11,13,15,13,17,16,17,11,14,10,11,13,14,15,16,17,10,11,12,14,15,16,17,19,20,21,19,20,21,22,23,18,22,23,18,22,23,19,20,21,18,19,20,21,22,23,19,20,21,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27])
+    # weight_edge,row_indices,col_indices=weight()
+    # # エッジのインデックス（ノード間の接続）を定義
+    # #row_indices = torch.tensor([0, 0, 0, 0,0,1,1,1,1,1,1,1,2,3,4,4,4,4,5,5,6,6,7,7,8,8,8,8,8,8,8,9,9,9,9,9,9,9,10,10,10,11,11,11,12,12,13,13,13,14,14,14,15,15,15,16,16,16,16,16,16,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,22,22,22,22,23,23,23,23,28,28,28,28,28,28,28,28,29,29,29,29,29,29,30,30,30,30])
+    # #col_indices = torch.tensor([13,14,15,16,17,10,11,12,13,14,15,17,15,16,10,11,13,15,13,17,16,17,11,14,10,11,13,14,15,16,17,10,11,12,14,15,16,17,19,20,21,19,20,21,22,23,18,22,23,18,22,23,19,20,21,18,19,20,21,22,23,19,20,21,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,24,25,26,27,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27])
 
-    # 各エッジの重みを定義
-    values = weight_edge
-    #values =x
-    # 行と列のインデックスを組み合わせて、疎行列のインデックスを作成
-    print(row_indices.shape,col_indices.shape)
-    tensor_data= torch.stack([row_indices, col_indices],dim=0)
+    # # 各エッジの重みを定義
+    # values = weight_edge
+    # #values =x
+    # # 行と列のインデックスを組み合わせて、疎行列のインデックスを作成
+    # print(row_indices.shape,col_indices.shape)
+    # tensor_data= torch.stack([row_indices, col_indices],dim=0)
 
-    result = [[tensor_data[0, i].item(), tensor_data[1, i].item()] for i in range(tensor_data.shape[1])]
-    edge_index=result
-    print(result)
-    edge_index=torch.tensor(edge_index)
+    # result = [[tensor_data[0, i].item(), tensor_data[1, i].item()] for i in range(tensor_data.shape[1])]
+    # edge_index=result
+    # print(result)
+    # edge_index=torch.tensor(edge_index)
 
-    edge_attr=weight_edge
+    # edge_attr=weight_edge
 
-    np.random.seed(0000)
-    x=np.random.rand(263,1)
-    #x=np.zeros_like(a)
-    x=torch.tensor(x,dtype=torch.float)
-    #x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
-    print(x)
-    #y=torch.tensor([0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
-    # 配列のサイズを指定
-    size = 263
+    # np.random.seed(0000)
+    # x=np.random.rand(263,1)
+    # #x=np.zeros_like(a)
+    # x=torch.tensor(x,dtype=torch.float)
+    # #x=torch.tensor([[0],[0],[0],[0],[0],[1],[1],[1],[1],[1],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[2],[3],[3],[3]],dtype=torch.float)
+    # print(x)
+    # #y=torch.tensor([0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1])
+    # # 配列のサイズを指定
+    # size = 263
 
-    # テンソルをゼロで初期化
-    y = torch.zeros(size, dtype=torch.long)
+    # # テンソルをゼロで初期化
+    # y = torch.zeros(size, dtype=torch.long)
 
-    # 条件に基づいてテンソルの値を設定
-    y[0:10]=0
-    y[10:20] = 1       # 71~72のインデックスは1
-    y[20:30] = 2       # 63~74のインデックスは2
+    # # 条件に基づいてテンソルの値を設定
+    # y[0:10]=0
+    # y[10:20] = 1       # 71~72のインデックスは1
+    # y[20:30] = 2       # 63~74のインデックスは2
 
-    y[31:263] = 3      # 63~74のインデックスは2
-
-
-    print(y)
+    # y[31:263] = 3      # 63~74のインデックスは2
 
 
-    # visualize_graph(G,color=dataset.y)
+    # print(y)
 
 
-    print('==============================================================')
-
-    dataset=Data(x=x,edge_index=edge_index.t(),edge_attr=edge_attr,y=y,num_classes=4)
-    Data.train_mask=np.array([0 for i in range(30)])
+    # # visualize_graph(G,color=dataset.y)
 
 
+    # print('==============================================================')
 
+    # dataset=Data(x=x,edge_index=edge_index.t(),edge_attr=edge_attr,y=y,num_classes=4)
+    # Data.train_mask=np.array([0 for i in range(30)])
+
+
+
+    dataset = load_my_dataset()
     data = dataset
     print(dataset)
     G=to_networkx(dataset, to_undirected=True)
@@ -432,7 +433,7 @@ for ko in range(30):
             best_label=gnn_labels
             best_epoch=epoch
         count=0
-        for i in range(30): 
+        for i in range(in_channels): 
             if gnn_labels[i]==dataset.y[i]:
                 count += 1
         acc=count/30
@@ -462,12 +463,12 @@ for ko in range(30):
             print('Early stopping: AUC and AP have not increased by more than 1% for 10 epochs.')
             print(gnn_labels,epoch)
             break
-    # visualize_graph(G,color=best_label,i=0)
+    visualize_graph(G,color=best_label,i=0)
     print(epoch,gnn_labels,loss)
-    print(best_label,best_epoch,best_auc,best_loss)
+    ic(best_label,best_epoch,best_auc,best_loss)
 
 
-    for i in range(30): 
+    for i in range(in_channels): 
         if gnn_labels[i]== 0:
             print(i)
             count_0[i] += 1

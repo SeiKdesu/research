@@ -1,0 +1,4 @@
+epoch 1 fold 1 acc 51.42857142857142%
+epoch 2 fold 1 acc 42.857142857142854%
+epoch 3 fold 1 acc 60.0%
+epoch 4 fold 1 acc 54.285714285714285%
