@@ -75,49 +75,33 @@ pop_size = 300
 offspring_size = 2
 bound = 5.12
 
-# 初期集団の生成
-def init_population(pop_size, dim, bound):
-    return [np.random.uniform(-bound, bound, dim) for _ in range(pop_size)]
-
-# 適合度の計算
-def evaluate_population(population):
-    return [objective_function(individual, dim) for individual in population]
-
-def genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound):
-    population = init_population(pop_size, dim, bound)
-    for generation in range(max_gen):
-        fitness = evaluate_population(population)
-    
-    return population, fitness
-
-population, fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
-
+ndoe = pop_size
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print('Using {} device'.format(device))
+from smt.sampling_methods import LHS
+# Generating training data
+sampling = LHS(xlimits=np.array([[-5.0,5.0]]*dim), criterion="ese", random_state=25)
+x_train = sampling(ndoe)
+y_train = objective_function(x_train,dim)
 
-np_array = np.array(population, dtype=np.float32)
-x_data = torch.from_numpy(np_array).to(device)
+# Generating training data
+sampling = LHS(xlimits=np.array([[-5.0,5.0]]*dim), criterion="ese", random_state=25)
+x_test = sampling(ndoe+100)
+y_test = objective_function(x_test,dim)
 
-np_array1 = np.array(fitness, dtype=np.float32)
-y_data = torch.from_numpy(np_array1).unsqueeze(1).to(device)
-
-test_population, test_fitness = genetic_algorithm(dim, max_gen, pop_size, offspring_size, bound)
-
-test_np_array = np.array(test_population, dtype=np.float32)
-test_x_data = torch.from_numpy(test_np_array).to(device)
-
-test_np_array1 = np.array(test_fitness, dtype=np.float32)
-test_y_data = torch.from_numpy(test_np_array1).unsqueeze(1).to(device)
-
+def train_data():
+    return x_train,y_train,pop_size
+def test_data():
+    return x_test,y_test
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork, self).__init__()
-        self.flatten = nn.Flatten()
+        self.flatten = nn.Flatten(start_dim=1)
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(6, 12),
-            nn.Linear(12,10),
-            nn.Linear(10,5),
-            nn.Linear(5, 2),
+            nn.Linear(12,6),
+            nn.Linear(6,3),
+            nn.Linear(3, 2),
             nn.Linear(2,1),
         
           
@@ -234,8 +218,8 @@ def convert_bool_to_int(bool_list):
 
 for t in range(epochs):
     print(f"Epoch {t+1}\n-------------------------------")
-    train_loss = train_loop(x_data, y_data, model, loss_fn, optimizer)
-    test_loss = test_loop(test_x_data, test_y_data, model, loss_fn)
+    train_loss = train_loop(x_train, y_train, model, loss_fn, optimizer)
+    test_loss = test_loop(x_test, y_test, model, loss_fn)
     train_losses.append(train_loss)
     test_losses.append(test_loss)
     # param_weight1,param_weight2,param_weight3,param_weight4 = param_weights(t)
@@ -301,7 +285,7 @@ def weight():
             
 
     
-    for i in range(1,len(key_list),2):
+    for i in range(1,len(key_list)-3,2):
        
        print('----------------------------')
        print(param_list[i])
@@ -369,30 +353,14 @@ print(key_list)
 print(param_list)
 print(param_list[0])
 result = []
-
-for i in range(0,9,2):
-    # 結果を保存するリスト
-    largest_indices = []      # 最大値のインデックス
-    second_largest_indices = []  # 2番目に大きい値のインデックス
-
-    # 各列に対して計算
-    for col in range(param_list[i].shape[1]):
-        # 各列の値を取得
-        column = param_list[i][:, col]
-        sorted_indices = np.argsort(column)[::-1]  # 降順ソートのインデックス
-        largest_indices.append(sorted_indices[0])  # 最大値のインデックス
-        second_largest_indices.append(sorted_indices[1])  # 2番目に大きい値のインデックス
-
-    # 結果を表示
-    ic(largest_indices)
-    ic(second_largest_indices)
-    print("各列で最大値のインデックス:", largest_indices)
-    print("各列で2番目に大きい値のインデックス:", second_largest_indices)
-    print("------------------------------------------------")
+for i in range(0,6,2):
+    ic(param_list[i])
+    result.append(param_list[i])
+    argmax_index = np.argmax(param_list[i],axis=0)
+    print(argmax_index)
 column_means = np.mean(param_list[0], axis=0)
 
 print("各列の平均:", column_means)
-# 結果を表示
 
 ic(result)
 
