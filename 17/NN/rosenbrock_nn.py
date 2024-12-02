@@ -369,8 +369,15 @@ print(key_list)
 print(param_list)
 print(param_list[0])
 result = []
-
-for i in range(0,9,2):
+num_nodes =0
+# 各ノードに対して接続先を追加
+node = 0
+    # srcとdstを格納するリスト
+src = []
+dst = []
+ex_dst = []
+tmp =0 
+for i in range(0,8,2):
     # 結果を保存するリスト
     largest_indices = []      # 最大値のインデックス
     second_largest_indices = []  # 2番目に大きい値のインデックス
@@ -386,8 +393,49 @@ for i in range(0,9,2):
     # 結果を表示
     ic(largest_indices)
     ic(second_largest_indices)
+
+    
     print("各列で最大値のインデックス:", largest_indices)
     print("各列で2番目に大きい値のインデックス:", second_largest_indices)
+
+
+    if tmp == 0:
+        num_nodes += len(largest_indices)
+        # 最大値のインデックスと2番目に大きい値のインデックスを使って接続を作成
+        src.append(node)
+        dst.append(largest_indices[node] + num_nodes )  # ノード番号を5足して接続
+        ex_dst.append(largest_indices[node] )
+        src.append(node)
+        dst.append(second_largest_indices[node]+num_nodes)  # 同様に接続
+        ex_dst.append(second_largest_indices[node] )
+        tmp=1
+    else:
+        ic(tmp)
+        ic(ex_dst)
+        for d in ex_dst:
+            src.append(d+num_nodes)
+            src.append(d+num_nodes)
+        ex_dst1=[]
+        num_nodes += len(largest_indices)
+        for d in ex_dst:
+
+
+                # 最初の接続: 最大値のインデックス
+            # src.append(node + 5)  # ノード番号を5足して接続
+
+            print(d)
+            dst.append(largest_indices[d] + num_nodes)  # 最大値に5を足して接続
+            
+            # 2番目の接続: 2番目に大きい値のインデックス
+            # src.append(node + 5)  # ノード番号を5足して接続
+            dst.append(second_largest_indices[d] + num_nodes)  # 2番目に大きい値に5を足して接続
+            ex_dst1.append(largest_indices[d] )
+            ex_dst1.append(second_largest_indices[d] )
+        tmp+=1
+        ex_dst = ex_dst1
+    # 結果を表示
+    print("src:", src)
+    print("dst:", dst)
     print("------------------------------------------------")
 column_means = np.mean(param_list[0], axis=0)
 
