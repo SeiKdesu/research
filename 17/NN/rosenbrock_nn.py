@@ -3,7 +3,7 @@ import torch
 from torch import nn
 import matplotlib.pyplot as plt
 from torchinfo import summary
-
+import shap
 
 def Rosenbrock(x, n):
     value = 0
@@ -165,6 +165,18 @@ def train_loop(x_data, y_data, model, loss_fn, optimizer):
 
 def test_loop(test_x_data, test_y_data, model, loss_fn):
     model.eval()
+    input_data = x_data.to(device)
+
+    back = torch.tensor([[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]])
+
+
+    background_data = torch.tensor(back,dtype=torch.float)  # ベースライン
+    print(background_data)
+    background_data = background_data.reshape(-1,6).to(device)
+
+    explainer = shap.DeepExplainer(model, background_data)
+    shap_values = explainer.shap_values(input_data)
+    shap.summary_plot(shap_values, input_data.cpu().numpy())
     with torch.no_grad():
         pred = model(test_x_data)
         test_loss = loss_fn(pred, test_y_data).item()
