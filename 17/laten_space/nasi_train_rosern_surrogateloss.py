@@ -355,7 +355,7 @@ for com in range(1):
         acc=0
         acc_num = 0
         # 訓練データでのlossを取得
-        loss,gnn_labels,best_z = train(train_data)
+        loss = train(train_data)
         # loss = int(loss)
         # if loss == 0:
         #     break
@@ -385,15 +385,10 @@ for com in range(1):
 
         if best_loss > loss:
             best_loss = loss
-            best_label=gnn_labels
+  
             best_epoch=epoch
             # visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
-        count=0
-        for i in range(dim): 
-            if gnn_labels[i]==dataset.y[i]:
-                count += 1
-        acc=count/dim
-        
+
         
         # accuracy.append(count/6)
         # # print(count/2)
@@ -422,13 +417,11 @@ for com in range(1):
     #         break
     # # visualize_graph(G,color=best_label,i=0)
 
-        if acc > 0.8:
-            print(epoch,gnn_labels,loss)
-            print(best_label,best_epoch,best_auc,best_loss)
+
     # print(count_0,count_1,count_2)
     # visualize_graph(G,color=best_label,i=0,file_dir_name=dir_file)
     # 訓練終了後にlossとAUCをプロット
-    print(best_label,best_epoch,best_auc,best_loss)
+
     plt.figure()
 
 
@@ -471,9 +464,40 @@ plt.tight_layout()  # レイアウトの調整
 # グラフを表示
 plt.savefig(f'{dir_file}/hist.png')
 
+data_ = dataset
+ic(data.adj)
+ic(data.edge_attr)
+
+with torch.no_grad():
+    z = model.encode(data_.x, data_.edge_index)
+z = z.cpu().detach().numpy()
 
 
-best_label = np.array(best_label)
+
+spkm = KMeans(n_clusters=num_clusters, n_init=n)
+# gnn_labels = gnn_kmeans.labels_
+
+# from sklearn import cluster
+# # SVMの分類器を訓練
+# spkm = cluster.SpectralClustering(n_clusters=num_clusters,affinity="rbf",assign_labels='discretize')
+# res_spkm = spkm.fit(z)
+# gnn_labels = res_spkm.labels_
+
+# from sklearn.cluster import AffinityPropagation
+# # SVMの分類器を訓練
+# spkm = AffinityPropagation()
+# res_spkm = spkm.fit(z)
+# gnn_labels = res_spkm.labels_
+
+
+# SVMの分類器を訓練
+# spkm = cluster.AgglomerativeClustering(n_clusters=num_clusters, metric='manhattan', linkage='complete')
+
+res_spkm = spkm.fit(z)
+gnn_labels = res_spkm.labels_
+best_label = np.array(gnn_labels)
+ic(best_label)
+best_label = best_label.squeeze()
 # 3Dプロットの準備
 fig = plt.figure(figsize=(12, 10))
 ax = fig.add_subplot(111, projection='3d')
@@ -483,8 +507,10 @@ colors = {0: 'red', 1: 'blue', 2: 'green',3: 'yellow', 4: 'pink', 5:'purple',6: 
 
 # 散布図のプロット
 for label, color in colors.items():
-    subset = best_z[best_label == label]
+    ic(best_z)
+    subset = best_label[best_label == label]
     indices = np.where(best_label == label)[0]
+    ic(subset)
     ax.scatter(subset[:, 0], subset[:, 1], subset[:, 2],label=f'Label {label}', color=color, alpha=0.6)
     # 各点のインデックスを表示
     for i, (x, y, z) in zip(indices, subset):
@@ -498,6 +524,7 @@ ax.set_title('3D Scatter Plot with Indices and Labels')
 ax.legend()
 plt.savefig(f'{dir_file}/潜在変数空間.png')
 plt.close()
+
 
 
 

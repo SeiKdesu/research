@@ -2,7 +2,7 @@
 %%LanguageLevel: 3
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-initial-graph
 %%Creator: Matplotlib v3.9.2, https://matplotlib.org/
-%%CreationDate: Tue Dec  3 12:00:51 2024
+%%CreationDate: Tue Dec  3 12:03:10 2024
 %%Orientation: portrait
 %%BoundingBox: 0 0 720 720
 %%HiResBoundingBox: 0.000000 0.000000 720.000000 720.000000
@@ -176,54 +176,6 @@ grestore
 gsave
 90 79.2 558 554.4 rectclip
 599.578533 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
-138.421489 104.4 l
-stroke
-grestore
-gsave
-90 79.2 558 554.4 rectclip
-138.421489 104.4 m
 138.421489 104.4 l
 stroke
 grestore

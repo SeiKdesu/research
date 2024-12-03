@@ -110,7 +110,7 @@ os.makedirs(folder_path, exist_ok=True)
 
 
 # Define the Number of Clusters
-num_clusters = 50
+num_clusters = 3
 K = num_clusters
 clusters = []
 
@@ -120,7 +120,7 @@ max_dist_rsu = 250 #V2R
 max_dist = 150 #V2V
 
 # Channel Parameters & GAE MODEL
-in_channels = 34
+in_channels = 35
 hidden_channels = 5
 out_channels = 2
 
