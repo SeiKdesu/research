@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 1
+epochs = 100
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -249,8 +249,7 @@ def devide_deminsion(pp,labels):
 def train(dt):
     model.train()
     optimizer.zero_grad()
-    print('used',torch.cuda.memory_allocated())  # 現在のメモリ使用量
-    print('残り',torch.cuda.max_memory_allocated())  # 最大メモリ使用量
+
     z = model.encode(dt.x, dt.pos_edge_label_index)
     with torch.no_grad():
         z = model.encode(data_.x, data_.edge_index)
@@ -347,7 +346,7 @@ def train(dt):
     loss_func=nn.L1Loss()
 
     loss = loss_func(ff_out,all_prediction)
-    print(loss)
+
     # loss = model.recon_loss(z, dt.pos_edge_label_index)
     loss.backward()
     optimizer.step()
@@ -587,6 +586,26 @@ for com in range(1):
     best_label=[]
     best_loss= 100000000000000
     best_z = np.ones_like((108,2))
+
+    dif_0_0 = []
+    dif_0_1 = []
+    dif_0_2 = []
+    dif_1_0 = []
+    dif_1_1 = []
+    dif_1_2 = []
+    dif_2_0 = []
+    dif_2_1 = []
+    dif_2_2 = []
+    dif_3_0 = []
+    dif_3_1 = []
+    dif_3_2 = []
+    dif_4_0 = []
+    dif_4_1 = []
+    dif_4_2 = []
+    dif_5_0 = []
+    dif_5_1 = []
+    dif_5_2 = []
+    tmp_tmp = 0
     for epoch in range(1, epochs + 1):
         acc=0
         acc_num = 0
@@ -618,12 +637,121 @@ for com in range(1):
         # spkm = cluster.DBSCAN()
         # res_spkm = spkm.fit(z)
         # gnn_labels = res_spkm.labels_
-
+        if tmp_tmp == 0:
+            tmp_tmp += 1
+            continue
         if best_loss > loss:
+ 
+            tmp_tmp += 1
+            difference = best_loss -loss
             best_loss = loss
             best_label=gnn_labels
             best_epoch=epoch
             visualize_graph(G,color=best_label,i=1,file_dir_name=dir_file)
+
+            ic(difference)
+            for i in range(6):
+                if best_label[i] == 0:
+                    if i ==0: 
+                        dif_0_0.append(0.0001*tmp_tmp)
+                    elif i == 1:
+                        dif_1_0.append(0.0001*tmp_tmp)
+                    elif i == 2:
+                        dif_2_0.append(0.0001*tmp_tmp)
+                    elif i == 3:
+                        dif_3_0.append(0.0001*tmp_tmp)
+                    elif i == 4:
+                        dif_4_0.append(0.0001*tmp_tmp)
+                    elif i== 5:
+                        dif_5_0.append(0.0001*tmp_tmp)
+                elif best_label[i] == 1:
+                    if i == 0:
+                        dif_0_1.append(0.0001*tmp_tmp)
+                    elif i == 1:
+                        dif_1_1.append(0.0001*tmp_tmp)
+                    elif i ==2:
+                        dif_2_1.append(0.0001*tmp_tmp)
+                    elif i==3:
+                        dif_3_1.append(0.0001*tmp_tmp)
+                    elif i == 4:
+                        dif_4_1.append(0.0001*tmp_tmp)
+                    elif i==5:
+                        dif_5_1.append(0.0001*tmp_tmp)
+                elif best_label[i] == 2:
+                    if i == 0:
+                        dif_0_2.append(0.0001*tmp_tmp)
+                    elif i == 1:
+                        dif_1_2.append(0.0001*tmp_tmp)
+                    elif i == 2:
+                        dif_2_2.append(0.0001*tmp_tmp)
+                    elif i == 3:
+                        dif_3_2.append(0.0001*tmp_tmp)
+                    elif i == 4:
+                        dif_4_2.append(0.0001*tmp_tmp)
+                    elif i == 5:
+                        dif_5_2.append(0.0001*tmp_tmp)
+            
+
+            # for i in range(6):
+            #     if best_label[i] == 0:
+            #         if i ==0: 
+            #             dif_0_0.append(difference*0.0001)
+            #         elif i == 1:
+            #             dif_1_0.append(difference*0.0001)
+            #         elif i == 2:
+            #             dif_2_0.append(difference*0.0001)
+            #         elif i == 3:
+            #             dif_3_0.append(difference*0.0001)
+            #         elif i == 4:
+            #             dif_4_0.append(difference*0.0001)
+            #         elif i== 5:
+            #             dif_5_0.append(difference*0.0001)
+            #     elif best_label[i] == 1:
+            #         if i == 0:
+            #             dif_0_1.append(difference*0.0001)
+            #         elif i == 1:
+            #             dif_1_1.append(difference*0.0001)
+            #         elif i ==2:
+            #             dif_2_1.append(difference*0.0001)
+            #         elif i==3:
+            #             dif_3_1.append(difference*0.0001)
+            #         elif i == 4:
+            #             dif_4_1.append(difference*0.0001)
+            #         elif i==5:
+            #             dif_5_1.append(difference*0.0001)
+            #     elif best_label[i] == 2:
+            #         if i == 0:
+            #             dif_0_2.append(difference*0.0001)
+            #         elif i == 1:
+            #             dif_1_2.append(difference*0.0001)
+            #         elif i == 2:
+            #             dif_2_2.append(difference*0.0001)
+            #         elif i == 3:
+            #             dif_3_2.append(difference*0.0001)
+            #         elif i == 4:
+            #             dif_4_2.append(difference*0.0001)
+            #         elif i == 5:
+            #             dif_5_2.append(difference*0.0001)
+                        
+            ic(dif_0_0) 
+            ic(dif_0_1) 
+            ic(dif_0_2) 
+            ic(dif_1_0)
+            ic(dif_1_1)
+            ic(dif_1_2)
+            ic(dif_2_0)
+            ic(dif_2_1)
+            ic(dif_2_2)
+            ic(dif_3_0)
+            ic(dif_3_1)
+            ic(dif_3_2)
+            ic(dif_4_0)
+            ic(dif_4_1)
+            ic(dif_4_2)
+            ic(dif_5_0)
+            ic(dif_5_1)
+            ic(dif_5_2)
+
         count=0
         for i in range(6): 
             if gnn_labels[i]==dataset.y[i]:
@@ -737,8 +865,41 @@ plt.close()
 
 
 
+ic(dif_0_0) 
+ic(dif_0_1) 
+ic(dif_0_2) 
+ic(dif_1_0)
+ic(dif_1_1)
+ic(dif_1_2)
+ic(dif_2_0)
+ic(dif_2_1)
+ic(dif_2_2)
+ic(dif_3_0)
+ic(dif_3_1)
+ic(dif_3_2)
+ic(dif_4_0)
+ic(dif_4_1)
+ic(dif_4_2)
+ic(dif_5_0)
+ic(dif_5_1)
+ic(dif_5_2)
 
 
+ic(sum(dif_0_0))
+ic(sum(dif_0_1))
+ic(sum(dif_0_2))
+ic(sum(dif_1_0))
+ic(sum(dif_1_1))
+ic(sum(dif_1_2))
+ic(sum(dif_3_0))
+ic(sum(dif_3_1))
+ic(sum(dif_3_2))
+ic(sum(dif_4_0))
+ic(sum(dif_4_1))
+ic(sum(dif_4_2))
+ic(sum(dif_5_0))
+ic(sum(dif_5_1))
+ic(sum(dif_5_2))
 
 
 

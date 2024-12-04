@@ -161,10 +161,12 @@ optimizer=torch.optim.Adam(model.parameters(),lr=0.003)
 loss_func = torch.nn.CrossEntropyLoss()
 losses=[]
 acces=[]
+from icecream import ic
 for epoch in range(1500):
     optimizer.zero_grad()
     dataset.to('cpu')
     out = model(dataset)
+    ic(dataset.y)
     loss = loss_func(out,dataset.y)
     print(dataset.y)
     print(loss)
