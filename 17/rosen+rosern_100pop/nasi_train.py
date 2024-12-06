@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 2
+epochs = 100
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -351,6 +351,76 @@ def train(dt):
     loss.backward()
     optimizer.step()
     return float(loss),gnn_labels,z
+def generate_loss(generate_loss_label):
+    gnn_labels = generate_loss_label
+    pp,ff = QOL()
+
+    ff_out =objective_function(pp,dim)
+    
+    # ff_out = ff_out[0]
+    pp= pp
+
+    # ff_real = objective_function(pp,dim)
+    pp = np.array(pp)
+    classfication = gnn_labels
+    # classfication = [0,0,2,1,1,2]
+    mal_list0=[]
+    list0_count=0
+    mal_list1=[]
+    list1_count =0
+    # mal_list2=[]
+    # list2_count =dim
+    
+    for count in range(dim-1):
+        if classfication[count] == 0:
+            mal_list0.append(count)
+            list0_count += 1
+        if classfication[count] == 1:
+            mal_list1.append(count)
+
+    mal_list0= np.array(mal_list0)
+    mal_list1 = np.array(mal_list1)
+
+    
+
+
+    prediction=[]
+    prediction1=[]
+    prediction2 = []
+    
+    
+    # if list0_count != dim : 
+    #     prediction = t_preditct(input)
+    # else:
+    #     prediction[0] = 0
+    # input2 = pp*mal_list1
+    # if list1_count != dim:
+    #     prediction1 = t_preditct(input2)
+    # else:
+    #     prediction1.append(0.0)
+    # input3 = pp*mal_list2
+    # if list2_count == dim: 
+    #     prediction2.append(0.0)
+    # else:
+    #     prediction2 = t_preditct(input3)
+
+    all_prediction1 = objective_function1(pp,mal_list0)
+    all_prediction2 = objective_function1(pp,mal_list1)
+
+    all_prediction = all_prediction1 + all_prediction2
+    ff_out = np.array(ff_out,dtype = np.float32)
+    # ff_out = ff_out.reshape(20,1)
+
+    
+
+
+    # loss_mse= mean_squared_error(ff, all_prediction)
+    ff_out = torch.tensor(ff_out,requires_grad=True,dtype=float)
+    all_prediction = torch.tensor(all_prediction)
+    loss_func=nn.L1Loss()
+
+    loss = loss_func(ff_out,all_prediction)
+    return loss
 
 
 def test(dt):
@@ -938,14 +1008,23 @@ ic(ave_dim_4)
 ic(ave_dim_5)
 
 pre_teacher=[]
-# pre_teacher.append(dim_0)
-# pre_teacher.append(dim_1)
-# pre_teacher.append(dim_2)
-# pre_teacher.append(dim_3)
-# pre_teacher.append(dim_4)
-# pre_teacher.append(dim_5)
+pre_teacher.append(dim_0)
+pre_teacher.append(dim_1)
+pre_teacher.append(dim_2)
+pre_teacher.append(dim_3)
+pre_teacher.append(dim_4)
+pre_teacher.append(dim_5)
 
-for _ in range(109):
+
+# pre_teacher.append([1.0,0.0,0.0])
+# pre_teacher.append([1.0,0.0,0.0])
+# pre_teacher.append([1.0,0.0,0.0])
+# pre_teacher.append([0.0,1.0,0.0])
+# pre_teacher.append([0.0,1.0,0.0])
+# pre_teacher.append([0.0,1.0,0.0]
+# )
+
+for _ in range(103):
     pre_teacher.append([0.0, 0.0, 1.0])
 # list_3x100 = [[0, 0, 1] for _ in range(100)]
 # list_3x100[:5]  # 最初の5つを表示
@@ -954,17 +1033,115 @@ for _ in range(109):
 pre_teacher = torch.tensor(pre_teacher,dtype=torch.float)
 def teacher_vector():
     
-    ic(pre_teacher)
+    ic(pre_teacher.shape)
+    return pre_teacher,best_loss
+
+
+
+
+
+
+
+def make_teacher_label():
+    tmp_tmp += 1
+    for i in range(6):
+                if best_label[i] == 0:
+                    if i ==0: 
+                        dif_0_0.append(0.1*tmp_tmp)
+                    elif i == 1:
+                        dif_1_0.append(0.1*tmp_tmp)
+                    elif i == 2:
+                        dif_2_0.append(0.1*tmp_tmp)
+                    elif i == 3:
+                        dif_3_0.append(0.1*tmp_tmp)
+                    elif i == 4:
+                        dif_4_0.append(0.1*tmp_tmp)
+                    elif i== 5:
+                        dif_5_0.append(0.1*tmp_tmp)
+                elif best_label[i] == 1:
+                    if i == 0:
+                        dif_0_1.append(0.1*tmp_tmp)
+                    elif i == 1:
+                        dif_1_1.append(0.1*tmp_tmp)
+                    elif i ==2:
+                        dif_2_1.append(0.1*tmp_tmp)
+                    elif i==3:
+                        dif_3_1.append(0.1*tmp_tmp)
+                    elif i == 4:
+                        dif_4_1.append(0.1*tmp_tmp)
+                    elif i==5:
+                        dif_5_1.append(0.1*tmp_tmp)
+                elif best_label[i] == 2:
+                    if i == 0:
+                        dif_0_2.append(0.1*tmp_tmp)
+                    elif i == 1:
+                        dif_1_2.append(0.1*tmp_tmp)
+                    elif i == 2:
+                        dif_2_2.append(0.1*tmp_tmp)
+                    elif i == 3:
+                        dif_3_2.append(0.1*tmp_tmp)
+                    elif i == 4:
+                        dif_4_2.append(0.1*tmp_tmp)
+                    elif i == 5:
+                        dif_5_2.append(0.1*tmp_tmp)
+    dim_0 = [sum(dif_0_0),sum(dif_0_1),sum(dif_0_2)]
+    dim_1 = [sum(dif_1_0),sum(dif_1_1),sum(dif_1_2)]
+    dim_2 = [sum(dif_2_0),sum(dif_2_1),sum(dif_2_2)]
+
+    dim_3 = [sum(dif_3_0),sum(dif_3_1),sum(dif_3_2)]
+    dim_4 = [sum(dif_4_0),sum(dif_4_1),sum(dif_4_2)]
+    dim_5 = [sum(dif_5_0),sum(dif_5_1),sum(dif_5_2)]
+    max_dim_0 = max(dim_0)
+    ave_dim_0 = max_dim_0 / sum(dim_0)
+    max_dim_1 = max(dim_1)
+    ave_dim_1 = max_dim_1 / sum(dim_1)
+    max_dim_2 = max(dim_2)
+    ave_dim_2 = max_dim_2 / sum(dim_2)
+    max_dim_3 = max(dim_3)
+    ave_dim_3 = max_dim_3 / sum(dim_3)
+    max_dim_4 = max(dim_4)
+    ave_dim_4 = max_dim_4 / sum(dim_4)
+    max_dim_5 = max(dim_5)
+    ave_dim_5 = max_dim_5 / sum(dim_5)
+    ic(max_dim_0)
+    ic(max_dim_1)
+    ic(max_dim_2)
+    ic(max_dim_3)
+    ic(max_dim_4)
+    ic(max_dim_5)
+    ic(ave_dim_0)
+    ic(ave_dim_1)
+    ic(ave_dim_2)
+    ic(ave_dim_3)
+    ic(ave_dim_4)
+    ic(ave_dim_5)
+
+    pre_teacher=[]
+    pre_teacher.append(dim_0)
+    pre_teacher.append(dim_1)
+    pre_teacher.append(dim_2)
+    pre_teacher.append(dim_3)
+    pre_teacher.append(dim_4)
+    pre_teacher.append(dim_5)
+
+
+    # pre_teacher.append([1.0,0.0,0.0])
+    # pre_teacher.append([1.0,0.0,0.0])
+    # pre_teacher.append([1.0,0.0,0.0])
+    # pre_teacher.append([0.0,1.0,0.0])
+    # pre_teacher.append([0.0,1.0,0.0])
+    # pre_teacher.append([0.0,1.0,0.0]
+    # )
+
+    for _ in range(103):
+        pre_teacher.append([0.0, 0.0, 1.0])
+    # list_3x100 = [[0, 0, 1] for _ in range(100)]
+    # list_3x100[:5]  # 最初の5つを表示
+
+
+    pre_teacher = torch.tensor(pre_teacher,dtype=torch.float)
+
     return pre_teacher
-
-
-
-
-
-
-
-
-
 
 
 

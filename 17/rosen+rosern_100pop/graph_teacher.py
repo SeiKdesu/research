@@ -202,16 +202,16 @@ class Net(torch.nn.Module):
         x=self.linear(x)
         return x
 
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-# model =Net()
-# model.to(device)
-# dataset.to(device)
-# model.train()
-
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model =Net()
-model.to('cpu')
-dataset.to('cpu')
+model.to(device)
+dataset.to(device)
 model.train()
+
+# model =Net()
+# model.to('cpu')
+# dataset.to('cpu')
+# model.train()
 # optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
 optimizer=torch.optim.SGD(model.parameters(),lr=0.1)
 # scheduler = optim.lr_scheduler.CosineAnnealingLR(
@@ -223,13 +223,13 @@ loss_func = torch.nn.CrossEntropyLoss()
 losses=[]
 acces=[]
 from icecream import ic
-from nasi_train import teacher_vector
-teacher_probs = teacher_vector()
+from nasi_train import teacher_vector,make_teacher_label,generate_loss
+teacher_probs ,bbest_loss= teacher_vector()
 # Trueが6つ、Falseが103個並ぶリストを作成
 mask_list = [True] * 6 + [False] * 103
 
-
-for epoch in range(1500):
+teacher_probs= teacher_probs.to(device)
+for epoch in range(500):
     optimizer.zero_grad()
     # dataset.to('cpu')
     out = model(dataset)
@@ -243,10 +243,9 @@ for epoch in range(1500):
 
 
 
-    ic(out)
     loss = loss_func(out[mask_list],teacher_probs[mask_list])
-    ic(teacher_probs)
-    print(loss)
+
+
     losses.append(loss)
     loss.backward()
 
@@ -260,7 +259,20 @@ for epoch in range(1500):
     # scheduler.step()
  
     predict=pred.cpu()
-    ic(predict)
+
+
+    label = predict[:5]
+    fitness_loss = generate_loss(label)
+    if bbest_loss > fitness_loss:
+        ic(teacher_probs)
+        teacher_probs = make_teacher_label()
+        print('changedd!')
+        ic(teacher_probs)
+        teacher_probs = teacher_probs.to(device)
+
+
+
+    # ic(predict)
     data_y=dataset.y.cpu()
     count=0
     for i in range(dim): 
@@ -272,7 +284,8 @@ print("結果：",predict)
 print("真値：",data_y)
 # visualize_graph(G,color=predict)
 # リスト内の各テンソルをdetachしてnumpy配列に変換
-losses_np = [loss.detach().numpy() for loss in losses]
+
+losses_np = [loss.detach().cpu().numpy() for loss in losses]
 # acces_np=   [acc.detach().numpy() for acc in acces]
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 5))
