@@ -891,6 +891,9 @@ ic(sum(dif_0_2))
 ic(sum(dif_1_0))
 ic(sum(dif_1_1))
 ic(sum(dif_1_2))
+ic(sum(dif_2_0))
+ic(sum(dif_2_1))
+ic(sum(dif_2_2))
 ic(sum(dif_3_0))
 ic(sum(dif_3_1))
 ic(sum(dif_3_2))
@@ -902,6 +905,57 @@ ic(sum(dif_5_1))
 ic(sum(dif_5_2))
 
 
+dim_0 = [sum(dif_0_0),sum(dif_0_1),sum(dif_0_2)]
+dim_1 = [sum(dif_1_0),sum(dif_1_1),sum(dif_1_2)]
+dim_2 = [sum(dif_2_0),sum(dif_2_1),sum(dif_2_2)]
+
+dim_3 = [sum(dif_3_0),sum(dif_3_1),sum(dif_3_2)]
+dim_4 = [sum(dif_4_0),sum(dif_4_1),sum(dif_4_2)]
+dim_5 = [sum(dif_5_0),sum(dif_5_1),sum(dif_5_2)]
+max_dim_0 = max(dim_0)
+ave_dim_0 = max_dim_0 / sum(dim_0)
+max_dim_1 = max(dim_1)
+ave_dim_1 = max_dim_1 / sum(dim_1)
+max_dim_2 = max(dim_2)
+ave_dim_2 = max_dim_2 / sum(dim_2)
+max_dim_3 = max(dim_3)
+ave_dim_3 = max_dim_3 / sum(dim_3)
+max_dim_4 = max(dim_4)
+ave_dim_4 = max_dim_4 / sum(dim_4)
+max_dim_5 = max(dim_5)
+ave_dim_5 = max_dim_5 / sum(dim_5)
+ic(max_dim_0)
+ic(max_dim_1)
+ic(max_dim_2)
+ic(max_dim_3)
+ic(max_dim_4)
+ic(max_dim_5)
+ic(ave_dim_0)
+ic(ave_dim_1)
+ic(ave_dim_2)
+ic(ave_dim_3)
+ic(ave_dim_4)
+ic(ave_dim_5)
+
+pre_teacher=[]
+pre_teacher.append(dim_0)
+pre_teacher.append(dim_1)
+pre_teacher.append(dim_2)
+pre_teacher.append(dim_3)
+pre_teacher.append(dim_4)
+pre_teacher.append(dim_5)
+
+for _ in range(103):
+    pre_teacher.append([0.0, 0.0, 1.0])
+# list_3x100 = [[0, 0, 1] for _ in range(100)]
+# list_3x100[:5]  # 最初の5つを表示
+
+
+pre_teacher = torch.tensor(pre_teacher,dtype=torch.float)
+def teacher_vector():
+    
+    ic(pre_teacher)
+    return pre_teacher
 
 
 

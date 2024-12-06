@@ -2,7 +2,7 @@
 %%LanguageLevel: 3
 %%Title: GAT_1000_k_50_dist_150_250_500_transform_v1-kmeans-cluster-node-features-gnn
 %%Creator: Matplotlib v3.9.2, https://matplotlib.org/
-%%CreationDate: Wed Dec  4 11:50:45 2024
+%%CreationDate: Fri Dec  6 12:44:39 2024
 %%Orientation: portrait
 %%BoundingBox: 0 0 720 720
 %%HiResBoundingBox: 0.000000 0.000000 720.000000 720.000000
@@ -272,7 +272,7 @@ cl
 1 setlinejoin
 0 setlinecap
 [] 0 setdash
-0.62 0.855 0.898 setrgbcolor
+0.549 0.337 0.294 setrgbcolor
 gsave
 90 79.2 558 554.4 rectclip
 622.636 104.4 p0_0
@@ -299,7 +299,6 @@ fill
 grestore
 stroke
 grestore
-0.122 0.467 0.706 setrgbcolor
 gsave
 90 79.2 558 554.4 rectclip
 622.636 104.4 p0_0
@@ -308,7 +307,6 @@ fill
 grestore
 stroke
 grestore
-0.62 0.855 0.898 setrgbcolor
 gsave
 90 79.2 558 554.4 rectclip
 622.636 608.4 p0_0
@@ -317,7 +315,6 @@ fill
 grestore
 stroke
 grestore
-0.122 0.467 0.706 setrgbcolor
 gsave
 90 79.2 558 554.4 rectclip
 115.364 104.4 p0_0
@@ -353,42 +350,42 @@ grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-621.931 96.2136 translate
+618.562 93.5799 translate
 0 rotate
 0 0 m /zero glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-610.819 100.797 translate
+614.531 101.275 translate
 0 rotate
 0 0 m /one glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-613.935 102.309 translate
+615.199 99.2189 translate
 0 rotate
 0 0 m /two glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-612.033 99.8476 translate
+619.585 98.3227 translate
 0 rotate
 0 0 m /three glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-607.973 603.68 translate
+605.735 603.381 translate
 0 rotate
 0 0 m /four glyphshow
 grestore
 /DejaVuSans 25.000 selectfont
 gsave
 
-107.184 97.6125 translate
+111.91 100.45 translate
 0 rotate
 0 0 m /five glyphshow
 grestore
