@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 100
+epochs = 2
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -464,7 +464,7 @@ for com in range(1):
         y_tmp.append(0)
     for i in range(3):
         y_tmp.append(1)
-    for i in range(102):
+    for i in range(103):
         y_tmp.append(2)
 
     y = torch.tensor(y_tmp)
@@ -653,43 +653,43 @@ for com in range(1):
             for i in range(6):
                 if best_label[i] == 0:
                     if i ==0: 
-                        dif_0_0.append(0.0001*tmp_tmp)
+                        dif_0_0.append(0.1*tmp_tmp)
                     elif i == 1:
-                        dif_1_0.append(0.0001*tmp_tmp)
+                        dif_1_0.append(0.1*tmp_tmp)
                     elif i == 2:
-                        dif_2_0.append(0.0001*tmp_tmp)
+                        dif_2_0.append(0.1*tmp_tmp)
                     elif i == 3:
-                        dif_3_0.append(0.0001*tmp_tmp)
+                        dif_3_0.append(0.1*tmp_tmp)
                     elif i == 4:
-                        dif_4_0.append(0.0001*tmp_tmp)
+                        dif_4_0.append(0.1*tmp_tmp)
                     elif i== 5:
-                        dif_5_0.append(0.0001*tmp_tmp)
+                        dif_5_0.append(0.1*tmp_tmp)
                 elif best_label[i] == 1:
                     if i == 0:
-                        dif_0_1.append(0.0001*tmp_tmp)
+                        dif_0_1.append(0.1*tmp_tmp)
                     elif i == 1:
-                        dif_1_1.append(0.0001*tmp_tmp)
+                        dif_1_1.append(0.1*tmp_tmp)
                     elif i ==2:
-                        dif_2_1.append(0.0001*tmp_tmp)
+                        dif_2_1.append(0.1*tmp_tmp)
                     elif i==3:
-                        dif_3_1.append(0.0001*tmp_tmp)
+                        dif_3_1.append(0.1*tmp_tmp)
                     elif i == 4:
-                        dif_4_1.append(0.0001*tmp_tmp)
+                        dif_4_1.append(0.1*tmp_tmp)
                     elif i==5:
-                        dif_5_1.append(0.0001*tmp_tmp)
+                        dif_5_1.append(0.1*tmp_tmp)
                 elif best_label[i] == 2:
                     if i == 0:
-                        dif_0_2.append(0.0001*tmp_tmp)
+                        dif_0_2.append(0.1*tmp_tmp)
                     elif i == 1:
-                        dif_1_2.append(0.0001*tmp_tmp)
+                        dif_1_2.append(0.1*tmp_tmp)
                     elif i == 2:
-                        dif_2_2.append(0.0001*tmp_tmp)
+                        dif_2_2.append(0.1*tmp_tmp)
                     elif i == 3:
-                        dif_3_2.append(0.0001*tmp_tmp)
+                        dif_3_2.append(0.1*tmp_tmp)
                     elif i == 4:
-                        dif_4_2.append(0.0001*tmp_tmp)
+                        dif_4_2.append(0.1*tmp_tmp)
                     elif i == 5:
-                        dif_5_2.append(0.0001*tmp_tmp)
+                        dif_5_2.append(0.1*tmp_tmp)
             
 
             # for i in range(6):
@@ -938,14 +938,14 @@ ic(ave_dim_4)
 ic(ave_dim_5)
 
 pre_teacher=[]
-pre_teacher.append(dim_0)
-pre_teacher.append(dim_1)
-pre_teacher.append(dim_2)
-pre_teacher.append(dim_3)
-pre_teacher.append(dim_4)
-pre_teacher.append(dim_5)
+# pre_teacher.append(dim_0)
+# pre_teacher.append(dim_1)
+# pre_teacher.append(dim_2)
+# pre_teacher.append(dim_3)
+# pre_teacher.append(dim_4)
+# pre_teacher.append(dim_5)
 
-for _ in range(103):
+for _ in range(109):
     pre_teacher.append([0.0, 0.0, 1.0])
 # list_3x100 = [[0, 0, 1] for _ in range(100)]
 # list_3x100[:5]  # 最初の5つを表示

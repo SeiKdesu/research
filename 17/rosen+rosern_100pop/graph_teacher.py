@@ -146,15 +146,16 @@ for i in range(3):
     y_tmp.append(0)
 for i in range(3):
     y_tmp.append(1)
-for i in range(102):
+for i in range(103):
     y_tmp.append(2)
 
 y = torch.tensor(y_tmp)
 
 
-
+Data.train_mask=np.array([1 for i in range(6)])
 dataset=Data(x=x,edge_index=edge_index,edge_attr=edge_attr,y=y,num_classes=3)
 ic(dataset)
+
 # dataset=dataset[0]
 G=to_networkx(dataset, to_undirected=False)
 # visualize_graph(G,color=dataset.y)
@@ -211,22 +212,26 @@ model =Net()
 model.to('cpu')
 dataset.to('cpu')
 model.train()
-optimizer=torch.optim.Adam(model.parameters(),lr=0.01)
+# optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
+optimizer=torch.optim.SGD(model.parameters(),lr=0.1)
 # scheduler = optim.lr_scheduler.CosineAnnealingLR(
 #     optimizer,
 #     T_max = 4000
 # )
-# loss_func = torch.nn.CrossEntropyLoss()
-loss_func  = torch.nn.KLDivLoss()
+loss_func = torch.nn.CrossEntropyLoss()
+# loss_func  = torch.nn.KLDivLoss()
 losses=[]
 acces=[]
 from icecream import ic
 from nasi_train import teacher_vector
-teacher_probs = teacher_vector().cuda()
+teacher_probs = teacher_vector()
+# Trueが6つ、Falseが103個並ぶリストを作成
+mask_list = [True] * 6 + [False] * 103
+
 
 for epoch in range(1500):
     optimizer.zero_grad()
-    dataset.to('cpu')
+    # dataset.to('cpu')
     out = model(dataset)
     # out = torch.tensor(out,requires_grad=True)
     # probs = F.log_softmax(out,dim=-1)
@@ -238,9 +243,9 @@ for epoch in range(1500):
 
 
 
-
-    loss = loss_func(out,teacher_probs)
-    ic(teacher_vector.cpu())
+    ic(out)
+    loss = loss_func(out[mask_list],teacher_probs[mask_list])
+    ic(teacher_probs)
     print(loss)
     losses.append(loss)
     loss.backward()
@@ -278,7 +283,7 @@ plt.ylabel('Loss')
 plt.title('Loss vs. Epoch')
 plt.legend()
 plt.grid(True)
-plt.savefig('Graph Neural Network')
+plt.savefig('Graph Neural Network SGD')
 plt.close()
 plt.figure(figsize=(10, 5))
 plt.plot(acces, label='Accracy')
