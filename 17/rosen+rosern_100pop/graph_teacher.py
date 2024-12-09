@@ -212,8 +212,8 @@ model.train()
 # model.to('cpu')
 # dataset.to('cpu')
 # model.train()
-optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
-# optimizer=torch.optim.SGD(model.parameters(),lr=0.001)
+# optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
+optimizer=torch.optim.SGD(model.parameters(),lr=0.001)
 # scheduler = optim.lr_scheduler.CosineAnnealingLR(
 #     optimizer,
 #     T_max = 4000
@@ -262,15 +262,15 @@ for epoch in range(500):
 
 
     label = predict[:5]
-    fitness_loss = generate_loss(label)
-    ic(fitness_loss)
-    ic(bbest_loss)
-    if bbest_loss > fitness_loss:
-        ic(teacher_probs)
-        teacher_probs = make_teacher_label()
-        print('changedd!')
-        ic(teacher_probs)
-        teacher_probs = teacher_probs.to(device)
+    # # fitness_loss = generate_loss(label)
+    # ic(fitness_loss)
+    # ic(bbest_loss)
+    # if bbest_loss > fitness_loss:
+    #     ic(teacher_probs)
+    #     # teacher_probs = make_teacher_label()
+    #     print('changedd!')
+    #     ic(teacher_probs)
+    #     teacher_probs = teacher_probs.to(device)
 
 
 

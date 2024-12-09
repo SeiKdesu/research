@@ -711,24 +711,7 @@ for com in range(1):
             tmp_tmp += 1
             continue
         if best_loss > loss:
-            dif_0_0 = []
-            dif_0_1 = []
-            dif_0_2 = []
-            dif_1_0 = []
-            dif_1_1 = []
-            dif_1_2 = []
-            dif_2_0 = []
-            dif_2_1 = []
-            dif_2_2 = []
-            dif_3_0 = []
-            dif_3_1 = []
-            dif_3_2 = []
-            dif_4_0 = []
-            dif_4_1 = []
-            dif_4_2 = []
-            dif_5_0 = []
-            dif_5_1 = []
-            dif_5_2 = []
+
             tmp_tmp += 1
             difference = best_loss -loss
             best_loss = loss
@@ -970,6 +953,7 @@ ic(dif_4_2)
 ic(dif_5_0)
 ic(dif_5_1)
 ic(dif_5_2)
+
 
 
 ic(sum(dif_0_0))
