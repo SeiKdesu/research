@@ -212,8 +212,8 @@ model.train()
 # model.to('cpu')
 # dataset.to('cpu')
 # model.train()
-# optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
-optimizer=torch.optim.SGD(model.parameters(),lr=0.1)
+optimizer=torch.optim.Adam(model.parameters(),lr=0.1)
+# optimizer=torch.optim.SGD(model.parameters(),lr=0.001)
 # scheduler = optim.lr_scheduler.CosineAnnealingLR(
 #     optimizer,
 #     T_max = 4000
@@ -263,6 +263,8 @@ for epoch in range(500):
 
     label = predict[:5]
     fitness_loss = generate_loss(label)
+    ic(fitness_loss)
+    ic(bbest_loss)
     if bbest_loss > fitness_loss:
         ic(teacher_probs)
         teacher_probs = make_teacher_label()
@@ -278,8 +280,8 @@ for epoch in range(500):
     for i in range(dim): 
         if predict[i]==data_y[i]:
             count += 1
-    acces.append(count/len(data_y))
-    print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/len(data_y)))
+    acces.append(count/dim)
+    print('Epoch %d | Loss: %.4f | ACC: %.4f' % (epoch,loss.item(),count/dim))
 print("結果：",predict)
 print("真値：",data_y)
 # visualize_graph(G,color=predict)

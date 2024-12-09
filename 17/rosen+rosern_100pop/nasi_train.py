@@ -154,7 +154,7 @@ transform_set = True
 
 # Epochs or the number of generation/iterations of the training dataset
 # epoch and n_init refers to the number of times the clustering algorithm will run different initializations
-epochs = 100
+epochs = 200
 n = 1000
 count_0 = [0]*6
 count_1 = [0]*6
@@ -711,7 +711,24 @@ for com in range(1):
             tmp_tmp += 1
             continue
         if best_loss > loss:
- 
+            dif_0_0 = []
+            dif_0_1 = []
+            dif_0_2 = []
+            dif_1_0 = []
+            dif_1_1 = []
+            dif_1_2 = []
+            dif_2_0 = []
+            dif_2_1 = []
+            dif_2_2 = []
+            dif_3_0 = []
+            dif_3_1 = []
+            dif_3_2 = []
+            dif_4_0 = []
+            dif_4_1 = []
+            dif_4_2 = []
+            dif_5_0 = []
+            dif_5_1 = []
+            dif_5_2 = []
             tmp_tmp += 1
             difference = best_loss -loss
             best_loss = loss
@@ -1026,8 +1043,7 @@ pre_teacher.append(dim_5)
 
 for _ in range(103):
     pre_teacher.append([0.0, 0.0, 1.0])
-# list_3x100 = [[0, 0, 1] for _ in range(100)]
-# list_3x100[:5]  # 最初の5つを表示
+
 
 
 pre_teacher = torch.tensor(pre_teacher,dtype=torch.float)
